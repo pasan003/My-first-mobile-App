@@ -5,28 +5,36 @@
         <!-- Primary brand color -->
         <item name="colorPrimary">@color/primary</item>
         <item name="colorOnPrimary">@color/on_primary</item>
-        <item name="colorPrimaryContainer">#FFB2DFDB</item>
-        <item name="colorOnPrimaryContainer">#FF00201E</item>
+        <item name="colorPrimaryContainer">@color/primary_container</item>
+        <item name="colorOnPrimaryContainer">@color/on_primary_container</item>
 
         <!-- Secondary brand color -->
         <item name="colorSecondary">@color/secondary</item>
         <item name="colorOnSecondary">@color/on_secondary</item>
-        <item name="colorSecondaryContainer">#FFB2DFDB</item>
-        <item name="colorOnSecondaryContainer">#FF00201E</item>
+        <item name="colorSecondaryContainer">@color/secondary_container</item>
+        <item name="colorOnSecondaryContainer">@color/on_secondary_container</item>
 
         <!-- Tertiary brand color -->
-        <item name="colorTertiary">#FF4D8C6B</item>
-        <item name="colorOnTertiary">#FFFFFFFF</item>
+        <item name="colorTertiary">@color/tertiary</item>
+        <item name="colorOnTertiary">@color/on_tertiary</item>
 
         <!-- Surface and Background -->
         <item name="colorSurface">@color/surface</item>
         <item name="colorOnSurface">@color/on_surface</item>
+        <item name="colorSurfaceVariant">@color/surface_variant</item>
+        <item name="colorOnSurfaceVariant">@color/on_surface_variant</item>
         <item name="android:colorBackground">@color/background</item>
         <item name="colorOnBackground">@color/on_background</item>
 
+        <!-- Outline -->
+        <item name="colorOutline">@color/outline</item>
+        <item name="colorOutlineVariant">@color/outline_variant</item>
+
         <!-- Error color -->
-        <item name="colorError">#FFC62828</item>
-        <item name="colorOnError">#FFFFFFFF</item>
+        <item name="colorError">@color/error</item>
+        <item name="colorOnError">@color/on_error</item>
+        <item name="colorErrorContainer">@color/error_container</item>
+        <item name="colorOnErrorContainer">@color/on_error_container</item>
 
         <!-- Status bar -->
         <item name="android:statusBarColor">@color/balance_card_start</item>
