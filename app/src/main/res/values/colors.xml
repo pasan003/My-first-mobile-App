@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Primary - Finance green theme -->
+    <color name="primary">#FF00897B</color>
+    <color name="primary_variant">#FF00695C</color>
+    <color name="on_primary">#FFFFFFFF</color>
+
+    <!-- Secondary - Teal accent -->
+    <color name="secondary">#FF26A69A</color>
+    <color name="secondary_variant">#FF00897B</color>
+    <color name="on_secondary">#FFFFFFFF</color>
+
+    <!-- Surface & Background -->
+    <color name="surface">#FFF5F7FA</color>
+    <color name="on_surface">#FF1C1B1F</color>
+    <color name="background">#FFF5F7FA</color>
+    <color name="on_background">#FF1C1B1F</color>
+
+    <!-- Dark theme surface -->
+    <color name="surface_dark">#FF1C1B1F</color>
+    <color name="on_surface_dark">#FFE6E1E5</color>
+
+    <!-- Card colors -->
+    <color name="card_income">#FFE8F5E9</color>
+    <color name="card_expense">#FFFFEBEE</color>
+    <color name="balance_card_start">#FF00695C</color>
+    <color name="balance_card_end">#FF004D40</color>
+
+    <!-- Text colors -->
+    <color name="text_primary">#FF1C1B1F</color>
+    <color name="text_secondary">#FF6B7280</color>
+    <color name="text_hint">#FF9CA3AF</color>
+    <color name="text_income">#FF2E7D32</color>
+    <color name="text_expense">#FFC62828</color>
+    <color name="text_white">#FFFFFFFF</color>
+
+    <!-- Legacy colors kept for compatibility -->
+    <color name="purple_200">#FFBB86FC</color>
+    <color name="purple_500">#FF6200EE</color>
+    <color name="purple_700">#FF3700B3</color>
+    <color name="teal_200">#FF03DAC5</color>
+    <color name="teal_700">#FF018786</color>
+    <color name="black">#FF000000</color>
+    <color name="white">#FFFFFFFF</color>
+</resources>
