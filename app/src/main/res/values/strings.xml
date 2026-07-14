@@ -45,7 +45,63 @@
     <string name="nav_analytics">Analytics</string>
     <string name="nav_profile">Profile</string>
 
+    <!-- Add Expense Screen -->
+    <string name="add_expense">Add Expense</string>
+    <string name="expense_title_hint">Expense Title</string>
+    <string name="expense_title_example">Lunch, Grocery Shopping, Fuel</string>
+    <string name="amount_hint">Amount</string>
+    <string name="amount_prefix">Rs.</string>
+    <string name="category_hint">Category</string>
+    <string name="date_hint">Date</string>
+    <string name="payment_method_hint">Payment Method</string>
+    <string name="notes_hint">Add a note (optional)</string>
+    <string name="save_expense">Save Expense</string>
+    <string name="cancel">Cancel</string>
+
+    <!-- Categories -->
+    <string name="cat_health">Health</string>
+    <string name="cat_education">Education</string>
+    <string name="cat_other">Other</string>
+
+    <!-- Payment Methods -->
+    <string name="payment_cash">Cash</string>
+    <string name="payment_credit_card">Credit Card</string>
+    <string name="payment_debit_card">Debit Card</string>
+    <string name="payment_bank_transfer">Bank Transfer</string>
+    <string name="payment_digital_wallet">Digital Wallet</string>
+
+    <!-- String arrays for dropdowns -->
+    <string-array name="expense_categories">
+        <item>@string/cat_food</item>
+        <item>@string/cat_transport</item>
+        <item>@string/cat_shopping</item>
+        <item>@string/cat_bills</item>
+        <item>@string/cat_entertainment</item>
+        <item>@string/cat_health</item>
+        <item>@string/cat_education</item>
+        <item>@string/cat_other</item>
+    </string-array>
+
+    <string-array name="payment_methods">
+        <item>@string/payment_cash</item>
+        <item>@string/payment_credit_card</item>
+        <item>@string/payment_debit_card</item>
+        <item>@string/payment_bank_transfer</item>
+        <item>@string/payment_digital_wallet</item>
+    </string-array>
+
+    <!-- Date value -->
+    <string name="today_date_formatted">Today</string>
+
+    <!-- Validation Error Placeholders -->
+    <string name="error_title_required">Expense title required</string>
+    <string name="error_amount_required">Amount required</string>
+    <string name="error_category_required">Category required</string>
+
     <!-- Content Descriptions -->
     <string name="cd_profile_avatar">Profile avatar</string>
     <string name="cd_add_expense">Add new expense</string>
+    <string name="cd_back_button">Navigate back</string>
+    <string name="cd_save_expense">Save expense</string>
+    <string name="cd_calendar_icon">Select date</string>
 </resources>

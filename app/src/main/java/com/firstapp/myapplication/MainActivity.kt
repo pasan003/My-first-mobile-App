@@ -1,5 +1,6 @@
 package com.firstapp.myapplication
 
+import android.content.Intent
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
@@ -17,6 +18,17 @@ class MainActivity : AppCompatActivity() {
         setContentView(binding.root)
 
         setupRecyclerView()
+        setupClickListeners()
+    }
+
+    /**
+     * Sets up click listeners, including the FAB to navigate to AddExpenseActivity.
+     */
+    private fun setupClickListeners() {
+        binding.fabAddExpense.setOnClickListener {
+            val intent = Intent(this, AddExpenseActivity::class.java)
+            startActivity(intent)
+        }
     }
 
     /**

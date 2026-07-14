@@ -1,45 +1,80 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <!-- Primary - Finance green theme -->
-    <color name="primary">#FF00897B</color>
-    <color name="primary_variant">#FF00695C</color>
-    <color name="on_primary">#FFFFFFFF</color>
+    <!-- ========================================== -->
+    <!-- MATERIAL DESIGN 3 THEME COLORS            -->
+    <!-- ========================================== -->
 
-    <!-- Secondary - Teal accent -->
-    <color name="secondary">#FF26A69A</color>
-    <color name="secondary_variant">#FF00897B</color>
+    <!-- Primary: Deep Teal -->
+    <color name="primary">#FF0F766E</color>
+    <color name="on_primary">#FFFFFFFF</color>
+    <color name="primary_container">#FFCCFBF1</color>
+    <color name="on_primary_container">#FF0D3D3A</color>
+
+    <!-- Secondary -->
+    <color name="secondary">#FF14B8A6</color>
     <color name="on_secondary">#FFFFFFFF</color>
+    <color name="secondary_container">#FFD5FAF5</color>
+    <color name="on_secondary_container">#FF0A3D38</color>
+
+    <!-- Tertiary: Warm Amber accent -->
+    <color name="tertiary">#FFF59E0B</color>
+    <color name="on_tertiary">#FFFFFFFF</color>
 
     <!-- Surface & Background -->
-    <color name="surface">#FFF5F7FA</color>
-    <color name="on_surface">#FF1C1B1F</color>
-    <color name="background">#FFF5F7FA</color>
-    <color name="on_background">#FF1C1B1F</color>
+    <color name="surface">#FFF8FAFC</color>
+    <color name="on_surface">#FF0F172A</color>
+    <color name="surface_variant">#FFF1F5F9</color>
+    <color name="on_surface_variant">#FF475569</color>
+    <color name="background">#FFF8FAFC</color>
+    <color name="on_background">#FF0F172A</color>
 
-    <!-- Dark theme surface -->
-    <color name="surface_dark">#FF1C1B1F</color>
-    <color name="on_surface_dark">#FFE6E1E5</color>
+    <!-- Error - MD3 default -->
+    <color name="error">#FFB3261E</color>
+    <color name="on_error">#FFFFFFFF</color>
+    <color name="error_container">#FFF9DEDC</color>
+    <color name="on_error_container">#FF410E0B</color>
 
-    <!-- Card colors -->
-    <color name="card_income">#FFE8F5E9</color>
-    <color name="card_expense">#FFFFEBEE</color>
-    <color name="balance_card_start">#FF00695C</color>
-    <color name="balance_card_end">#FF004D40</color>
+    <!-- Outline / Border -->
+    <color name="outline">#FFCBD5E1</color>
+    <color name="outline_variant">#FFE2E8F0</color>
 
-    <!-- Text colors -->
-    <color name="text_primary">#FF1C1B1F</color>
-    <color name="text_secondary">#FF6B7280</color>
-    <color name="text_hint">#FF9CA3AF</color>
-    <color name="text_income">#FF2E7D32</color>
-    <color name="text_expense">#FFC62828</color>
+    <!-- ========================================== -->
+    <!-- FINANCE THEME COLORS (Add Expense Screen)  -->
+    <!-- ========================================== -->
+    <color name="finance_primary">#FF0F766E</color>
+    <color name="finance_primary_container">#FFCCFBF1</color>
+    <color name="finance_secondary">#FF14B8A6</color>
+    <color name="finance_accent">#FFF59E0B</color>
+    <color name="finance_background">#FFF8FAFC</color>
+    <color name="finance_card">#FFFFFFFF</color>
+    <color name="finance_surface_variant">#FFF1F5F9</color>
+    <color name="finance_text_primary">#FF0F172A</color>
+    <color name="finance_text_secondary">#FF64748B</color>
+    <color name="finance_hint_text">#FF94A3B8</color>
+    <color name="finance_border">#FFCBD5E1</color>
+    <color name="finance_success">#FF16A34A</color>
+
+    <!-- ========================================== -->
+    <!-- CARD & BALANCE COLORS                      -->
+    <!-- ========================================== -->
+    <color name="card_income">#FFCCFBF1</color>
+    <color name="card_expense">#FFF9DEDC</color>
+    <color name="balance_card_start">#FF0F766E</color>
+    <color name="balance_card_end">#FF0D3D3A</color>
+
+    <!-- ========================================== -->
+    <!-- TEXT COLORS                                 -->
+    <!-- ========================================== -->
+    <color name="text_primary">#FF0F172A</color>
+    <color name="text_secondary">#FF64748B</color>
+    <color name="text_hint">#FF94A3B8</color>
+    <color name="text_income">#FF16A34A</color>
+    <color name="text_expense">#FFB3261E</color>
     <color name="text_white">#FFFFFFFF</color>
 
-    <!-- Legacy colors kept for compatibility -->
-    <color name="purple_200">#FFBB86FC</color>
-    <color name="purple_500">#FF6200EE</color>
-    <color name="purple_700">#FF3700B3</color>
-    <color name="teal_200">#FF03DAC5</color>
-    <color name="teal_700">#FF018786</color>
+    <!-- ========================================== -->
+    <!-- LEGACY COLORS (kept for compatibility)     -->
+    <!-- ========================================== -->
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
 </resources>
