@@ -1,4 +1,4 @@
-# SpendWise – Personal Finance Tracker
+# <img src="assets/logo.png" width="100" align="center"> SpendWise – Personal Finance Tracker
 
 SpendWise is a personal finance tracker designed to help you manage your money effectively. Database integration is straightforward, and data visualization provides a clear overview of your financial health.
 
