@@ -335,6 +335,8 @@
                     <!-- ===== 2g. ACTION BUTTONS ===== -->
 
                     <!-- Save Expense - Filled Button -->
+
+                    <!-- Cancel - Outlined Button -->
                     <com.google.android.material.button.MaterialButton
                         android:id="@+id/btnSaveExpense"
                         android:layout_width="0dp"
@@ -343,12 +345,13 @@
                         android:backgroundTint="@color/finance_primary"
                         android:contentDescription="@string/cd_save_expense"
                         android:fontFamily="sans-serif-medium"
-                        android:paddingVertical="@dimen/spacing_medium"
+                        android:insetTop="0dp"
+                        android:insetBottom="0dp"
+                        android:letterSpacing="0.01"
                         android:text="@string/save_expense"
                         android:textAllCaps="false"
                         android:textColor="@color/white"
                         android:textSize="16sp"
-                        android:letterSpacing="0.01"
                         app:cornerRadius="@dimen/button_corner_radius"
                         app:elevation="2dp"
                         app:icon="@drawable/ic_save"
@@ -356,10 +359,10 @@
                         app:iconSize="20dp"
                         app:iconTint="@color/white"
                         app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintHorizontal_bias="0.0"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toBottomOf="@id/tilNotes" />
 
-                    <!-- Cancel - Outlined Button -->
                     <com.google.android.material.button.MaterialButton
                         android:id="@+id/btnCancel"
                         style="@style/Widget.Material3.Button.OutlinedButton"
@@ -368,7 +371,8 @@
                         android:layout_marginTop="@dimen/spacing_medium"
                         android:backgroundTint="@color/white"
                         android:fontFamily="sans-serif-medium"
-                        android:paddingVertical="@dimen/spacing_medium"
+                        android:insetTop="0dp"
+                        android:insetBottom="0dp"
                         android:text="@string/cancel"
                         android:textAllCaps="false"
                         android:textColor="@color/finance_primary"
