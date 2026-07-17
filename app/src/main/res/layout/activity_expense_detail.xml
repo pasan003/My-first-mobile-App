@@ -1,0 +1,460 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.coordinatorlayout.widget.CoordinatorLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/finance_background"
+    tools:context=".ExpenseDetailActivity">
+
+    <!-- ========== 1. TOP APP BAR ========== -->
+    <com.google.android.material.appbar.MaterialToolbar
+        android:id="@+id/toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="?attr/actionBarSize"
+        android:background="@color/finance_card"
+        android:contentInsetStart="4dp"
+        android:contentInsetEnd="8dp"
+        android:elevation="2dp"
+        app:menu="@menu/menu_expense_detail"
+        app:navigationContentDescription="@string/cd_back_button"
+        app:navigationIcon="@drawable/ic_arrow_back"
+        app:title="@string/expense_details"
+        app:titleTextAppearance="@style/TextAppearance.Material3.TitleLarge"
+        app:titleTextColor="@color/finance_text_primary" />
+
+    <!-- ========== 2. SCROLLABLE CONTENT ========== -->
+    <androidx.core.widget.NestedScrollView
+        android:id="@+id/nestedScrollView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginTop="?attr/actionBarSize"
+        android:clipToPadding="false"
+        android:fillViewport="true"
+        android:paddingHorizontal="@dimen/spacing_medium"
+        android:paddingTop="@dimen/spacing_medium"
+        android:paddingBottom="@dimen/spacing_large">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <!-- ============================================================ -->
+            <!-- CARD 1: EXPENSE SUMMARY                                       -->
+            <!-- ============================================================ -->
+            <com.google.android.material.card.MaterialCardView
+                android:id="@+id/cardExpenseSummary"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                app:cardBackgroundColor="@color/finance_card"
+                app:cardCornerRadius="@dimen/card_corner_radius"
+                app:cardElevation="2dp"
+                app:contentPadding="@dimen/card_padding"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent">
+
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+
+                    <!-- Expense Title -->
+                    <TextView
+                        android:id="@+id/tvDetailTitle"
+                        style="@style/TextAppearance.Material3.TitleLarge"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:textColor="@color/finance_text_primary"
+                        android:textSize="20sp"
+                        android:textStyle="bold"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent"
+                        tools:text="@string/sample_detail_title" />
+
+                    <!-- Expense Amount -->
+                    <TextView
+                        android:id="@+id/tvDetailAmount"
+                        style="@style/TextAppearance.Material3.HeadlineLarge"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="8dp"
+                        android:textColor="@color/finance_text_primary"
+                        android:textSize="36sp"
+                        android:textStyle="bold"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@id/tvDetailTitle"
+                        tools:text="@string/sample_detail_amount" />
+
+                    <!-- Category Chip -->
+                    <com.google.android.material.chip.Chip
+                        android:id="@+id/chipDetailCategory"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="12dp"
+                        android:text="@string/sample_detail_category"
+                        android:textColor="@color/on_primary_container"
+                        android:textSize="@dimen/text_size_small"
+                        app:chipBackgroundColor="@color/primary_container"
+                        app:chipCornerRadius="@dimen/spacing_medium"
+                        app:chipIcon="@drawable/ic_food"
+                        app:chipIconSize="18dp"
+                        app:chipMinHeight="32dp"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@id/tvDetailAmount" />
+
+                    <!-- Expense Date -->
+                    <TextView
+                        android:id="@+id/tvDetailDate"
+                        style="@style/TextAppearance.Material3.BodyMedium"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="12dp"
+                        android:textColor="@color/finance_text_secondary"
+                        android:textSize="@dimen/text_size_small"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@id/chipDetailCategory"
+                        tools:text="@string/sample_detail_date" />
+
+                </androidx.constraintlayout.widget.ConstraintLayout>
+
+            </com.google.android.material.card.MaterialCardView>
+
+            <!-- ============================================================ -->
+            <!-- CARD 2: EXPENSE INFORMATION                                   -->
+            <!-- ============================================================ -->
+            <com.google.android.material.card.MaterialCardView
+                android:id="@+id/cardExpenseInfo"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/spacing_medium"
+                app:cardBackgroundColor="@color/finance_card"
+                app:cardCornerRadius="@dimen/card_corner_radius"
+                app:cardElevation="2dp"
+                app:contentPadding="@dimen/card_padding"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/cardExpenseSummary">
+
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+
+                    <!-- Section Title -->
+                    <TextView
+                        android:id="@+id/tvInfoSectionTitle"
+                        style="@style/TextAppearance.Material3.TitleMedium"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:text="@string/expense_information"
+                        android:textColor="@color/finance_text_primary"
+                        android:textSize="16sp"
+                        android:textStyle="bold"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent" />
+
+                    <!-- Divider -->
+                    <View
+                        android:id="@+id/dividerInfo"
+                        android:layout_width="0dp"
+                        android:layout_height="1dp"
+                        android:layout_marginTop="12dp"
+                        android:background="@color/outline_variant"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@id/tvInfoSectionTitle" />
+
+                    <!-- ===== Row: Category ===== -->
+                    <ImageView
+                        android:id="@+id/ivInfoCategoryIcon"
+                        android:layout_width="20dp"
+                        android:layout_height="20dp"
+                        android:layout_marginTop="16dp"
+                        android:importantForAccessibility="no"
+                        android:src="@drawable/ic_category_outline"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@id/dividerInfo"
+                        app:tint="@color/finance_primary" />
+
+                    <TextView
+                        android:id="@+id/tvInfoCategoryLabel"
+                        style="@style/TextAppearance.Material3.BodySmall"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="12dp"
+                        android:text="@string/category_hint"
+                        android:textColor="@color/finance_text_secondary"
+                        android:textSize="@dimen/text_size_small"
+                        app:layout_constraintBottom_toBottomOf="@id/ivInfoCategoryIcon"
+                        app:layout_constraintStart_toEndOf="@id/ivInfoCategoryIcon"
+                        app:layout_constraintTop_toTopOf="@id/ivInfoCategoryIcon" />
+
+                    <TextView
+                        android:id="@+id/tvInfoCategory"
+                        style="@style/TextAppearance.Material3.BodyMedium"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:textColor="@color/finance_text_primary"
+                        android:textSize="@dimen/text_size_body"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintTop_toTopOf="@id/ivInfoCategoryIcon"
+                        tools:text="@string/sample_detail_category" />
+
+                    <!-- ===== Row: Payment Method ===== -->
+                    <ImageView
+                        android:id="@+id/ivInfoPaymentIcon"
+                        android:layout_width="20dp"
+                        android:layout_height="20dp"
+                        android:layout_marginTop="16dp"
+                        android:importantForAccessibility="no"
+                        android:src="@drawable/ic_payment"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@id/ivInfoCategoryIcon"
+                        app:tint="@color/finance_primary" />
+
+                    <TextView
+                        android:id="@+id/tvInfoPaymentLabel"
+                        style="@style/TextAppearance.Material3.BodySmall"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="12dp"
+                        android:text="@string/payment_method"
+                        android:textColor="@color/finance_text_secondary"
+                        android:textSize="@dimen/text_size_small"
+                        app:layout_constraintBottom_toBottomOf="@id/ivInfoPaymentIcon"
+                        app:layout_constraintStart_toEndOf="@id/ivInfoPaymentIcon"
+                        app:layout_constraintTop_toTopOf="@id/ivInfoPaymentIcon" />
+
+                    <TextView
+                        android:id="@+id/tvInfoPayment"
+                        style="@style/TextAppearance.Material3.BodyMedium"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:textColor="@color/finance_text_primary"
+                        android:textSize="@dimen/text_size_body"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintTop_toTopOf="@id/ivInfoPaymentIcon"
+                        tools:text="@string/sample_detail_payment" />
+
+                    <!-- ===== Row: Date ===== -->
+                    <ImageView
+                        android:id="@+id/ivInfoDateIcon"
+                        android:layout_width="20dp"
+                        android:layout_height="20dp"
+                        android:layout_marginTop="16dp"
+                        android:importantForAccessibility="no"
+                        android:src="@drawable/ic_calendar"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@id/ivInfoPaymentIcon"
+                        app:tint="@color/finance_primary" />
+
+                    <TextView
+                        android:id="@+id/tvInfoDateLabel"
+                        style="@style/TextAppearance.Material3.BodySmall"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="12dp"
+                        android:text="@string/date_hint"
+                        android:textColor="@color/finance_text_secondary"
+                        android:textSize="@dimen/text_size_small"
+                        app:layout_constraintBottom_toBottomOf="@id/ivInfoDateIcon"
+                        app:layout_constraintStart_toEndOf="@id/ivInfoDateIcon"
+                        app:layout_constraintTop_toTopOf="@id/ivInfoDateIcon" />
+
+                    <TextView
+                        android:id="@+id/tvInfoDate"
+                        style="@style/TextAppearance.Material3.BodyMedium"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:textColor="@color/finance_text_primary"
+                        android:textSize="@dimen/text_size_body"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintTop_toTopOf="@id/ivInfoDateIcon"
+                        tools:text="@string/sample_detail_date" />
+
+                    <!-- ===== Row: Time ===== -->
+                    <ImageView
+                        android:id="@+id/ivInfoTimeIcon"
+                        android:layout_width="20dp"
+                        android:layout_height="20dp"
+                        android:layout_marginTop="16dp"
+                        android:importantForAccessibility="no"
+                        android:src="@drawable/ic_time"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@id/ivInfoDateIcon"
+                        app:tint="@color/finance_primary" />
+
+                    <TextView
+                        android:id="@+id/tvInfoTimeLabel"
+                        style="@style/TextAppearance.Material3.BodySmall"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="12dp"
+                        android:text="@string/expense_time"
+                        android:textColor="@color/finance_text_secondary"
+                        android:textSize="@dimen/text_size_small"
+                        app:layout_constraintBottom_toBottomOf="@id/ivInfoTimeIcon"
+                        app:layout_constraintStart_toEndOf="@id/ivInfoTimeIcon"
+                        app:layout_constraintTop_toTopOf="@id/ivInfoTimeIcon" />
+
+                    <TextView
+                        android:id="@+id/tvInfoTime"
+                        style="@style/TextAppearance.Material3.BodyMedium"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:textColor="@color/finance_text_primary"
+                        android:textSize="@dimen/text_size_body"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintTop_toTopOf="@id/ivInfoTimeIcon"
+                        tools:text="@string/sample_detail_time" />
+
+                    <!-- ===== Row: Notes ===== -->
+                    <ImageView
+                        android:id="@+id/ivInfoNotesIcon"
+                        android:layout_width="20dp"
+                        android:layout_height="20dp"
+                        android:layout_marginTop="16dp"
+                        android:importantForAccessibility="no"
+                        android:src="@drawable/ic_notes"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@id/ivInfoTimeIcon"
+                        app:tint="@color/finance_primary" />
+
+                    <TextView
+                        android:id="@+id/tvInfoNotesLabel"
+                        style="@style/TextAppearance.Material3.BodySmall"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="12dp"
+                        android:text="@string/expense_notes"
+                        android:textColor="@color/finance_text_secondary"
+                        android:textSize="@dimen/text_size_small"
+                        app:layout_constraintBottom_toBottomOf="@id/ivInfoNotesIcon"
+                        app:layout_constraintStart_toEndOf="@id/ivInfoNotesIcon"
+                        app:layout_constraintTop_toTopOf="@id/ivInfoNotesIcon" />
+
+                    <TextView
+                        android:id="@+id/tvInfoNotes"
+                        style="@style/TextAppearance.Material3.BodyMedium"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:textColor="@color/finance_text_primary"
+                        android:textSize="@dimen/text_size_body"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintTop_toTopOf="@id/ivInfoNotesIcon"
+                        tools:text="@string/sample_detail_notes" />
+
+                </androidx.constraintlayout.widget.ConstraintLayout>
+
+            </com.google.android.material.card.MaterialCardView>
+
+            <!-- ============================================================ -->
+            <!-- CARD 3: ACTIONS                                               -->
+            <!-- ============================================================ -->
+            <com.google.android.material.card.MaterialCardView
+                android:id="@+id/cardActions"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/spacing_medium"
+                app:cardBackgroundColor="@color/finance_card"
+                app:cardCornerRadius="@dimen/card_corner_radius"
+                app:cardElevation="2dp"
+                app:contentPadding="@dimen/card_padding"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/cardExpenseInfo">
+
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+
+                    <!-- Section Title -->
+                    <TextView
+                        android:id="@+id/tvActionsSectionTitle"
+                        style="@style/TextAppearance.Material3.TitleMedium"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:text="@string/actions"
+                        android:textColor="@color/finance_text_primary"
+                        android:textSize="16sp"
+                        android:textStyle="bold"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent" />
+
+                    <!-- Divider -->
+                    <View
+                        android:id="@+id/dividerActions"
+                        android:layout_width="0dp"
+                        android:layout_height="1dp"
+                        android:layout_marginTop="12dp"
+                        android:background="@color/outline_variant"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@id/tvActionsSectionTitle" />
+
+                    <!-- Edit Expense - Filled Button -->
+                    <com.google.android.material.button.MaterialButton
+                        android:id="@+id/btnEditExpense"
+                        android:layout_width="0dp"
+                        android:layout_height="56dp"
+                        android:layout_marginTop="@dimen/spacing_large"
+                        android:backgroundTint="@color/finance_primary"
+                        android:fontFamily="sans-serif-medium"
+                        android:insetTop="0dp"
+                        android:insetBottom="0dp"
+                        android:letterSpacing="0.01"
+                        android:text="@string/edit_expense"
+                        android:textAllCaps="false"
+                        android:textColor="@color/white"
+                        android:textSize="16sp"
+                        app:cornerRadius="@dimen/button_corner_radius"
+                        app:elevation="2dp"
+                        app:icon="@drawable/ic_edit"
+                        app:iconGravity="textStart"
+                        app:iconSize="20dp"
+                        app:iconTint="@color/white"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@id/dividerActions" />
+
+                    <!-- Delete Expense - Outlined Button -->
+                    <com.google.android.material.button.MaterialButton
+                        android:id="@+id/btnDeleteExpense"
+                        style="@style/Widget.Material3.Button.OutlinedButton"
+                        android:layout_width="0dp"
+                        android:layout_height="56dp"
+                        android:layout_marginTop="@dimen/spacing_medium"
+                        android:backgroundTint="@color/finance_card"
+                        android:fontFamily="sans-serif-medium"
+                        android:insetTop="0dp"
+                        android:insetBottom="0dp"
+                        android:letterSpacing="0.01"
+                        android:text="@string/delete_expense"
+                        android:textAllCaps="false"
+                        android:textColor="@color/error"
+                        android:textSize="16sp"
+                        app:cornerRadius="@dimen/button_corner_radius"
+                        app:icon="@drawable/ic_delete"
+                        app:iconGravity="textStart"
+                        app:iconSize="20dp"
+                        app:iconTint="@color/error"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@id/btnEditExpense"
+                        app:strokeColor="@color/error"
+                        app:strokeWidth="1.5dp" />
+
+                </androidx.constraintlayout.widget.ConstraintLayout>
+
+            </com.google.android.material.card.MaterialCardView>
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+    </androidx.core.widget.NestedScrollView>
+
+</androidx.coordinatorlayout.widget.CoordinatorLayout>

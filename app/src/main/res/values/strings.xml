@@ -98,6 +98,106 @@
     <string name="error_amount_required">Amount required</string>
     <string name="error_category_required">Category required</string>
 
+    <!-- Expense Details Screen -->
+    <string name="expense_details">Expense Details</string>
+    <string name="expense_information">Expense Information</string>
+    <string name="actions">Actions</string>
+    <string name="edit_expense">Edit Expense</string>
+    <string name="delete_expense">Delete Expense</string>
+    <string name="payment_method">Payment Method</string>
+    <string name="expense_time">Time</string>
+    <string name="expense_notes">Notes</string>
+
+    <!-- Sample Expense Detail Values -->
+    <string name="sample_detail_title">Lunch</string>
+    <string name="sample_detail_amount">Rs. 850.00</string>
+    <string name="sample_detail_category">Food</string>
+    <string name="sample_detail_date">15 July 2026</string>
+    <string name="sample_detail_time">1:30 PM</string>
+    <string name="sample_detail_payment">Cash</string>
+    <string name="sample_detail_notes">Lunch with friends after class.</string>
+    <string name="sample_toast_placeholder">%1$s — coming soon in a future update</string>
+    <string name="menu_edit">Edit</string>
+    <string name="menu_delete">Delete</string>
+
+    <!-- Expense History Screen -->
+    <string name="expense_history">Expense History</string>
+    <string name="summary_total_expenses">Total Expenses</string>
+    <string name="summary_this_month">This Month</string>
+    <string name="search_expenses_hint">Search expenses&#8230;</string>
+    <string name="chip_all">All</string>
+    <string name="empty_title">No Expenses Yet</string>
+    <string name="empty_description">Start tracking your spending by adding your first expense.</string>
+    <string name="empty_add_expense">Add Expense</string>
+    <string name="sample_history_transactions_count">124 Transactions</string>
+    <string name="sample_history_total">Rs. 48,650</string>
+
+    <!-- Sample History Items (12+ items) -->
+    <string name="sample_history_title_1">Lunch</string>
+    <string name="sample_history_cat_1">Food</string>
+    <string name="sample_history_date_1">15 July 2026</string>
+    <string name="sample_history_amount_1">850</string>
+
+    <string name="sample_history_title_2">Fuel</string>
+    <string name="sample_history_cat_2">Transport</string>
+    <string name="sample_history_date_2">14 July 2026</string>
+    <string name="sample_history_amount_2">3500</string>
+
+    <string name="sample_history_title_3">Groceries</string>
+    <string name="sample_history_cat_3">Shopping</string>
+    <string name="sample_history_date_3">13 July 2026</string>
+    <string name="sample_history_amount_3">2750</string>
+
+    <string name="sample_history_title_4">Electricity Bill</string>
+    <string name="sample_history_cat_4">Bills</string>
+    <string name="sample_history_date_4">12 July 2026</string>
+    <string name="sample_history_amount_4">5200</string>
+
+    <string name="sample_history_title_5">Netflix</string>
+    <string name="sample_history_cat_5">Entertainment</string>
+    <string name="sample_history_date_5">11 July 2026</string>
+    <string name="sample_history_amount_5">1200</string>
+
+    <string name="sample_history_title_6">Doctor Visit</string>
+    <string name="sample_history_cat_6">Health</string>
+    <string name="sample_history_date_6">10 July 2026</string>
+    <string name="sample_history_amount_6">2000</string>
+
+    <string name="sample_history_title_7">Course Fee</string>
+    <string name="sample_history_cat_7">Education</string>
+    <string name="sample_history_date_7">9 July 2026</string>
+    <string name="sample_history_amount_7">8500</string>
+
+    <string name="sample_history_title_8">Dinner</string>
+    <string name="sample_history_cat_8">Food</string>
+    <string name="sample_history_date_8">8 July 2026</string>
+    <string name="sample_history_amount_8">1450</string>
+
+    <string name="sample_history_title_9">Bus Pass</string>
+    <string name="sample_history_cat_9">Transport</string>
+    <string name="sample_history_date_9">7 July 2026</string>
+    <string name="sample_history_amount_9">2500</string>
+
+    <string name="sample_history_title_10">Clothing</string>
+    <string name="sample_history_cat_10">Shopping</string>
+    <string name="sample_history_date_10">6 July 2026</string>
+    <string name="sample_history_amount_10">4200</string>
+
+    <string name="sample_history_title_11">Internet Bill</string>
+    <string name="sample_history_cat_11">Bills</string>
+    <string name="sample_history_date_11">5 July 2026</string>
+    <string name="sample_history_amount_11">1899</string>
+
+    <string name="sample_history_title_12">Movie Tickets</string>
+    <string name="sample_history_cat_12">Entertainment</string>
+    <string name="sample_history_date_12">4 July 2026</string>
+    <string name="sample_history_amount_12">1200</string>
+
+    <!-- Expense History Content Descriptions -->
+    <string name="cd_filter">Filter expenses</string>
+    <string name="cd_add_expense_fab">Add new expense</string>
+    <string name="cd_empty_illustration">Empty state illustration</string>
+
     <!-- Content Descriptions -->
     <string name="cd_profile_avatar">Profile avatar</string>
     <string name="cd_add_expense">Add new expense</string>
