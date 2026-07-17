@@ -60,7 +60,8 @@ class MainActivity : AppCompatActivity() {
                     true
                 }
                 R.id.nav_analytics -> {
-                    showComingSoonToast(getString(R.string.nav_analytics))
+                    val intent = Intent(this, AnalyticsActivity::class.java)
+                    startActivity(intent)
                     true
                 }
                 R.id.nav_profile -> {
