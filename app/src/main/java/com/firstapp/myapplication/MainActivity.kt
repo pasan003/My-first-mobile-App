@@ -2,7 +2,6 @@ package com.firstapp.myapplication
 
 import android.content.Intent
 import android.os.Bundle
-import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.recyclerview.widget.DividerItemDecoration
@@ -38,14 +37,20 @@ class MainActivity : AppCompatActivity() {
             val intent = Intent(this, ExpenseHistoryActivity::class.java)
             startActivity(intent)
         }
+
+        // Profile avatar (top-right) opens Profile & Settings screen
+        binding.cardProfileAvatar.setOnClickListener {
+            val intent = Intent(this, ProfileSettingsActivity::class.java)
+            startActivity(intent)
+        }
     }
 
     /**
      * Sets up the bottom navigation bar to switch between screens.
      * - Home: Stays on the current screen
      * - Categories: Opens CategoryManagerActivity
-     * - Analytics: Placeholder toast (future implementation)
-     * - Profile: Placeholder toast (future implementation)
+     * - Analytics: Opens AnalyticsActivity
+     * - Profile: Opens ProfileSettingsActivity
      */
     private fun setupBottomNavigation() {
         binding.bottomNavigation.setOnItemSelectedListener { menuItem ->
@@ -65,7 +70,8 @@ class MainActivity : AppCompatActivity() {
                     true
                 }
                 R.id.nav_profile -> {
-                    showComingSoonToast(getString(R.string.nav_profile))
+                    val intent = Intent(this, ProfileSettingsActivity::class.java)
+                    startActivity(intent)
                     true
                 }
                 else -> false
@@ -73,17 +79,6 @@ class MainActivity : AppCompatActivity() {
         }
         // Preselect the home tab
         binding.bottomNavigation.selectedItemId = R.id.nav_home
-    }
-
-    /**
-     * Shows a short toast indicating the feature is coming soon.
-     */
-    private fun showComingSoonToast(feature: String) {
-        Toast.makeText(
-            this,
-            getString(R.string.sample_toast_placeholder, feature),
-            Toast.LENGTH_SHORT
-        ).show()
     }
 
     /**
