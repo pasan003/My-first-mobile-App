@@ -1,5 +1,6 @@
 package com.firstapp.myapplication
 
+import android.content.Intent
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
@@ -66,6 +67,20 @@ class ExpenseHistoryActivity : AppCompatActivity() {
     }
 
     /**
+     * Returns an intent to open [ExpenseDetailActivity] populated with
+     * the given [transaction] data.
+     */
+    private fun getExpenseDetailIntent(transaction: Transaction): Intent {
+        return Intent(this, ExpenseDetailActivity::class.java).apply {
+            putExtra(ExpenseDetailActivity.EXTRA_TITLE, transaction.title)
+            putExtra(ExpenseDetailActivity.EXTRA_AMOUNT, transaction.amount)
+            putExtra(ExpenseDetailActivity.EXTRA_CATEGORY, transaction.category)
+            putExtra(ExpenseDetailActivity.EXTRA_DATE, transaction.date)
+            putExtra(ExpenseDetailActivity.EXTRA_ICON_RES_ID, transaction.iconResId)
+        }
+    }
+
+    /**
      * Shows a short toast as a placeholder for future filter functionality.
      */
     private fun showPlaceholderToast(action: String) {
@@ -82,7 +97,9 @@ class ExpenseHistoryActivity : AppCompatActivity() {
      */
     private fun setupRecyclerView() {
         val sampleData = getSampleHistoryData()
-        val adapter = ExpenseHistoryAdapter()
+        val adapter = ExpenseHistoryAdapter { transaction ->
+            startActivity(getExpenseDetailIntent(transaction))
+        }
         adapter.submitList(sampleData)
         binding.rvExpenseHistory.adapter = adapter
 

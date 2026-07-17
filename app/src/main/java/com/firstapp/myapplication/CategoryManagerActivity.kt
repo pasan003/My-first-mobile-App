@@ -39,6 +39,7 @@ class CategoryManagerActivity : AppCompatActivity() {
 
         setupToolbar()
         setupRecyclerView()
+        setupFab()
     }
 
     /**
@@ -66,6 +67,19 @@ class CategoryManagerActivity : AppCompatActivity() {
                 true
             }
             else -> super.onOptionsItemSelected(item)
+        }
+    }
+
+    /**
+     * Sets up the Floating Action Button to show a placeholder message.
+     */
+    private fun setupFab() {
+        binding.fabAddCategory.setOnClickListener {
+            Toast.makeText(
+                this,
+                getString(R.string.add_category_placeholder),
+                Toast.LENGTH_SHORT
+            ).show()
         }
     }
 

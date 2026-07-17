@@ -130,51 +130,16 @@ class ProfileSettingsActivity : AppCompatActivity() {
 
     /**
      * Sets up click listeners for interactive elements.
-     * All show placeholder toasts — no actual functionality.
+     * Only the logout button shows a placeholder message.
      */
     private fun setupClickListeners() {
-        // Edit Profile
-        binding.ivEditProfile.setOnClickListener {
-            showPlaceholderToast(getString(R.string.cd_edit_profile))
-        }
-
-        // Budget Reminder Switch
-        binding.switchBudgetReminder.setOnCheckedChangeListener { _, isChecked ->
-            val status = if (isChecked) "enabled" else "disabled"
-            showPlaceholderToast("Budget Reminder $status")
-        }
-
-        // Application Settings rows (use .root to access the root View of the included layout)
-        binding.rowNotifications.root.setOnClickListener {
-            showPlaceholderToast(getString(R.string.profile_notifications))
-        }
-        binding.rowLanguage.root.setOnClickListener {
-            showPlaceholderToast(getString(R.string.profile_language))
-        }
-        binding.rowDateFormat.root.setOnClickListener {
-            showPlaceholderToast(getString(R.string.profile_date_format))
-        }
-        binding.rowCurrencyFormat.root.setOnClickListener {
-            showPlaceholderToast(getString(R.string.profile_currency_format))
-        }
-
-        // Help & Support rows
-        binding.rowHelpCenter.root.setOnClickListener {
-            showPlaceholderToast(getString(R.string.profile_help_center))
-        }
-        binding.rowContactSupport.root.setOnClickListener {
-            showPlaceholderToast(getString(R.string.profile_contact_support))
-        }
-        binding.rowPrivacyPolicy.root.setOnClickListener {
-            showPlaceholderToast(getString(R.string.profile_privacy_policy))
-        }
-        binding.rowTermsConditions.root.setOnClickListener {
-            showPlaceholderToast(getString(R.string.profile_terms_conditions))
-        }
-
-        // Logout
+        // Logout — place holder for future implementation
         binding.btnLogout.setOnClickListener {
-            showPlaceholderToast(getString(R.string.profile_logout))
+            Toast.makeText(
+                this,
+                getString(R.string.feature_coming_soon),
+                Toast.LENGTH_SHORT
+            ).show()
         }
     }
 }
