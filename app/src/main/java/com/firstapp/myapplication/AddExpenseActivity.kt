@@ -119,38 +119,20 @@ class AddExpenseActivity : AppCompatActivity() {
     }
 
     /**
-     * Placeholder save handler. Displays a snackbar with the entered data.
-     * Will later be replaced with Room Database operations.
+     * Placeholder save handler. Shows a UI demonstration message
+     * and returns to the Dashboard.
      */
     private fun handleSave() {
-        val title = binding.tilExpenseTitle.editText?.text?.toString()
-        val amount = binding.tilAmount.editText?.text?.toString()
-        val category = binding.actvCategory.text.toString()
-        val date = binding.etDate.text.toString()
-        val paymentMethod = binding.actvPaymentMethod.text.toString()
-        val notes = binding.tilNotes.editText?.text?.toString()
+        // UI-only demonstration: show a snackbar and return to Dashboard
+        Snackbar.make(
+            binding.root,
+            getString(R.string.save_demo_message),
+            Snackbar.LENGTH_SHORT
+        ).show()
 
-        // UI-only: show a snackbar with the captured data
-        val summary = buildString {
-            append(getString(R.string.save_expense))
-            append(": ")
-            if (title.isNullOrBlank()) {
-                append(getString(R.string.error_title_required))
-            } else {
-                append(title)
-                append(" - Rs.")
-                append(amount ?: "0")
-            }
-        }
-
-        Snackbar.make(binding.root, summary, Snackbar.LENGTH_SHORT).show()
-
-        // Validation placeholders — toggle error visibility based on input
-        binding.tvTitleError.visibility =
-            if (title.isNullOrBlank()) android.view.View.VISIBLE else android.view.View.GONE
-        binding.tvAmountError.visibility =
-            if (amount.isNullOrBlank()) android.view.View.VISIBLE else android.view.View.GONE
-        binding.tvCategoryError.visibility =
-            if (category.isBlank()) android.view.View.VISIBLE else android.view.View.GONE
+        // Return to Dashboard after showing the snackbar
+        binding.root.postDelayed({
+            finish()
+        }, 800)
     }
 }
