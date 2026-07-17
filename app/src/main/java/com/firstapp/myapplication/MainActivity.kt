@@ -2,6 +2,7 @@ package com.firstapp.myapplication
 
 import android.content.Intent
 import android.os.Bundle
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.recyclerview.widget.DividerItemDecoration
@@ -19,12 +20,9 @@ class MainActivity : AppCompatActivity() {
 
         setupRecyclerView()
         setupClickListeners()
+        setupBottomNavigation()
     }
 
-    /**
-     * Sets up click listeners, including the FAB to navigate to AddExpenseActivity
-     * and transaction item taps to open ExpenseDetailActivity.
-     */
     /**
      * Sets up click listeners, including the FAB to navigate to AddExpenseActivity,
      * transaction item taps to open ExpenseDetailActivity,
@@ -40,6 +38,51 @@ class MainActivity : AppCompatActivity() {
             val intent = Intent(this, ExpenseHistoryActivity::class.java)
             startActivity(intent)
         }
+    }
+
+    /**
+     * Sets up the bottom navigation bar to switch between screens.
+     * - Home: Stays on the current screen
+     * - Categories: Opens CategoryManagerActivity
+     * - Analytics: Placeholder toast (future implementation)
+     * - Profile: Placeholder toast (future implementation)
+     */
+    private fun setupBottomNavigation() {
+        binding.bottomNavigation.setOnItemSelectedListener { menuItem ->
+            when (menuItem.itemId) {
+                R.id.nav_home -> {
+                    // Already on home — do nothing
+                    true
+                }
+                R.id.nav_categories -> {
+                    val intent = Intent(this, CategoryManagerActivity::class.java)
+                    startActivity(intent)
+                    true
+                }
+                R.id.nav_analytics -> {
+                    showComingSoonToast(getString(R.string.nav_analytics))
+                    true
+                }
+                R.id.nav_profile -> {
+                    showComingSoonToast(getString(R.string.nav_profile))
+                    true
+                }
+                else -> false
+            }
+        }
+        // Preselect the home tab
+        binding.bottomNavigation.selectedItemId = R.id.nav_home
+    }
+
+    /**
+     * Shows a short toast indicating the feature is coming soon.
+     */
+    private fun showComingSoonToast(feature: String) {
+        Toast.makeText(
+            this,
+            getString(R.string.sample_toast_placeholder, feature),
+            Toast.LENGTH_SHORT
+        ).show()
     }
 
     /**
