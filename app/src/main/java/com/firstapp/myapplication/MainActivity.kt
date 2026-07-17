@@ -22,12 +22,37 @@ class MainActivity : AppCompatActivity() {
     }
 
     /**
-     * Sets up click listeners, including the FAB to navigate to AddExpenseActivity.
+     * Sets up click listeners, including the FAB to navigate to AddExpenseActivity
+     * and transaction item taps to open ExpenseDetailActivity.
+     */
+    /**
+     * Sets up click listeners, including the FAB to navigate to AddExpenseActivity,
+     * transaction item taps to open ExpenseDetailActivity,
+     * and the View All link to open ExpenseHistoryActivity.
      */
     private fun setupClickListeners() {
         binding.fabAddExpense.setOnClickListener {
             val intent = Intent(this, AddExpenseActivity::class.java)
             startActivity(intent)
+        }
+
+        binding.tvViewAll.setOnClickListener {
+            val intent = Intent(this, ExpenseHistoryActivity::class.java)
+            startActivity(intent)
+        }
+    }
+
+    /**
+     * Returns an intent to open [ExpenseDetailActivity] populated with
+     * the given [transaction] data.
+     */
+    private fun getExpenseDetailIntent(transaction: Transaction): Intent {
+        return Intent(this, ExpenseDetailActivity::class.java).apply {
+            putExtra(ExpenseDetailActivity.EXTRA_TITLE, transaction.title)
+            putExtra(ExpenseDetailActivity.EXTRA_AMOUNT, transaction.amount)
+            putExtra(ExpenseDetailActivity.EXTRA_CATEGORY, transaction.category)
+            putExtra(ExpenseDetailActivity.EXTRA_DATE, transaction.date)
+            putExtra(ExpenseDetailActivity.EXTRA_ICON_RES_ID, transaction.iconResId)
         }
     }
 
@@ -36,7 +61,9 @@ class MainActivity : AppCompatActivity() {
      */
     private fun setupRecyclerView() {
         val sampleTransactions = getSampleTransactions()
-        val adapter = TransactionAdapter()
+        val adapter = TransactionAdapter { transaction ->
+            startActivity(getExpenseDetailIntent(transaction))
+        }
         adapter.submitList(sampleTransactions)
         binding.rvRecentTransactions.adapter = adapter
 
