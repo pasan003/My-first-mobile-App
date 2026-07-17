@@ -37,20 +37,23 @@ My-first-mobile-App/
 │   ├── build.gradle.kts              # Module build config (SDK versions, deps, viewBinding)
 │   └── src/
 │       └── main/
-│           ├── AndroidManifest.xml           # 4 activities declared
+│           ├── AndroidManifest.xml           # 5 activities declared
 │           ├── java/com/firstapp/myapplication/
 │           │   ├── MainActivity.kt           # Dashboard screen (home)
 │           │   ├── AddExpenseActivity.kt     # Add expense form
 │           │   ├── ExpenseDetailActivity.kt  # Single expense detail view
 │           │   ├── ExpenseHistoryActivity.kt # Full expense history list
+│           │   ├── CategoryManagerActivity.kt # Category management screen
 │           │   ├── Transaction.kt            # Data model (data class)
+│           │   ├── CategoryItem.kt           # Category data model (data class)
 │           │   ├── TransactionAdapter.kt     # RecyclerView adapter (dashboard list)
-│           │   └── ExpenseHistoryAdapter.kt  # RecyclerView adapter (history list)
+│           │   ├── ExpenseHistoryAdapter.kt  # RecyclerView adapter (history list)
+│           │   └── CategoryAdapter.kt        # RecyclerView adapter (category list)
 │           ├── res/
 │           │   ├── color/                    # Color state selectors (bottom nav, text fields)
-│           │   ├── drawable/                 # 30+ vector drawables (icons, dividers, gradients)
-│           │   ├── layout/                   # 6 layout XML files (see Section 3)
-│           │   ├── menu/                     # 4 menu XML files (toolbars + bottom nav)
+│           │   ├── drawable/                 # 31+ vector drawables (icons, dividers, gradients)
+│           │   ├── layout/                   # 10 layout XML files (see Section 3)
+│           │   ├── menu/                     # 5 menu XML files (toolbars + bottom nav)
 │           │   ├── mipmap-anydpi/             # Launcher icons
 │           │   ├── values/
 │           │   │   ├── colors.xml            # Full MD3 color palette + finance-specific colors
@@ -68,10 +71,10 @@ My-first-mobile-App/
 | Directory | Purpose |
 |-----------|---------|
 | `java/.../myapplication/` | All Kotlin source files (activities, data models, adapters) |
-| `res/layout/` | XML layout files for all screens and list items |
+| `res/layout/` | XML layout files for all screens, list items, dialogs, and empty states |
 | `res/drawable/` | Vector drawables (category icons, UI icons, dividers, splash logo) |
 | `res/color/` | Color state list selectors (e.g., checked/unchecked bottom nav tint) |
-| `res/menu/` | Toolbar menus and bottom navigation definition |
+| `res/menu/` | Toolbar menus, bottom navigation, and overflow menu definitions |
 | `res/values/` | Colors, dimensions, strings, and theme/style definitions |
 
 ---
@@ -94,6 +97,7 @@ Features on this screen:
 - Recent transactions section with "View All" link
 - FAB to add new expense
 - Bottom navigation bar (4 tabs: Home, Categories, Analytics, Profile)
+- **Bottom navigation wired**: Home stays active, Categories opens `CategoryManagerActivity`, Analytics and Profile show placeholder toasts
 
 ### 3.2 Add Expense
 
@@ -151,6 +155,37 @@ Features on this screen:
 - RecyclerView with 12 sample transactions
 - Empty state layout (hidden by default — icon, title, description, "Add Expense" button)
 
+### 3.5 Category Manager
+
+| Field | Value |
+|-------|-------|
+| **Screen Name** | Category Manager |
+| **Purpose** | Displays and manages expense categories (add, edit, delete) with UI dialogs ready for future database integration |
+| **Layout File** | `activity_category_manager.xml` |
+| **Activity** | `CategoryManagerActivity` |
+| **Current Status** | **Completed** (UI with sample data; add/edit/delete dialogs are visual only; FAB not wired) |
+
+Features on this screen:
+- **MaterialToolbar** with back arrow and more options overflow icon (placeholder toast)
+- **Summary card**: Label ("Categories"), description ("Total categories"), count badge (8) with `primary_container` background
+- **Search bar card**: Visual only — search icon + EditText (non-clickable/non-focusable)
+- **RecyclerView** with 8 sample categories, each displaying:
+  - Left color indicator (4dp wide vertical bar)
+  - Category icon in a rounded card with tinted background
+  - Category name (bold)
+  - Expense count with plural support (e.g., "42 Expenses", "1 Expense")
+  - Edit icon on the right (shows placeholder toast on tap)
+- **Empty state layout** (hidden by default, `visibility="gone"`):
+  - Rounded icon container with category outline icon
+  - Title: "No Categories Found"
+  - Description: "Create your first category to organize your expenses."
+  - "Add Category" button (UI only)
+- **Floating Action Button** (FAB) — positioned bottom-end, uses `ic_add` icon, primary background tint (not wired in code)
+
+**Planned enhancements (dialogs exist but not launched):**
+- **Add/Edit dialog** (`dialog_add_edit_category.xml`): Category name input, icon dropdown (`ExposedDropdownMenu` with `AppCompatAutoCompleteTextView`), horizontal color picker with 8 color circles (primary, secondary, tertiary, primary_container, secondary_container, error_container, income green, surface_variant), Cancel + Save buttons
+- **Delete dialog** (`dialog_delete_category.xml`): Warning icon in error container, title, message explaining expenses won't be removed, Cancel + Delete buttons (delete button has error background and delete icon)
+
 ---
 
 ## 4. Navigation Flow
@@ -162,7 +197,9 @@ MainActivity (Dashboard)
     │
     ├──→ ExpenseDetailActivity        (via transaction item tap)
     │
-    └──→ ExpenseHistoryActivity       (via "View All" link)
+    ├──→ ExpenseHistoryActivity       (via "View All" link)
+    │
+    └──→ CategoryManagerActivity      (via bottom navigation "Categories" tab)
 ```
 
 **Implementation details:**
@@ -170,10 +207,14 @@ MainActivity (Dashboard)
 - Activity parent relationships are declared in AndroidManifest (parentActivityName=".MainActivity").
 - `ExpenseDetailActivity` receives data via Intent extras.
 - Add Expense screen has a toolbar save action (menu item) but it does not pass data back yet.
-- Bottom navigation items exist visually but none are clickable — no navigation logic is wired.
+- Bottom navigation items are wired:
+  - **Home** → stays on current screen (already on dashboard)
+  - **Categories** → opens `CategoryManagerActivity` via explicit Intent
+  - **Analytics** → shows placeholder toast ("Analytics — coming soon in a future update")
+  - **Profile** → shows placeholder toast ("Profile — coming soon in a future update")
+  - Home tab is preselected on activity start
 
 **Planned navigation:**
-- Categories → Categories screen (not implemented)
 - Analytics → Analytics screen (not implemented)
 - Profile → Profile screen (not implemented)
 - Edit/Delete from Expense Detail → placeholder toasts (not implemented)
@@ -189,8 +230,12 @@ MainActivity (Dashboard)
 - ✅ **Add Expense UI** — form with all fields, dropdowns, date picker
 - ✅ **Expense Detail UI** — 3-card layout showing full expense info
 - ✅ **Expense History UI** — summary card, search bar, filter chips, list, empty state
+- ✅ **Category Manager UI** — full screen with summary card, search bar, category list, empty state, FAB
+- ✅ **Add/Edit Category Dialog** — name input, icon dropdown, color picker, save/cancel buttons
+- ✅ **Delete Category Dialog** — warning icon, explanation, confirm/cancel buttons
 - ✅ **RecyclerView (Dashboard)** — 5 recent transactions with DiffUtil
 - ✅ **RecyclerView (History)** — 12 transactions with DiffUtil
+- ✅ **RecyclerView (Categories)** — 8 categories with DiffUtil, color indicators, expense count plurals
 - ✅ **View Binding** — enabled across all activities
 - ✅ **Sample Data** — hardcoded sample transactions for UI demonstration
 - ✅ **Category-specific icons** — 8 unique vector drawables (food, transport, shopping, bills, entertainment, health, education, other)
@@ -199,6 +244,8 @@ MainActivity (Dashboard)
 - ✅ **Color state selectors** — bottom nav tint, text field hint/stroke colors
 - ✅ **Dashboard → Detail navigation** — transaction item tap opens detail with data
 - ✅ **Dashboard → History navigation** — "View All" link opens full history
+- ✅ **Dashboard → Category Manager** — bottom navigation "Categories" tab opens Category Manager
+- ✅ **Bottom Navigation** — partially wired (Home + Categories functional; Analytics + Profile show placeholder)
 
 ---
 
@@ -206,15 +253,16 @@ MainActivity (Dashboard)
 
 - 🔲 **Room Database** — persistence layer (not implemented)
 - 🔲 **CRUD Operations** — create, read, update, delete expenses (not implemented)
-- 🔲 **Categories Screen** — manage expense categories (not implemented)
 - 🔲 **Analytics Screen** — charts/graphs for spending (not implemented)
 - 🔲 **Profile Screen** — user settings (not implemented)
-- 🔲 **Search** — filter expenses by text (UI only, no logic)
+- 🔲 **Search** — filter expenses/categories by text (UI only, no logic)
 - 🔲 **Filtering** — filter by category chips (UI only, no logic)
 - 🔲 **Income Tracking** — differentiate income vs expense (isExpense field exists but no UI to add income)
 - 🔲 **Edit Expense** — update an existing expense
 - 🔲 **Delete Expense** — remove an expense (with confirmation)
-- 🔲 **Bottom Navigation** — wire up Categories, Analytics, Profile tabs
+- 🔲 **FAB wiring** — Category Manager FAB and empty state "Add Category" button are UI only
+- 🔲 **Category CRUD** — add/edit/delete category dialogs exist but are not launched or wired
+- 🔲 **Category Manager toolbar** — more options menu shows placeholder toast
 - 🔲 **Real-time Greeting** — dynamic greeting based on time of day
 - 🔲 **Data Validation** — proper form validation (amount format, required fields, etc.)
 
@@ -233,7 +281,19 @@ MainActivity (Dashboard)
 | `iconResId` | `Int` | — | Drawable resource ID for the category icon |
 | `isExpense` | `Boolean` | `true` | Whether it's an expense (true) or income (false) |
 
-**Note:** This is the **only** data model. There is no `id` field yet (needed for Room). The model is a Kotlin `data class` with no database annotations. All data is currently hardcoded sample data.
+**Note:** This model has no `id` field yet (needed for Room). All data is currently hardcoded sample data.
+
+### CategoryItem
+
+| Field | Type | Default | Purpose |
+|-------|------|---------|---------|
+| `id` | `Int` | — | Unique identifier (designed for future Room `@PrimaryKey` with `autoGenerate = true`) |
+| `name` | `String` | — | Display name of the category (e.g., "Food", "Transport") |
+| `iconResId` | `Int` | — | Drawable resource ID for the category icon |
+| `expenseCount` | `Int` | — | Number of expenses in this category (sample data for now) |
+| `colorIndicatorResId` | `Int` | — | Color resource ID for the category color indicator (e.g., `primary_container`, `secondary_container`) |
+
+**Note:** Designed for future Room Database integration. The `id` field will serve as the `@PrimaryKey`.
 
 ---
 
@@ -263,6 +323,18 @@ MainActivity (Dashboard)
 | **Click Handler** | Lambda `onItemClick: ((Transaction) -> Unit)?` passed via constructor (currently unused) |
 | **Item Decoration** | `DividerItemDecoration` with custom `divider_transaction` drawable |
 
+### 8.3 Category Manager List
+
+| Aspect | Details |
+|--------|---------|
+| **Adapter** | `CategoryAdapter` |
+| **ViewHolder** | `CategoryAdapter.ViewHolder` |
+| **Item Layout** | `item_category.xml` |
+| **Data Source** | Hardcoded sample list (8 items) in `CategoryManagerActivity.getSampleCategories()` |
+| **DiffUtil** | `CategoryAdapter.DiffCallback` — matches on `id` for item identity, full data class equality for content comparison |
+| **Click Handler** | Lambda `onEditClick: ((CategoryItem) -> Unit)?` passed via constructor (currently shows placeholder toast) |
+| **Item Decoration** | None (items have built-in `layout_marginBottom` for spacing) |
+
 ---
 
 ## 9. Resources
@@ -271,7 +343,7 @@ MainActivity (Dashboard)
 
 Well-organized into sections:
 - **MD3 Theme Colors** — Primary (deep teal `#0F766E`), Secondary (teal `#14B8A6`), Tertiary (amber `#F59E0B`), surface, background, error, outline
-- **Finance Theme Colors** — dedicated `finance_*` color set for the Add Expense screen
+- **Finance Theme Colors** — dedicated `finance_*` color set for the Add Expense and Category Manager screens
 - **Card & Balance Colors** — income card, expense card, balance card gradient endpoints
 - **Text Colors** — primary, secondary, hint, income (green), expense (red), white
 - **Legacy Colors** — black, white (kept for compatibility)
@@ -287,13 +359,14 @@ Uses Material 3 text appearances (`TextAppearance.Material3.*`) throughout — n
 
 ### Icons & Drawables
 
-30+ vector drawables in `res/drawable/`:
+31+ vector drawables in `res/drawable/`:
 - **Category icons:** `ic_food`, `ic_transport`, `ic_shopping`, `ic_bills`, `ic_entertainment`, `ic_health`, `ic_education`, `ic_category_outline`
 - **Navigation icons:** `ic_home`, `ic_categories`, `ic_analytics`, `ic_profile`
 - **Action icons:** `ic_add`, `ic_add_expense`, `ic_arrow_back`, `ic_filter`, `ic_search`, `ic_save`, `ic_edit`, `ic_delete`, `ic_calendar`, `ic_time`, `ic_payment`, `ic_notes`
+- **More options:** `ic_more_vert` (three-dot vertical menu icon)
 - **Other:** `ic_launcher_background`, `ic_launcher_foreground`, `ic_logo.png`, `splash_logo_wrapper`, `bg_balance_card` (gradient), `divider_transaction`
 
-**Consistency:** Colors are reused consistently via `@color/` references. The `finance_*` color set mirrors the MD3 colors for the Add/Detail screens but is a separate namespace. Category icons are 24-28dp with consistent styling.
+**Consistency:** Colors are reused consistently via `@color/` references. The `finance_*` color set mirrors the MD3 colors but is a separate namespace. Category icons are 24-28dp with consistent styling. The `ic_more_vert` icon uses `@color/finance_text_primary` tint.
 
 ---
 
@@ -343,9 +416,9 @@ Material Design 3 (Material You) with a **finance/expense tracking aesthetic**.
 - Content padding of 14-20dp
 
 ### Button Style
-- **Filled buttons:** Primary color background, white text, 16dp corner radius, 56dp height, icon + text
+- **Filled buttons:** Primary color background, white text, 16dp corner radius, 56dp height (standard), 48dp (dialog), icon + text
 - **Outlined buttons:** White background, primary/error stroke (1.5dp), 16dp corner radius
-- **FAB:** Primary color, white "+" icon, positioned above bottom navigation
+- **FAB:** Primary color, white "+" icon, positioned above bottom navigation or bottom-end
 
 ### Text Field Style
 - Outlined box style (`Widget.Material3.TextInputLayout.OutlinedBox`)
@@ -355,10 +428,10 @@ Material Design 3 (Material You) with a **finance/expense tracking aesthetic**.
 ### Navigation Style
 - **Toolbars:** White background, 2dp elevation, custom back arrow icon, title text
 - **Bottom Navigation:** White background, labeled mode, 4 tabs, custom tint selector (primary when checked, hint when unchecked)
-- **Overflow menus:** In Expense Detail (Edit, Delete) and Expense History (Filter)
+- **Overflow menus:** In Expense Detail (Edit, Delete), Expense History (Filter), and Category Manager (More Options)
 
 ### Overall UI Consistency
-High — all screens share the same color palette, card styles, button styles, and spacing conventions (`dimens.xml`). The Add Expense and Expense Detail screens use the `finance_*` color namespace which mirrors the MD3 palette. Formatting is consistent across all XML layouts.
+High — all screens share the same color palette, card styles, button styles, and spacing conventions (`dimens.xml`). The Category Manager uses the same `finance_*` color namespace as the Add Expense and Expense Detail screens. Formatting is consistent across all XML layouts.
 
 ---
 
@@ -367,34 +440,37 @@ High — all screens share the same color palette, card styles, button styles, a
 1. **No database (Room)** — all data is hardcoded sample data; app loses all state on restart
 2. **No ID on Transaction** — data class has no unique identifier, making database integration harder
 3. **Form validation is visual only** — error text views toggle visibility but no actual validation logic
-4. **Search is cosmetic** — EditText is non-clickable/non-focusable
+4. **Search is cosmetic** — EditText is non-clickable/non-focusable (both categories and history)
 5. **Filter chips are cosmetic** — no filtering logic is wired
-6. **Bottom navigation is cosmetic** — clicking Categories, Analytics, or Profile does nothing
-7. **Edit/Delete are placeholder toasts** — no actual functionality
-8. **No ViewModel/LiveData** — no architecture components; activities hold all logic
-9. **No dependency injection** — no Hilt/Dagger/Koin
-10. **Hardcoded greeting** — "Good Morning" is hardcoded regardless of time of day
-11. **No theme switching** — light theme only; no dark mode support
-12. **Similar add icon drawables** — `ic_add` and `ic_add_expense` both exist in drawable but only `ic_add` is used by the FAB
-13. **Divider drawable uses `android-color`** — `divider_transaction.xml` uses `android-color` instead of `android:color` (potential lint warning)
-14. **Time field gap** — `ExpenseDetailActivity` populates a `tvInfoTime` view but the `Transaction` data model has no `time` field, nor is time passed via Intent extras
-15. **ExpenseHistoryAdapter onClick unused** — the adapter accepts an `onItemClick` callback but `ExpenseHistoryActivity` does not pass one, so tapping history items does nothing
-14. **ExpenseHistoryActivity FAB** — the layout includes a FAB reference but it is not wired in the Activity
+6. **Edit/Delete are placeholder toasts** — no actual functionality
+7. **No ViewModel/LiveData** — no architecture components; activities hold all logic
+8. **No dependency injection** — no Hilt/Dagger/Koin
+9. **Hardcoded greeting** — "Good Morning" is hardcoded regardless of time of day
+10. **No theme switching** — light theme only; no dark mode support
+11. **Similar add icon drawables** — `ic_add` and `ic_add_expense` both exist but only `ic_add` is used
+12. **Divider drawable uses `android-color`** — `divider_transaction.xml` uses `android-color` instead of `android:color` (potential lint warning)
+13. **Time field gap** — `ExpenseDetailActivity` populates a `tvInfoTime` view but the `Transaction` data model has no `time` field
+14. **ExpenseHistoryAdapter onClick unused** — the adapter accepts an `onItemClick` callback but `ExpenseHistoryActivity` does not pass one
+15. **ExpenseHistoryActivity FAB** — the layout includes a FAB reference but it is not wired in the Activity
+16. **Category Manager FAB not wired** — FAB is UI only; does not launch the add dialog
+17. **Category Manager toolbar overflow** — "More options" shows a placeholder toast, no real menu
+18. **Category dialogs not launched** — `dialog_add_edit_category.xml` and `dialog_delete_category.xml` are designed but never shown via DialogFragment or AlertDialog
+19. **Category edit icon** — tapping edit on a category item shows a placeholder toast instead of the edit dialog
 
 ---
 
 ## 13. Next Recommended Tasks
 
-1. **Add Room Database** — create Entity, DAO, and Database classes; add `id: Long` field to Transaction with `@PrimaryKey(autoGenerate = true)`
-2. **Replace sample data with database queries** — update all adapters/activities to observe Room data
-3. **Add ViewModel + LiveData/Flow** — move data logic out of Activities for proper lifecycle management
-4. **Wire Add Expense save** — persist to Room database instead of showing snackbar
-5. **Wire Edit/Delete** — implement actual update and delete operations from Expense Detail
-6. **Wire Filter chips + Search** — implement query-based filtering
-7. **Add dark theme** — create `values-night/themes.xml` with dark color palette
-8. **Implement Categories screen** — show category-wise breakdown
+1. **Wire Category Manager dialogs** — launch `dialog_add_edit_category` and `dialog_delete_category` from FAB and edit icon clicks using `DialogFragment` or `AlertDialog`
+2. **Add Room Database** — create Entity, DAO, and Database classes; add `id: Long` field to Transaction with `@PrimaryKey(autoGenerate = true)`
+3. **Replace sample data with database queries** — update all adapters/activities to observe Room data
+4. **Add ViewModel + LiveData/Flow** — move data logic out of Activities for proper lifecycle management
+5. **Wire Add Expense save** — persist to Room database instead of showing snackbar
+6. **Wire Edit/Delete** — implement actual update and delete operations from Expense Detail
+7. **Wire Filter chips + Search** — implement query-based filtering for both expenses and categories
+8. **Add dark theme** — create `values-night/themes.xml` with dark color palette
 9. **Implement Analytics screen** — add charts (consider MPAndroidChart or similar)
-10. **Wire bottom navigation** — connect remaining tabs to their Activities
+10. **Implement Profile screen** — user settings
 11. **Add proper form validation** — validate amount format, required fields, etc.
 12. **Add navigation safeguards** — confirm dialog before discard/deletion
 
