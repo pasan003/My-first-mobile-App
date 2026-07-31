@@ -77,6 +77,7 @@
                         app:layout_constraintTop_toTopOf="parent">
 
                         <com.google.android.material.textfield.TextInputEditText
+                            android:id="@+id/etExpenseTitle"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:fontFamily="sans-serif"
@@ -130,6 +131,7 @@
                         app:prefixTextAppearance="@style/TextAppearance.Material3.BodyLarge">
 
                         <com.google.android.material.textfield.TextInputEditText
+                            android:id="@+id/etAmount"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:fontFamily="sans-serif"
@@ -315,6 +317,7 @@
                         app:layout_constraintTop_toBottomOf="@id/tilPaymentMethod">
 
                         <com.google.android.material.textfield.TextInputEditText
+                            android:id="@+id/etNotes"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:fontFamily="sans-serif"

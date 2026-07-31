@@ -90,9 +90,6 @@
         <item>@string/payment_digital_wallet</item>
     </string-array>
 
-    <!-- Date value -->
-    <string name="today_date_formatted">Today</string>
-
     <!-- Validation Error Placeholders -->
     <string name="error_title_required">Expense title required</string>
     <string name="error_amount_required">Amount required</string>
@@ -292,10 +289,10 @@
 
     <!-- Insights -->
     <string name="analytics_insights">Insights</string>
-    <string name="analytics_insight_highest_category">Highest spending category: Food</string>
-    <string name="analytics_insight_avg_daily">Average daily spending: Rs. 820</string>
-    <string name="analytics_insight_highest_day">Highest spending day: Friday</string>
-    <string name="analytics_insight_largest_expense">Largest single expense: Rs. 5,500</string>
+    <string name="analytics_insight_highest_category">Highest spending category: %1$s</string>
+    <string name="analytics_insight_avg_daily">Average daily spending: %1$s</string>
+    <string name="analytics_insight_highest_day">Highest spending day: %1$s</string>
+    <string name="analytics_insight_largest_expense">Largest single expense: %1$s</string>
 
     <!-- Analytics Empty State -->
     <string name="analytics_empty_title">No Analytics Available</string>
@@ -360,7 +357,28 @@
     <string name="cd_profile_back">Navigate back</string>
 
     <!-- Navigation Placeholder Messages -->
-    <string name="save_demo_message">UI demonstration only — no data saved</string>
-    <string name="add_category_placeholder">Add Category will be implemented later.</string>
     <string name="feature_coming_soon">Feature coming soon.</string>
+
+    <!-- ========================================== -->
+    <!-- ROOM DATABASE / CRUD MESSAGES             -->
+    <!-- ========================================== -->
+    <string name="expense_saved">Expense saved</string>
+    <string name="expense_updated">Expense updated</string>
+    <string name="expense_deleted">Expense deleted</string>
+    <string name="delete_expense_confirm_message">This expense will be permanently deleted.</string>
+    <string name="error_expense_not_found">Expense not found</string>
+    <string name="not_specified">Not specified</string>
+    <string name="error_fill_required_fields">Please fill in all required fields</string>
+    <string name="error_select_valid_category">Please select a valid category</string>
+
+    <string name="category_added">Category added</string>
+    <string name="category_updated">Category updated</string>
+    <string name="category_deleted">Category deleted</string>
+    <string name="error_category_name_required">Category name is required</string>
+    <string name="error_category_in_use">This category has %1$d expenses and cannot be deleted yet.</string>
+
+    <plurals name="transaction_count">
+        <item quantity="one">%d Transaction</item>
+        <item quantity="other">%d Transactions</item>
+    </plurals>
 </resources>
