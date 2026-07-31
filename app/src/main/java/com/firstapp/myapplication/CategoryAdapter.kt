@@ -17,7 +17,8 @@ import com.firstapp.myapplication.databinding.ItemCategoryBinding
  * @param onEditClick Callback invoked when the edit icon on a category is tapped.
  */
 class CategoryAdapter(
-    private val onEditClick: ((CategoryItem) -> Unit)? = null
+    private val onEditClick: ((CategoryItem) -> Unit)? = null,
+    private val onItemLongClick: ((CategoryItem) -> Unit)? = null
 ) : ListAdapter<CategoryItem, CategoryAdapter.ViewHolder>(DiffCallback()) {
 
     /**
@@ -26,7 +27,11 @@ class CategoryAdapter(
     class ViewHolder(private val binding: ItemCategoryBinding) :
         RecyclerView.ViewHolder(binding.root) {
 
-        fun bind(category: CategoryItem, onEditClick: ((CategoryItem) -> Unit)?) {
+        fun bind(
+            category: CategoryItem,
+            onEditClick: ((CategoryItem) -> Unit)?,
+            onItemLongClick: ((CategoryItem) -> Unit)?
+        ) {
             val context = binding.root.context
 
             // Set category icon
@@ -51,6 +56,12 @@ class CategoryAdapter(
             binding.ivEditCategory.setOnClickListener {
                 onEditClick?.invoke(category)
             }
+
+            // Long-press the item to delete the category
+            binding.root.setOnLongClickListener {
+                onItemLongClick?.invoke(category)
+                true
+            }
         }
     }
 
@@ -62,7 +73,7 @@ class CategoryAdapter(
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        holder.bind(getItem(position), onEditClick)
+        holder.bind(getItem(position), onEditClick, onItemLongClick)
     }
 
     /**

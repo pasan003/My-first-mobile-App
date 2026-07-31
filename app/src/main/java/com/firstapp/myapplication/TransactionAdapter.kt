@@ -74,10 +74,11 @@ class TransactionAdapter(
 
     /**
      * DiffUtil callback for efficient list updates.
+     * Matches on the database [Transaction.id] for stable item identity.
      */
     class DiffCallback : DiffUtil.ItemCallback<Transaction>() {
         override fun areItemsTheSame(oldItem: Transaction, newItem: Transaction): Boolean {
-            return oldItem.title == newItem.title && oldItem.date == newItem.date
+            return oldItem.id == newItem.id
         }
 
         override fun areContentsTheSame(oldItem: Transaction, newItem: Transaction): Boolean {

@@ -2,14 +2,19 @@ package com.firstapp.myapplication
 
 import android.content.Intent
 import android.os.Bundle
+import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.recyclerview.widget.DividerItemDecoration
 import com.firstapp.myapplication.databinding.ActivityMainBinding
+import com.firstapp.myapplication.utils.CurrencyUtils
+import com.firstapp.myapplication.viewmodel.ExpenseViewModel
 
 class MainActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityMainBinding
+    private val viewModel: ExpenseViewModel by viewModels()
+    private lateinit var adapter: TransactionAdapter
 
     override fun onCreate(savedInstanceState: Bundle?) {
         installSplashScreen()
@@ -20,6 +25,7 @@ class MainActivity : AppCompatActivity() {
         setupRecyclerView()
         setupClickListeners()
         setupBottomNavigation()
+        observeData()
     }
 
     /**
@@ -82,28 +88,22 @@ class MainActivity : AppCompatActivity() {
     }
 
     /**
-     * Returns an intent to open [ExpenseDetailActivity] populated with
-     * the given [transaction] data.
+     * Returns an intent to open [ExpenseDetailActivity] for the given transaction,
+     * passing the database id so the detail screen can load the real record.
      */
     private fun getExpenseDetailIntent(transaction: Transaction): Intent {
         return Intent(this, ExpenseDetailActivity::class.java).apply {
-            putExtra(ExpenseDetailActivity.EXTRA_TITLE, transaction.title)
-            putExtra(ExpenseDetailActivity.EXTRA_AMOUNT, transaction.amount)
-            putExtra(ExpenseDetailActivity.EXTRA_CATEGORY, transaction.category)
-            putExtra(ExpenseDetailActivity.EXTRA_DATE, transaction.date)
-            putExtra(ExpenseDetailActivity.EXTRA_ICON_RES_ID, transaction.iconResId)
+            putExtra(ExpenseDetailActivity.EXTRA_EXPENSE_ID, transaction.id)
         }
     }
 
     /**
-     * Sets up the RecyclerView with sample transaction data.
+     * Sets up the RecyclerView and observes the Room database for changes.
      */
     private fun setupRecyclerView() {
-        val sampleTransactions = getSampleTransactions()
-        val adapter = TransactionAdapter { transaction ->
+        adapter = TransactionAdapter { transaction ->
             startActivity(getExpenseDetailIntent(transaction))
         }
-        adapter.submitList(sampleTransactions)
         binding.rvRecentTransactions.adapter = adapter
 
         // Add subtle divider between items
@@ -115,45 +115,20 @@ class MainActivity : AppCompatActivity() {
     }
 
     /**
-     * Returns a list of sample transactions for UI demonstration.
+     * Observes the ViewModel and updates the dashboard with real database data.
      */
-    private fun getSampleTransactions(): List<Transaction> {
-        return listOf(
-            Transaction(
-                title = getString(R.string.sample_lunch),
-                category = getString(R.string.cat_food),
-                amount = 850.00,
-                date = getString(R.string.date_today),
-                iconResId = R.drawable.ic_food
-            ),
-            Transaction(
-                title = getString(R.string.sample_groceries),
-                category = getString(R.string.cat_shopping),
-                amount = 3450.00,
-                date = getString(R.string.date_today),
-                iconResId = R.drawable.ic_shopping
-            ),
-            Transaction(
-                title = getString(R.string.sample_bus_fare),
-                category = getString(R.string.cat_transport),
-                amount = 320.00,
-                date = getString(R.string.date_yesterday),
-                iconResId = R.drawable.ic_transport
-            ),
-            Transaction(
-                title = getString(R.string.sample_netflix),
-                category = getString(R.string.cat_entertainment),
-                amount = 1200.00,
-                date = "Dec 12",
-                iconResId = R.drawable.ic_entertainment
-            ),
-            Transaction(
-                title = getString(R.string.sample_electricity),
-                category = getString(R.string.cat_bills),
-                amount = 5200.00,
-                date = "Dec 10",
-                iconResId = R.drawable.ic_bills
-            )
-        )
+    private fun observeData() {
+        // Recent transactions (top 5) from Room
+        viewModel.getRecentExpenses(5).observe(this) { transactions ->
+            adapter.submitList(transactions)
+        }
+
+        // Balance card calculations using real data.
+        // No income is tracked yet, so total income is 0 and the balance is -expenses.
+        viewModel.totalExpenses.observe(this) { totalExpenses ->
+            binding.tvExpensesAmount.text = CurrencyUtils.format(totalExpenses)
+            binding.tvIncomeAmount.text = CurrencyUtils.format(0.0)
+            binding.tvBalanceAmount.text = CurrencyUtils.format(0.0 - totalExpenses)
+        }
     }
 }

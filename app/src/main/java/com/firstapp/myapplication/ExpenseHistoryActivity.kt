@@ -4,30 +4,30 @@ import android.content.Intent
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
+import android.view.View
 import android.widget.Toast
+import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.DividerItemDecoration
 import com.firstapp.myapplication.databinding.ActivityExpenseHistoryBinding
+import com.firstapp.myapplication.utils.AnalyticsPeriod
+import com.firstapp.myapplication.utils.CurrencyUtils
+import com.firstapp.myapplication.utils.DateUtils
+import com.firstapp.myapplication.viewmodel.ExpenseViewModel
 
 /**
- * Activity that displays the full Expense History screen.
+ * Activity that displays the full Expense History screen, backed by Room.
  *
- * Features:
- * - Material Top App Bar with back arrow and filter icon
- * - Summary card showing total expenses and transaction count
- * - Search bar (UI only — for future implementation)
- * - Horizontally scrollable filter chips (UI only — for future implementation)
- * - RecyclerView populated with sample expense data
- * - Empty state layout (hidden by default, for future database integration)
- * - Floating Action Button (UI only — no navigation yet)
- *
- * This screen will later become the **Read** part of CRUD operations
- * backed by Room Database. The RecyclerView adapter and item layout
- * are designed to be easily swapped to a database-backed data source.
+ * - Summary card showing total expenses (this month) and transaction count
+ * - RecyclerView populated from the Room database
+ * - Empty state shown when there are no expenses
+ * - FAB navigates to the Add Expense screen
  */
 class ExpenseHistoryActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityExpenseHistoryBinding
+    private val viewModel: ExpenseViewModel by viewModels()
+    private lateinit var adapter: ExpenseHistoryAdapter
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -36,6 +36,8 @@ class ExpenseHistoryActivity : AppCompatActivity() {
 
         setupToolbar()
         setupRecyclerView()
+        setupFab()
+        observeData()
     }
 
     /**
@@ -67,16 +69,12 @@ class ExpenseHistoryActivity : AppCompatActivity() {
     }
 
     /**
-     * Returns an intent to open [ExpenseDetailActivity] populated with
-     * the given [transaction] data.
+     * Returns an intent to open [ExpenseDetailActivity] for the given transaction,
+     * passing the database id so the detail screen loads the real record.
      */
     private fun getExpenseDetailIntent(transaction: Transaction): Intent {
         return Intent(this, ExpenseDetailActivity::class.java).apply {
-            putExtra(ExpenseDetailActivity.EXTRA_TITLE, transaction.title)
-            putExtra(ExpenseDetailActivity.EXTRA_AMOUNT, transaction.amount)
-            putExtra(ExpenseDetailActivity.EXTRA_CATEGORY, transaction.category)
-            putExtra(ExpenseDetailActivity.EXTRA_DATE, transaction.date)
-            putExtra(ExpenseDetailActivity.EXTRA_ICON_RES_ID, transaction.iconResId)
+            putExtra(ExpenseDetailActivity.EXTRA_EXPENSE_ID, transaction.id)
         }
     }
 
@@ -92,15 +90,12 @@ class ExpenseHistoryActivity : AppCompatActivity() {
     }
 
     /**
-     * Sets up the RecyclerView with sample expense data.
-     * Will later be replaced with Room Database queries.
+     * Sets up the RecyclerView with expenses loaded from Room.
      */
     private fun setupRecyclerView() {
-        val sampleData = getSampleHistoryData()
-        val adapter = ExpenseHistoryAdapter { transaction ->
+        adapter = ExpenseHistoryAdapter { transaction ->
             startActivity(getExpenseDetailIntent(transaction))
         }
-        adapter.submitList(sampleData)
         binding.rvExpenseHistory.adapter = adapter
 
         binding.rvExpenseHistory.addItemDecoration(
@@ -111,95 +106,46 @@ class ExpenseHistoryActivity : AppCompatActivity() {
     }
 
     /**
-     * Returns a list of 12 sample transactions for UI demonstration.
-     * Will be replaced by Room Database queries in a future update.
+     * Wires the FAB to the Add Expense screen.
      */
-    private fun getSampleHistoryData(): List<Transaction> {
-        return listOf(
-            Transaction(
-                title = getString(R.string.sample_history_title_1),
-                category = getString(R.string.sample_history_cat_1),
-                amount = 850.00,
-                date = getString(R.string.sample_history_date_1),
-                iconResId = R.drawable.ic_food
-            ),
-            Transaction(
-                title = getString(R.string.sample_history_title_2),
-                category = getString(R.string.sample_history_cat_2),
-                amount = 3500.00,
-                date = getString(R.string.sample_history_date_2),
-                iconResId = R.drawable.ic_transport
-            ),
-            Transaction(
-                title = getString(R.string.sample_history_title_3),
-                category = getString(R.string.sample_history_cat_3),
-                amount = 2750.00,
-                date = getString(R.string.sample_history_date_3),
-                iconResId = R.drawable.ic_shopping
-            ),
-            Transaction(
-                title = getString(R.string.sample_history_title_4),
-                category = getString(R.string.sample_history_cat_4),
-                amount = 5200.00,
-                date = getString(R.string.sample_history_date_4),
-                iconResId = R.drawable.ic_bills
-            ),
-            Transaction(
-                title = getString(R.string.sample_history_title_5),
-                category = getString(R.string.sample_history_cat_5),
-                amount = 1200.00,
-                date = getString(R.string.sample_history_date_5),
-                iconResId = R.drawable.ic_entertainment
-            ),
-            Transaction(
-                title = getString(R.string.sample_history_title_6),
-                category = getString(R.string.sample_history_cat_6),
-                amount = 2000.00,
-                date = getString(R.string.sample_history_date_6),
-                iconResId = R.drawable.ic_health
-            ),
-            Transaction(
-                title = getString(R.string.sample_history_title_7),
-                category = getString(R.string.sample_history_cat_7),
-                amount = 8500.00,
-                date = getString(R.string.sample_history_date_7),
-                iconResId = R.drawable.ic_education
-            ),
-            Transaction(
-                title = getString(R.string.sample_history_title_8),
-                category = getString(R.string.sample_history_cat_8),
-                amount = 1450.00,
-                date = getString(R.string.sample_history_date_8),
-                iconResId = R.drawable.ic_food
-            ),
-            Transaction(
-                title = getString(R.string.sample_history_title_9),
-                category = getString(R.string.sample_history_cat_9),
-                amount = 2500.00,
-                date = getString(R.string.sample_history_date_9),
-                iconResId = R.drawable.ic_transport
-            ),
-            Transaction(
-                title = getString(R.string.sample_history_title_10),
-                category = getString(R.string.sample_history_cat_10),
-                amount = 4200.00,
-                date = getString(R.string.sample_history_date_10),
-                iconResId = R.drawable.ic_shopping
-            ),
-            Transaction(
-                title = getString(R.string.sample_history_title_11),
-                category = getString(R.string.sample_history_cat_11),
-                amount = 1899.00,
-                date = getString(R.string.sample_history_date_11),
-                iconResId = R.drawable.ic_bills
-            ),
-            Transaction(
-                title = getString(R.string.sample_history_title_12),
-                category = getString(R.string.sample_history_cat_12),
-                amount = 1200.00,
-                date = getString(R.string.sample_history_date_12),
-                iconResId = R.drawable.ic_entertainment
+    private fun setupFab() {
+        binding.fabAddExpense.setOnClickListener {
+            startActivity(Intent(this, AddExpenseActivity::class.java))
+        }
+        binding.btnEmptyAddExpense.setOnClickListener {
+            startActivity(Intent(this, AddExpenseActivity::class.java))
+        }
+    }
+
+    /**
+     * Observes the Room database and updates the list + summary card.
+     */
+    private fun observeData() {
+        viewModel.allExpenses.observe(this) { transactions ->
+            adapter.submitList(transactions)
+            updateEmptyState(transactions.isEmpty())
+        }
+
+        // Transaction count with plural support
+        viewModel.expenseCount.observe(this) { count ->
+            binding.tvSummaryCount.text = resources.getQuantityString(
+                R.plurals.transaction_count,
+                count,
+                count
             )
-        )
+        }
+
+        // Total for the current month
+        val monthRange = DateUtils.periodRange(AnalyticsPeriod.THIS_MONTH)
+        viewModel.getMonthlyExpenses(monthRange.first, monthRange.second).observe(this) { total ->
+            binding.tvSummaryAmount.text = CurrencyUtils.format(total)
+        }
+    }
+
+    /**
+     * Shows or hides the empty state based on the list contents.
+     */
+    private fun updateEmptyState(isEmpty: Boolean) {
+        binding.layoutEmptyState.visibility = if (isEmpty) View.VISIBLE else View.GONE
     }
 }
