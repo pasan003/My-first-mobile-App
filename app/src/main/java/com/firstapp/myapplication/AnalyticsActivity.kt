@@ -1,37 +1,44 @@
 package com.firstapp.myapplication
 
 import android.content.Intent
+import android.graphics.drawable.GradientDrawable
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
-import android.widget.LinearLayout
 import android.widget.TextView
 import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.content.ContextCompat
 import com.firstapp.myapplication.databinding.ActivityAnalyticsBinding
+import com.firstapp.myapplication.databinding.ItemCategorySpendingBinding
+import com.firstapp.myapplication.databinding.ItemMonthlySpendingBinding
 import com.firstapp.myapplication.utils.AnalyticsPeriod
 import com.firstapp.myapplication.utils.CurrencyUtils
 import com.firstapp.myapplication.viewmodel.AnalyticsData
 import com.firstapp.myapplication.viewmodel.AnalyticsViewModel
 import com.firstapp.myapplication.viewmodel.CategorySpending
+import com.firstapp.myapplication.viewmodel.UserProfileViewModel
 
 /**
  * Analytics screen backed by real Room data.
  *
- * The summary cards, spending-by-category legend, monthly totals, top
- * categories and insights are all calculated from the database for the
- * selected period (This Week / This Month / This Year).
+ * The four summary cards (total expenses, monthly income, remaining balance,
+ * total transactions), the spending-by-category list, the monthly analysis,
+ * the top categories ranking and the insights are all calculated from the
+ * database for the selected period (This Week / This Month / This Year).
  *
- * The legend/ranking/insight rows keep their existing layout; their child
- * TextViews (which have no ids in the XML) are populated by position —
- * [0] is the leading icon/medal, [1] the name and [2] the amount.
+ * Currency formatting follows the user profile's stored currency.
  */
 class AnalyticsActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityAnalyticsBinding
     private val viewModel: AnalyticsViewModel by viewModels()
+    private val profileViewModel: UserProfileViewModel by viewModels()
+
+    /** Currency symbol used for all formatted amounts on this screen. */
+    private var currencySymbol: String = CurrencyUtils.DEFAULT_SYMBOL
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -108,80 +115,90 @@ class AnalyticsActivity : AppCompatActivity() {
     }
 
     /**
-     * Observes analytics data and the empty state from the ViewModel.
+     * Observes analytics data, the empty state and the profile currency.
      */
     private fun observeData() {
+        // Profile currency — formatting follows the user's preference
+        profileViewModel.profile.observe(this) { profile ->
+            currencySymbol = profile?.let { CurrencyUtils.symbolFor(it.currency) }
+                ?: CurrencyUtils.DEFAULT_SYMBOL
+            // Re-render everything with the new symbol
+            viewModel.analytics.value?.let { render(it) }
+        }
+
         viewModel.hasExpenses.observe(this) { hasExpenses ->
-            // The empty state and the analytics content live inside the same
-            // scroll view, so we toggle them independently.
             binding.layoutEmptyState.visibility = if (hasExpenses) View.GONE else View.VISIBLE
             binding.contentContainer.visibility = if (hasExpenses) View.VISIBLE else View.GONE
         }
 
         viewModel.analytics.observe(this) { data ->
-            populateSummary(data)
-            populateLegend(data)
-            populateMonthlyTotals(data)
-            populateTopCategories(data)
-            populateInsights(data)
+            render(data)
         }
+    }
+
+    /**
+     * Renders every analytics section from the computed [data].
+     */
+    private fun render(data: AnalyticsData) {
+        populateSummary(data)
+        populateCategoryList(data)
+        populateMonthlyTotals(data)
+        populateTopCategories(data)
+        populateInsights(data)
     }
 
     // ---------- SECTION: FINANCIAL SUMMARY CARDS ----------
 
     private fun populateSummary(data: AnalyticsData) {
-        binding.tvTotalExpenses.text = CurrencyUtils.format(data.totalExpenses)
+        binding.tvTotalExpenses.text = CurrencyUtils.format(data.totalExpenses, currencySymbol)
+        binding.tvMonthlyIncome.text = CurrencyUtils.format(data.monthlyIncome, currencySymbol)
+        binding.tvRemainingBalance.text = CurrencyUtils.format(data.remainingBalance, currencySymbol)
         binding.tvTransactionCount.text = data.transactionCount.toString()
-        binding.tvAverageExpense.text = CurrencyUtils.format(data.averageExpense)
     }
 
-    // ---------- SECTION: SPENDING BY CATEGORY (legend rows) ----------
+    // ---------- SECTION: SPENDING BY CATEGORY (dynamic rows) ----------
 
-    /**
-     * Legend rows contain: [0] color dot, [1] name, [2] amount.
-     */
-    private fun populateLegend(data: AnalyticsData) {
-        val rows = listOf(
-            binding.layoutLegendFood,
-            binding.layoutLegendTransport,
-            binding.layoutLegendShopping,
-            binding.layoutLegendBills
-        )
-        val topFour = data.categorySpending.take(4)
+    private fun populateCategoryList(data: AnalyticsData) {
+        binding.layoutCategoryList.removeAllViews()
 
-        rows.forEachIndexed { index, row ->
-            val spending = topFour.getOrNull(index)
-            setLegendRow(row, spending)
+        data.categorySpending.forEach { spending ->
+            val row = ItemCategorySpendingBinding.inflate(
+                layoutInflater,
+                binding.layoutCategoryList,
+                false
+            )
+            row.tvCategoryName.text = spending.name
+            row.tvCategoryAmount.text = CurrencyUtils.format(spending.amount, currencySymbol)
+
+            // Colored dot from the category's stored color
+            val dot = GradientDrawable().apply {
+                shape = GradientDrawable.OVAL
+                setColor(ContextCompat.getColor(this@AnalyticsActivity, spending.colorResId))
+            }
+            row.viewDot.background = dot
+
+            binding.layoutCategoryList.addView(row.root)
         }
     }
 
-    private fun setLegendRow(row: LinearLayout, spending: CategorySpending?) {
-        val nameView = row.getChildAt(1) as? TextView
-        val amountView = row.getChildAt(2) as? TextView
+    // ---------- SECTION: MONTHLY SPENDING (dynamic rows + bars) ----------
 
-        nameView?.text = spending?.name ?: "—"
-        amountView?.text = spending?.let { CurrencyUtils.format(it.amount) } ?: "—"
-    }
-
-    // ---------- SECTION: MONTHLY SPENDING (month labels) ----------
-
-    /**
-     * The bar chart remains a placeholder; the six month labels are updated
-     * with the real monthly totals for the first half of the current year.
-     */
     private fun populateMonthlyTotals(data: AnalyticsData) {
-        val labels = listOf(
-            binding.tvMonthJan,
-            binding.tvMonthFeb,
-            binding.tvMonthMar,
-            binding.tvMonthApr,
-            binding.tvMonthMay,
-            binding.tvMonthJun
-        )
-        data.monthlyTotals.forEachIndexed { index, (month, total) ->
-            if (index < labels.size) {
-                labels[index].text = "$month\n${CurrencyUtils.formatCompact(total)}"
-            }
+        binding.layoutMonthlyList.removeAllViews()
+
+        val maxAmount = data.monthlyTotals.maxOfOrNull { it.second } ?: 0.0
+
+        data.monthlyTotals.forEach { (label, total) ->
+            val row = ItemMonthlySpendingBinding.inflate(
+                layoutInflater,
+                binding.layoutMonthlyList,
+                false
+            )
+            row.tvMonthLabel.text = label
+            row.tvMonthAmount.text = CurrencyUtils.format(total, currencySymbol)
+            row.progressMonth.progress =
+                if (maxAmount > 0) (total / maxAmount * 100).toInt() else 0
+            binding.layoutMonthlyList.addView(row.root)
         }
     }
 
@@ -206,40 +223,71 @@ class AnalyticsActivity : AppCompatActivity() {
             val amountView = row.getChildAt(2) as? TextView
 
             nameView?.text = spending?.name ?: "—"
-            amountView?.text = spending?.let { CurrencyUtils.format(it.amount) } ?: "—"
+            amountView?.text = spending?.let { CurrencyUtils.format(it.amount, currencySymbol) } ?: "—"
         }
     }
 
     // ---------- SECTION: INSIGHTS ----------
 
     /**
-     * Insight rows contain: [0] bullet, [1] text.
+     * Insight rows contain: [0] bullet, [1] text. Rows without content are hidden.
      */
     private fun populateInsights(data: AnalyticsData) {
-        val insightViews = listOf(
+        val insights = mutableListOf<String>()
+
+        if (data.categorySpending.isNotEmpty()) {
+            insights.add(
+                getString(
+                    R.string.analytics_insight_most_spent_on,
+                    data.topCategory,
+                    periodLabel(viewModel.selectedPeriod.value ?: AnalyticsPeriod.THIS_MONTH)
+                )
+            )
+        }
+        if (data.monthlyIncome > 0) {
+            insights.add(
+                getString(
+                    R.string.analytics_insight_remaining_balance,
+                    CurrencyUtils.format(data.remainingBalance, currencySymbol)
+                )
+            )
+        }
+        if (data.transactionCount > 0) {
+            insights.add(
+                getString(
+                    R.string.analytics_insight_avg_daily,
+                    CurrencyUtils.format(data.averageDaily, currencySymbol)
+                )
+            )
+            insights.add(
+                getString(
+                    R.string.analytics_insight_largest_expense,
+                    CurrencyUtils.format(data.largestExpense, currencySymbol)
+                )
+            )
+        }
+
+        val insightRows = listOf(
             binding.layoutInsight1,
             binding.layoutInsight2,
             binding.layoutInsight3,
             binding.layoutInsight4
-        ).mapNotNull { it.getChildAt(1) as? TextView }
-
-        val insights = listOf(
-            getString(R.string.analytics_insight_highest_category, data.topCategory),
-            getString(
-                R.string.analytics_insight_avg_daily,
-                CurrencyUtils.format(data.averageDaily)
-            ),
-            getString(R.string.analytics_insight_highest_day, data.highestDay),
-            getString(
-                R.string.analytics_insight_largest_expense,
-                CurrencyUtils.format(data.largestExpense)
-            )
         )
 
-        insightViews.forEachIndexed { index, textView ->
-            if (index < insights.size) {
-                textView.text = insights[index]
-            }
+        insightRows.forEachIndexed { index, row ->
+            val textView = row.getChildAt(1) as? TextView
+            val hasInsight = index < insights.size
+            row.visibility = if (hasInsight) View.VISIBLE else View.GONE
+            textView?.text = insights.getOrNull(index) ?: ""
         }
+    }
+
+    /**
+     * Returns a lowercase period label such as "this month" for the insights.
+     */
+    private fun periodLabel(period: AnalyticsPeriod): String = when (period) {
+        AnalyticsPeriod.THIS_WEEK -> getString(R.string.period_insight_this_week)
+        AnalyticsPeriod.THIS_MONTH -> getString(R.string.period_insight_this_month)
+        AnalyticsPeriod.THIS_YEAR -> getString(R.string.period_insight_this_year)
     }
 }

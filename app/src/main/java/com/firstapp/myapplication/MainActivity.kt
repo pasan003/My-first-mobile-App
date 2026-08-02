@@ -9,12 +9,25 @@ import androidx.recyclerview.widget.DividerItemDecoration
 import com.firstapp.myapplication.databinding.ActivityMainBinding
 import com.firstapp.myapplication.utils.CurrencyUtils
 import com.firstapp.myapplication.viewmodel.ExpenseViewModel
+import com.firstapp.myapplication.viewmodel.UserProfileViewModel
+import java.util.Calendar
 
 class MainActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityMainBinding
     private val viewModel: ExpenseViewModel by viewModels()
+    private val profileViewModel: UserProfileViewModel by viewModels()
     private lateinit var adapter: TransactionAdapter
+
+    /** Latest values used to compute the balance card (income − expenses). */
+    private var monthlyIncome = 0.0
+    private var totalExpenses = 0.0
+
+    /** Currency symbol from the user profile, used for all balance formatting. */
+    private var currencySymbol = CurrencyUtils.DEFAULT_SYMBOL
+
+    /** Guards against redirecting to setup more than once. */
+    private var isRedirectingToSetup = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         installSplashScreen()
@@ -115,7 +128,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     /**
-     * Observes the ViewModel and updates the dashboard with real database data.
+     * Observes the ViewModels and updates the dashboard with real database data.
      */
     private fun observeData() {
         // Recent transactions (top 5) from Room
@@ -123,12 +136,65 @@ class MainActivity : AppCompatActivity() {
             adapter.submitList(transactions)
         }
 
-        // Balance card calculations using real data.
-        // No income is tracked yet, so total income is 0 and the balance is -expenses.
-        viewModel.totalExpenses.observe(this) { totalExpenses ->
-            binding.tvExpensesAmount.text = CurrencyUtils.format(totalExpenses)
-            binding.tvIncomeAmount.text = CurrencyUtils.format(0.0)
-            binding.tvBalanceAmount.text = CurrencyUtils.format(0.0 - totalExpenses)
+        // Profile drives the first-launch gate, greeting, name and income.
+        profileViewModel.profile.observe(this) { profile ->
+            if (profile == null) {
+                openFirstTimeSetup()
+                return@observe
+            }
+
+            monthlyIncome = profile.monthlyIncome
+            currencySymbol = CurrencyUtils.symbolFor(profile.currency)
+
+            binding.tvGreeting.setText(greetingForCurrentTime())
+            binding.tvUserName.text = profile.fullName
+            binding.tvIncomeAmount.text = CurrencyUtils.format(monthlyIncome, currencySymbol)
+            updateBalanceCard()
         }
+
+        // Total expenses from Room (recomputed automatically after every change)
+        viewModel.totalExpenses.observe(this) { total ->
+            totalExpenses = total
+            binding.tvExpensesAmount.text = CurrencyUtils.format(total, currencySymbol)
+            updateBalanceCard()
+        }
+    }
+
+    /**
+     * Remaining Balance = Monthly Income − Total Expenses.
+     * Always formats with the profile currency symbol, so either observer can
+     * refresh the card independently without clobbering the currency.
+     */
+    private fun updateBalanceCard() {
+        binding.tvBalanceAmount.text =
+            CurrencyUtils.format(monthlyIncome - totalExpenses, currencySymbol)
+    }
+
+    /**
+     * Returns the greeting string resource for the current device time:
+     * morning (5–11), afternoon (12–16) and evening otherwise.
+     */
+    private fun greetingForCurrentTime(): Int {
+        val hour = Calendar.getInstance().get(Calendar.HOUR_OF_DAY)
+        return when (hour) {
+            in 5..11 -> R.string.greeting_morning
+            in 12..16 -> R.string.greeting_afternoon
+            else -> R.string.greeting_evening
+        }
+    }
+
+    /**
+     * First launch: no profile exists yet, so redirect to the setup screen
+     * and clear the back stack so the dashboard is not reachable without a
+     * profile. The setup screen is only shown again after app data is cleared.
+     */
+    private fun openFirstTimeSetup() {
+        if (isRedirectingToSetup) return
+        isRedirectingToSetup = true
+        val intent = Intent(this, SetupActivity::class.java).apply {
+            addFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK)
+        }
+        startActivity(intent)
+        finish()
     }
 }

@@ -8,9 +8,20 @@ SpendWise is a personal finance tracker designed to help you manage your money e
 
 ## Current Features
 
+### ✅ First-Time Setup
+- Shown automatically on the very first launch when no user profile exists
+- Collects the user's **Full Name** and **Monthly Income** with validation
+- Saves the profile into Room and navigates to the Dashboard
+- Never shown again unless the app data is cleared
+
+### ✅ User Profile (Room)
+- `UserProfile` entity with full name, monthly income, currency and creation date
+- Only one profile is ever stored; created on first launch, editable afterwards
+- Every screen observes the same profile, so changes propagate instantly
+
 ### ✅ Home Dashboard
-- Greeting header with user name and profile avatar
-- Balance card showing total balance and expenses breakdown, calculated from real data
+- Time-aware greeting (**Good Morning / Afternoon / Evening**) with the user's real name
+- Balance card calculated from Room: **Monthly Income − Total Expenses = Remaining Balance**
 - Recent Transactions list rendered via `RecyclerView`
 - Bottom Navigation bar with four tabs (Home, Categories, Analytics, Profile)
 - Floating Action Button to navigate to the Add Expense screen
@@ -51,11 +62,11 @@ SpendWise is a personal finance tracker designed to help you manage your money e
 ### ✅ Analytics
 - All numbers calculated from the Room database
 - Period selector (This Week / This Month / This Year) that recomputes the aggregates
-- Total Expenses, Total Transactions, Average Expense summary cards
-- Spending by Category (top categories with amounts)
-- Monthly Spending totals for the first six months of the year
-- Top Categories ranking and Insights card (highest category, avg daily, highest day, largest expense)
-- Empty state when there are no expenses
+- Four summary cards: **Total Expenses, Monthly Income, Remaining Balance, Total Transactions**
+- Spending by Category — dynamic list grouped by category with colored indicators
+- Monthly Spending — per-month totals with progress bars for the whole year
+- Top Categories ranking and Insights card (most spent on, remaining balance, avg daily, largest expense)
+- Friendly empty state: *"No expense data available yet. Start by adding your first expense."*
 
 ### ✅ Material Design 3 Interface
 - Deep teal / emerald color palette
@@ -69,7 +80,9 @@ SpendWise is a personal finance tracker designed to help you manage your money e
 - `Category` entity with name, icon and color stored as resource names
 - One-to-many relation modeled with Room's `@Relation` (`ExpenseWithCategory`)
 - Reactive `Flow` queries so the UI updates automatically when data changes
-- **Default categories are seeded only on the first launch** (Food, Transport, Shopping, Bills, Entertainment) — no duplicates on later launches
+- **Nine default categories are seeded only on the first launch** (Food, Transport, Shopping, Bills, Entertainment, Health, Education, Salary, Other) — no duplicates on later launches
+- `UserProfile` entity for persistent profile management (name, monthly income, currency)
+- Database version 2 with a data-preserving migration (adds `user_profiles` + new default categories)
 - Schema exported to `app/schemas/`
 
 ### ✅ MVVM Architecture
@@ -86,6 +99,7 @@ app/
 ├── src/
 │   ├── main/
 │   │   ├── java/com/firstapp/myapplication/
+│   │   │   ├── SetupActivity.kt             # First-time setup (name + income)
 │   │   │   ├── MainActivity.kt              # Home Dashboard
 │   │   │   ├── AddExpenseActivity.kt        # Add / Edit Expense form
 │   │   │   ├── ExpenseHistoryActivity.kt    # Full expense list
@@ -102,11 +116,13 @@ app/
 │   │   │   │   ├── AppDatabase.kt
 │   │   │   │   ├── dao/ExpenseDao.kt
 │   │   │   │   ├── dao/CategoryDao.kt
+│   │   │   │   ├── dao/UserProfileDao.kt
 │   │   │   │   ├── entity/Expense.kt
 │   │   │   │   ├── entity/Category.kt
+│   │   │   │   ├── entity/UserProfile.kt
 │   │   │   │   └── relation/ExpenseWithCategory.kt
-│   │   │   ├── repository/                  # ExpenseRepository, CategoryRepository
-│   │   │   ├── viewmodel/                   # ExpenseViewModel, CategoryViewModel, AnalyticsViewModel
+│   │   │   ├── repository/                  # Expense, Category, UserProfile repositories
+│   │   │   ├── viewmodel/                   # Expense, Category, Analytics, UserProfile ViewModels
 │   │   │   └── utils/                       # CurrencyUtils, DateUtils, CategoryVisuals, Mapper
 │   │   ├── res/
 │   │   │   ├── layout/                      # XML layout files
@@ -148,13 +164,14 @@ app/
 
 | Screen | Description |
 |---|---|
+| **First-Time Setup** | Collects full name and monthly income on the very first launch |
 | **Home Dashboard** | Balance overview, recent transactions, bottom navigation, and FAB |
 | **Add Expense** | Full expense entry form with dropdowns, date picker, and validation (also used for editing) |
 | **Expense History** | Full list of expenses with summary and empty state |
 | **Expense Details** | View/edit/delete an individual transaction |
 | **Category Manager** | Add, edit, and delete custom spending categories |
 | **Analytics** | Real spending insights computed from the database |
-| **Profile / Settings** | User profile and app preferences |
+| **Profile / Settings** | Real profile data, edit profile, About / Privacy / Help, disabled logout |
 
 ---
 
@@ -166,7 +183,9 @@ app/
 - ✅ Expense Details (load, update, delete)
 - ✅ Category Manager (full CRUD)
 - ✅ Analytics (real calculations)
-- ✅ Room Database + seeding
+- ✅ First-time setup (persistent profile)
+- ✅ Profile & Settings (edit name, income, currency)
+- ✅ Room Database + seeding (9 default categories)
 - ✅ MVVM (Repository + ViewModel + LiveData)
 - ✅ Material Design 3 Theming
 - ⏳ Search / Filter logic
@@ -191,8 +210,9 @@ app/
    - The app will launch with the SpendWise splash screen followed by the Home Dashboard
 
 4. **Explore the app:**
+   - On first launch, the **Get Started** screen asks for your name and monthly income
    - Tap the **+** (FAB) button to add your first expense
-   - Add categories in **Categories**, view insights in **Analytics**
+   - Edit your profile in **Profile**, view insights in **Analytics**
    - All data is stored on-device and persists across app restarts
 
 > **Requirements:** Android Studio, Android SDK 37, JDK 11+ (AGP 9.2.1 with built-in Kotlin support).

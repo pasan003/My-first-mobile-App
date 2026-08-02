@@ -31,10 +31,16 @@
         android:layout_height="match_parent"
         android:layout_marginTop="?attr/actionBarSize"
         android:clipToPadding="false"
-        android:fillViewport="true">
+        android:fillViewport="true"
+        android:paddingBottom="@dimen/spacing_large">
 
-        <androidx.constraintlayout.widget.ConstraintLayout
-            android:id="@+id/contentContainer"
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/contentContainer"
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
 
@@ -112,7 +118,7 @@
             </HorizontalScrollView>
 
             <!-- ================================================================ -->
-            <!-- SECTION: FINANCIAL SUMMARY CARDS (3 in a row)                    -->
+            <!-- SECTION: FINANCIAL SUMMARY CARDS (2x2 grid)                      -->
             <!-- ================================================================ -->
             <LinearLayout
                 android:id="@+id/layoutSummaryCards"
@@ -120,148 +126,210 @@
                 android:layout_height="wrap_content"
                 android:layout_marginHorizontal="@dimen/spacing_medium"
                 android:layout_marginTop="@dimen/spacing_medium"
-                android:orientation="horizontal"
-                android:weightSum="3"
+                android:orientation="vertical"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/hsvPeriodSelector">
 
-                <!-- Card 1: Total Expenses -->
-                <com.google.android.material.card.MaterialCardView
-                    android:id="@+id/cardTotalExpenses"
-                    android:layout_width="0dp"
+                <!-- Row 1 -->
+                <LinearLayout
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginEnd="6dp"
-                    android:layout_weight="1"
-                    app:cardBackgroundColor="@color/finance_card"
-                    app:cardCornerRadius="16dp"
-                    app:cardElevation="2dp"
-                    app:contentPadding="14dp">
+                    android:orientation="horizontal"
+                    android:weightSum="2">
 
-                    <LinearLayout
-                        android:layout_width="match_parent"
+                    <!-- Card 1: Total Expenses -->
+                    <com.google.android.material.card.MaterialCardView
+                        android:id="@+id/cardTotalExpenses"
+                        android:layout_width="0dp"
                         android:layout_height="wrap_content"
-                        android:gravity="center"
-                        android:orientation="vertical">
+                        android:layout_marginEnd="6dp"
+                        android:layout_weight="1"
+                        app:cardBackgroundColor="@color/finance_card"
+                        app:cardCornerRadius="16dp"
+                        app:cardElevation="2dp"
+                        app:contentPadding="14dp">
 
-                        <TextView
-                            android:id="@+id/tvTotalExpensesLabel"
-                            style="@style/TextAppearance.Material3.BodySmall"
-                            android:layout_width="wrap_content"
+                        <LinearLayout
+                            android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:text="@string/analytics_total_expenses"
-                            android:textColor="@color/finance_text_secondary"
-                            android:textSize="11sp"
-                            android:textAlignment="center" />
+                            android:gravity="center"
+                            android:orientation="vertical">
 
-                        <TextView
-                            android:id="@+id/tvTotalExpenses"
-                            style="@style/TextAppearance.Material3.TitleMedium"
-                            android:layout_width="wrap_content"
+                            <TextView
+                                android:id="@+id/tvTotalExpensesLabel"
+                                style="@style/TextAppearance.Material3.BodySmall"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="@string/analytics_total_expenses"
+                                android:textAlignment="center"
+                                android:textColor="@color/finance_text_secondary"
+                                android:textSize="11sp" />
+
+                            <TextView
+                                android:id="@+id/tvTotalExpenses"
+                                style="@style/TextAppearance.Material3.TitleMedium"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="4dp"
+                                android:text=""
+                                android:textAlignment="center"
+                                android:textColor="@color/text_expense"
+                                android:textSize="16sp"
+                                android:textStyle="bold" />
+
+                        </LinearLayout>
+
+                    </com.google.android.material.card.MaterialCardView>
+
+                    <!-- Card 2: Total Transactions -->
+                    <com.google.android.material.card.MaterialCardView
+                        android:id="@+id/cardTotalTransactions"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="6dp"
+                        android:layout_weight="1"
+                        app:cardBackgroundColor="@color/finance_card"
+                        app:cardCornerRadius="16dp"
+                        app:cardElevation="2dp"
+                        app:contentPadding="14dp">
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:layout_marginTop="4dp"
-                            android:text="@string/analytics_sample_total_expenses"
-                            android:textColor="@color/text_expense"
-                            android:textSize="16sp"
-                            android:textStyle="bold"
-                            android:textAlignment="center" />
+                            android:gravity="center"
+                            android:orientation="vertical">
 
-                    </LinearLayout>
+                            <TextView
+                                android:id="@+id/tvTransactionCountLabel"
+                                style="@style/TextAppearance.Material3.BodySmall"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="@string/analytics_total_transactions"
+                                android:textAlignment="center"
+                                android:textColor="@color/finance_text_secondary"
+                                android:textSize="11sp" />
 
-                </com.google.android.material.card.MaterialCardView>
+                            <TextView
+                                android:id="@+id/tvTransactionCount"
+                                style="@style/TextAppearance.Material3.TitleMedium"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="4dp"
+                                android:text=""
+                                android:textAlignment="center"
+                                android:textColor="@color/finance_text_primary"
+                                android:textSize="16sp"
+                                android:textStyle="bold" />
 
-                <!-- Card 2: Total Transactions -->
-                <com.google.android.material.card.MaterialCardView
-                    android:id="@+id/cardTotalTransactions"
-                    android:layout_width="0dp"
+                        </LinearLayout>
+
+                    </com.google.android.material.card.MaterialCardView>
+
+                </LinearLayout>
+
+                <!-- Row 2 -->
+                <LinearLayout
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginHorizontal="6dp"
-                    android:layout_weight="1"
-                    app:cardBackgroundColor="@color/finance_card"
-                    app:cardCornerRadius="16dp"
-                    app:cardElevation="2dp"
-                    app:contentPadding="14dp">
+                    android:layout_marginTop="12dp"
+                    android:orientation="horizontal"
+                    android:weightSum="2">
 
-                    <LinearLayout
-                        android:layout_width="match_parent"
+                    <!-- Card 3: Monthly Income -->
+                    <com.google.android.material.card.MaterialCardView
+                        android:id="@+id/cardMonthlyIncome"
+                        android:layout_width="0dp"
                         android:layout_height="wrap_content"
-                        android:gravity="center"
-                        android:orientation="vertical">
+                        android:layout_marginEnd="6dp"
+                        android:layout_weight="1"
+                        app:cardBackgroundColor="@color/finance_card"
+                        app:cardCornerRadius="16dp"
+                        app:cardElevation="2dp"
+                        app:contentPadding="14dp">
 
-                        <TextView
-                            android:id="@+id/tvTransactionCountLabel"
-                            style="@style/TextAppearance.Material3.BodySmall"
-                            android:layout_width="wrap_content"
+                        <LinearLayout
+                            android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:text="@string/analytics_total_transactions"
-                            android:textColor="@color/finance_text_secondary"
-                            android:textSize="11sp"
-                            android:textAlignment="center" />
+                            android:gravity="center"
+                            android:orientation="vertical">
 
-                        <TextView
-                            android:id="@+id/tvTransactionCount"
-                            style="@style/TextAppearance.Material3.TitleMedium"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginTop="4dp"
-                            android:text="@string/analytics_sample_transactions"
-                            android:textColor="@color/finance_text_primary"
-                            android:textSize="16sp"
-                            android:textStyle="bold"
-                            android:textAlignment="center" />
+                            <TextView
+                                android:id="@+id/tvMonthlyIncomeLabel"
+                                style="@style/TextAppearance.Material3.BodySmall"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="@string/analytics_monthly_income"
+                                android:textAlignment="center"
+                                android:textColor="@color/finance_text_secondary"
+                                android:textSize="11sp" />
 
-                    </LinearLayout>
+                            <TextView
+                                android:id="@+id/tvMonthlyIncome"
+                                style="@style/TextAppearance.Material3.TitleMedium"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="4dp"
+                                android:text=""
+                                android:textAlignment="center"
+                                android:textColor="@color/text_income"
+                                android:textSize="16sp"
+                                android:textStyle="bold" />
 
-                </com.google.android.material.card.MaterialCardView>
+                        </LinearLayout>
 
-                <!-- Card 3: Average Expense -->
-                <com.google.android.material.card.MaterialCardView
-                    android:id="@+id/cardAverageExpense"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="6dp"
-                    android:layout_weight="1"
-                    app:cardBackgroundColor="@color/finance_card"
-                    app:cardCornerRadius="16dp"
-                    app:cardElevation="2dp"
-                    app:contentPadding="14dp">
+                    </com.google.android.material.card.MaterialCardView>
 
-                    <LinearLayout
-                        android:layout_width="match_parent"
+                    <!-- Card 4: Remaining Balance -->
+                    <com.google.android.material.card.MaterialCardView
+                        android:id="@+id/cardRemainingBalance"
+                        android:layout_width="0dp"
                         android:layout_height="wrap_content"
-                        android:gravity="center"
-                        android:orientation="vertical">
+                        android:layout_marginStart="6dp"
+                        android:layout_weight="1"
+                        app:cardBackgroundColor="@color/finance_card"
+                        app:cardCornerRadius="16dp"
+                        app:cardElevation="2dp"
+                        app:contentPadding="14dp">
 
-                        <TextView
-                            android:id="@+id/tvAverageExpenseLabel"
-                            style="@style/TextAppearance.Material3.BodySmall"
-                            android:layout_width="wrap_content"
+                        <LinearLayout
+                            android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:text="@string/analytics_average_expense"
-                            android:textColor="@color/finance_text_secondary"
-                            android:textSize="11sp"
-                            android:textAlignment="center" />
+                            android:gravity="center"
+                            android:orientation="vertical">
 
-                        <TextView
-                            android:id="@+id/tvAverageExpense"
-                            style="@style/TextAppearance.Material3.TitleMedium"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginTop="4dp"
-                            android:text="@string/analytics_sample_average_expense"
-                            android:textColor="@color/primary"
-                            android:textSize="16sp"
-                            android:textStyle="bold"
-                            android:textAlignment="center" />
+                            <TextView
+                                android:id="@+id/tvRemainingBalanceLabel"
+                                style="@style/TextAppearance.Material3.BodySmall"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="@string/analytics_remaining_balance"
+                                android:textAlignment="center"
+                                android:textColor="@color/finance_text_secondary"
+                                android:textSize="11sp" />
 
-                    </LinearLayout>
+                            <TextView
+                                android:id="@+id/tvRemainingBalance"
+                                style="@style/TextAppearance.Material3.TitleMedium"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="4dp"
+                                android:text=""
+                                android:textAlignment="center"
+                                android:textColor="@color/primary"
+                                android:textSize="16sp"
+                                android:textStyle="bold" />
 
-                </com.google.android.material.card.MaterialCardView>
+                        </LinearLayout>
+
+                    </com.google.android.material.card.MaterialCardView>
+
+                </LinearLayout>
 
             </LinearLayout>
 
             <!-- ================================================================ -->
-            <!-- SECTION: SPENDING BY CATEGORY (Pie Chart Placeholder)            -->
+            <!-- SECTION: SPENDING BY CATEGORY (dynamic list)                     -->
             <!-- ================================================================ -->
 
             <!-- Section Title -->
@@ -280,215 +348,20 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/layoutSummaryCards" />
 
-            <!-- Pie Chart Placeholder Card -->
-            <com.google.android.material.card.MaterialCardView
-                android:id="@+id/cardPieChart"
-                android:layout_width="0dp"
-                android:layout_height="200dp"
-                android:layout_marginHorizontal="@dimen/spacing_medium"
-                android:layout_marginTop="12dp"
-                app:cardBackgroundColor="@color/finance_card"
-                app:cardCornerRadius="16dp"
-                app:cardElevation="1dp"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/tvSpendingCategoryTitle"
-                app:strokeColor="@color/outline_variant"
-                app:strokeWidth="0.5dp">
-
-                <FrameLayout
-                    android:id="@+id/layoutPieChart"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:gravity="center">
-
-                    <TextView
-                        style="@style/TextAppearance.Material3.BodyMedium"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="center"
-                        android:text="@string/analytics_pie_chart_placeholder"
-                        android:textColor="@color/finance_hint_text"
-                        android:textSize="14sp" />
-
-                </FrameLayout>
-
-            </com.google.android.material.card.MaterialCardView>
-
-            <!-- Category Legend -->
+            <!-- Category rows are inflated dynamically from Room data -->
             <LinearLayout
-                android:id="@+id/layoutCategoryLegend"
+                android:id="@+id/layoutCategoryList"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginHorizontal="@dimen/spacing_medium"
-                android:layout_marginTop="12dp"
+                android:layout_marginTop="8dp"
                 android:orientation="vertical"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/cardPieChart">
-
-                <!-- Legend: Food -->
-                <LinearLayout
-                    android:id="@+id/layoutLegendFood"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:gravity="center_vertical"
-                    android:orientation="horizontal"
-                    android:paddingVertical="6dp">
-
-                    <View
-                        android:layout_width="12dp"
-                        android:layout_height="12dp"
-                        android:layout_marginEnd="10dp"
-                        android:background="@drawable/bg_legend_dot_food" />
-
-                    <TextView
-                        style="@style/TextAppearance.Material3.BodyMedium"
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:text="@string/analytics_legend_food"
-                        android:textColor="@color/finance_text_primary"
-                        android:textSize="14sp" />
-
-                    <TextView
-                        style="@style/TextAppearance.Material3.BodyMedium"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="@string/analytics_legend_food_amount"
-                        android:textColor="@color/finance_text_primary"
-                        android:textSize="14sp"
-                        android:textStyle="bold" />
-
-                </LinearLayout>
-
-                <!-- Divider -->
-                <View
-                    android:layout_width="match_parent"
-                    android:layout_height="0.5dp"
-                    android:background="@color/outline_variant" />
-
-                <!-- Legend: Transport -->
-                <LinearLayout
-                    android:id="@+id/layoutLegendTransport"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:gravity="center_vertical"
-                    android:orientation="horizontal"
-                    android:paddingVertical="6dp">
-
-                    <View
-                        android:layout_width="12dp"
-                        android:layout_height="12dp"
-                        android:layout_marginEnd="10dp"
-                        android:background="@drawable/bg_legend_dot_transport" />
-
-                    <TextView
-                        style="@style/TextAppearance.Material3.BodyMedium"
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:text="@string/analytics_legend_transport"
-                        android:textColor="@color/finance_text_primary"
-                        android:textSize="14sp" />
-
-                    <TextView
-                        style="@style/TextAppearance.Material3.BodyMedium"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="@string/analytics_legend_transport_amount"
-                        android:textColor="@color/finance_text_primary"
-                        android:textSize="14sp"
-                        android:textStyle="bold" />
-
-                </LinearLayout>
-
-                <!-- Divider -->
-                <View
-                    android:layout_width="match_parent"
-                    android:layout_height="0.5dp"
-                    android:background="@color/outline_variant" />
-
-                <!-- Legend: Shopping -->
-                <LinearLayout
-                    android:id="@+id/layoutLegendShopping"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:gravity="center_vertical"
-                    android:orientation="horizontal"
-                    android:paddingVertical="6dp">
-
-                    <View
-                        android:layout_width="12dp"
-                        android:layout_height="12dp"
-                        android:layout_marginEnd="10dp"
-                        android:background="@drawable/bg_legend_dot_shopping" />
-
-                    <TextView
-                        style="@style/TextAppearance.Material3.BodyMedium"
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:text="@string/analytics_legend_shopping"
-                        android:textColor="@color/finance_text_primary"
-                        android:textSize="14sp" />
-
-                    <TextView
-                        style="@style/TextAppearance.Material3.BodyMedium"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="@string/analytics_legend_shopping_amount"
-                        android:textColor="@color/finance_text_primary"
-                        android:textSize="14sp"
-                        android:textStyle="bold" />
-
-                </LinearLayout>
-
-                <!-- Divider -->
-                <View
-                    android:layout_width="match_parent"
-                    android:layout_height="0.5dp"
-                    android:background="@color/outline_variant" />
-
-                <!-- Legend: Bills -->
-                <LinearLayout
-                    android:id="@+id/layoutLegendBills"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:gravity="center_vertical"
-                    android:orientation="horizontal"
-                    android:paddingVertical="6dp">
-
-                    <View
-                        android:layout_width="12dp"
-                        android:layout_height="12dp"
-                        android:layout_marginEnd="10dp"
-                        android:background="@drawable/bg_legend_dot_bills" />
-
-                    <TextView
-                        style="@style/TextAppearance.Material3.BodyMedium"
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:text="@string/analytics_legend_bills"
-                        android:textColor="@color/finance_text_primary"
-                        android:textSize="14sp" />
-
-                    <TextView
-                        style="@style/TextAppearance.Material3.BodyMedium"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="@string/analytics_legend_bills_amount"
-                        android:textColor="@color/finance_text_primary"
-                        android:textSize="14sp"
-                        android:textStyle="bold" />
-
-                </LinearLayout>
-
-            </LinearLayout>
+                app:layout_constraintTop_toBottomOf="@id/tvSpendingCategoryTitle" />
 
             <!-- ================================================================ -->
-            <!-- SECTION: MONTHLY SPENDING (Bar Chart Placeholder)                -->
+            <!-- SECTION: MONTHLY SPENDING (dynamic list)                         -->
             <!-- ================================================================ -->
 
             <!-- Section Title -->
@@ -505,123 +378,19 @@
                 android:textStyle="bold"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/layoutCategoryLegend" />
+                app:layout_constraintTop_toBottomOf="@id/layoutCategoryList" />
 
-            <!-- Bar Chart Placeholder Card -->
-            <com.google.android.material.card.MaterialCardView
-                android:id="@+id/cardBarChart"
-                android:layout_width="0dp"
-                android:layout_height="180dp"
-                android:layout_marginHorizontal="@dimen/spacing_medium"
-                android:layout_marginTop="12dp"
-                app:cardBackgroundColor="@color/finance_card"
-                app:cardCornerRadius="16dp"
-                app:cardElevation="1dp"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/tvMonthlySpendingTitle"
-                app:strokeColor="@color/outline_variant"
-                app:strokeWidth="0.5dp">
-
-                <FrameLayout
-                    android:id="@+id/layoutBarChart"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:gravity="center">
-
-                    <TextView
-                        style="@style/TextAppearance.Material3.BodyMedium"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="center"
-                        android:text="@string/analytics_bar_chart_placeholder"
-                        android:textColor="@color/finance_hint_text"
-                        android:textSize="14sp" />
-
-                </FrameLayout>
-
-            </com.google.android.material.card.MaterialCardView>
-
-            <!-- Month Labels -->
+            <!-- Month rows are inflated dynamically from Room data -->
             <LinearLayout
-                android:id="@+id/layoutMonthLabels"
+                android:id="@+id/layoutMonthlyList"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginHorizontal="@dimen/spacing_medium"
                 android:layout_marginTop="8dp"
-                android:gravity="center"
-                android:orientation="horizontal"
+                android:orientation="vertical"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/cardBarChart">
-
-                <TextView
-                    android:id="@+id/tvMonthJan"
-                    style="@style/TextAppearance.Material3.LabelSmall"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:gravity="center"
-                    android:text="@string/month_jan"
-                    android:textColor="@color/finance_hint_text"
-                    android:textSize="12sp" />
-
-                <TextView
-                    android:id="@+id/tvMonthFeb"
-                    style="@style/TextAppearance.Material3.LabelSmall"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:gravity="center"
-                    android:text="@string/month_feb"
-                    android:textColor="@color/finance_hint_text"
-                    android:textSize="12sp" />
-
-                <TextView
-                    android:id="@+id/tvMonthMar"
-                    style="@style/TextAppearance.Material3.LabelSmall"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:gravity="center"
-                    android:text="@string/month_mar"
-                    android:textColor="@color/finance_hint_text"
-                    android:textSize="12sp" />
-
-                <TextView
-                    android:id="@+id/tvMonthApr"
-                    style="@style/TextAppearance.Material3.LabelSmall"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:gravity="center"
-                    android:text="@string/month_apr"
-                    android:textColor="@color/finance_hint_text"
-                    android:textSize="12sp" />
-
-                <TextView
-                    android:id="@+id/tvMonthMay"
-                    style="@style/TextAppearance.Material3.LabelSmall"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:gravity="center"
-                    android:text="@string/month_may"
-                    android:textColor="@color/finance_hint_text"
-                    android:textSize="12sp" />
-
-                <TextView
-                    android:id="@+id/tvMonthJun"
-                    style="@style/TextAppearance.Material3.LabelSmall"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:gravity="center"
-                    android:text="@string/month_jun"
-                    android:textColor="@color/finance_hint_text"
-                    android:textSize="12sp" />
-
-            </LinearLayout>
+                app:layout_constraintTop_toBottomOf="@id/tvMonthlySpendingTitle" />
 
             <!-- ================================================================ -->
             <!-- SECTION: TOP CATEGORIES                                          -->
@@ -638,7 +407,7 @@
                 app:contentPadding="16dp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/layoutMonthLabels">
+                app:layout_constraintTop_toBottomOf="@id/layoutMonthlyList">
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -656,7 +425,7 @@
                         android:textSize="16sp"
                         android:textStyle="bold" />
 
-                    <!-- Ranking 1: Food -->
+                    <!-- Ranking 1 -->
                     <LinearLayout
                         android:id="@+id/layoutRank1"
                         android:layout_width="match_parent"
@@ -678,7 +447,7 @@
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
-                            android:text="@string/analytics_legend_food"
+                            android:text=""
                             android:textColor="@color/finance_text_primary"
                             android:textSize="15sp" />
 
@@ -686,7 +455,7 @@
                             style="@style/TextAppearance.Material3.BodyMedium"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="@string/analytics_legend_food_amount"
+                            android:text=""
                             android:textColor="@color/finance_text_primary"
                             android:textSize="14sp"
                             android:textStyle="bold" />
@@ -700,7 +469,7 @@
                         android:layout_marginVertical="6dp"
                         android:background="@color/outline_variant" />
 
-                    <!-- Ranking 2: Bills -->
+                    <!-- Ranking 2 -->
                     <LinearLayout
                         android:id="@+id/layoutRank2"
                         android:layout_width="match_parent"
@@ -721,7 +490,7 @@
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
-                            android:text="@string/analytics_legend_bills"
+                            android:text=""
                             android:textColor="@color/finance_text_primary"
                             android:textSize="15sp" />
 
@@ -729,7 +498,7 @@
                             style="@style/TextAppearance.Material3.BodyMedium"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="@string/analytics_legend_bills_amount"
+                            android:text=""
                             android:textColor="@color/finance_text_primary"
                             android:textSize="14sp"
                             android:textStyle="bold" />
@@ -743,7 +512,7 @@
                         android:layout_marginVertical="6dp"
                         android:background="@color/outline_variant" />
 
-                    <!-- Ranking 3: Shopping -->
+                    <!-- Ranking 3 -->
                     <LinearLayout
                         android:id="@+id/layoutRank3"
                         android:layout_width="match_parent"
@@ -764,7 +533,7 @@
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
-                            android:text="@string/analytics_legend_shopping"
+                            android:text=""
                             android:textColor="@color/finance_text_primary"
                             android:textSize="15sp" />
 
@@ -772,7 +541,7 @@
                             style="@style/TextAppearance.Material3.BodyMedium"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="@string/analytics_legend_shopping_amount"
+                            android:text=""
                             android:textColor="@color/finance_text_primary"
                             android:textSize="14sp"
                             android:textStyle="bold" />
@@ -786,7 +555,7 @@
                         android:layout_marginVertical="6dp"
                         android:background="@color/outline_variant" />
 
-                    <!-- Ranking 4: Transport -->
+                    <!-- Ranking 4 -->
                     <LinearLayout
                         android:id="@+id/layoutRank4"
                         android:layout_width="match_parent"
@@ -807,7 +576,7 @@
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
-                            android:text="@string/analytics_legend_transport"
+                            android:text=""
                             android:textColor="@color/finance_text_primary"
                             android:textSize="15sp" />
 
@@ -815,7 +584,7 @@
                             style="@style/TextAppearance.Material3.BodyMedium"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="@string/analytics_legend_transport_amount"
+                            android:text=""
                             android:textColor="@color/finance_text_primary"
                             android:textSize="14sp"
                             android:textStyle="bold" />
@@ -829,7 +598,7 @@
                         android:layout_marginVertical="6dp"
                         android:background="@color/outline_variant" />
 
-                    <!-- Ranking 5: Entertainment -->
+                    <!-- Ranking 5 -->
                     <LinearLayout
                         android:id="@+id/layoutRank5"
                         android:layout_width="match_parent"
@@ -851,7 +620,7 @@
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
-                            android:text="@string/analytics_legend_entertainment"
+                            android:text=""
                             android:textColor="@color/finance_text_primary"
                             android:textSize="15sp" />
 
@@ -859,7 +628,7 @@
                             style="@style/TextAppearance.Material3.BodyMedium"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="@string/analytics_legend_entertainment_amount"
+                            android:text=""
                             android:textColor="@color/finance_text_primary"
                             android:textSize="14sp"
                             android:textStyle="bold" />
@@ -879,7 +648,6 @@
                 android:layout_height="wrap_content"
                 android:layout_marginHorizontal="@dimen/spacing_medium"
                 android:layout_marginTop="12dp"
-                android:layout_marginBottom="@dimen/spacing_medium"
                 app:cardBackgroundColor="@color/finance_card"
                 app:cardCornerRadius="16dp"
                 app:cardElevation="2dp"
@@ -928,7 +696,7 @@
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
-                            android:text="@string/analytics_insight_highest_category"
+                            android:text=""
                             android:textColor="@color/finance_text_primary"
                             android:textSize="14sp" />
 
@@ -958,7 +726,7 @@
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
-                            android:text="@string/analytics_insight_avg_daily"
+                            android:text=""
                             android:textColor="@color/finance_text_primary"
                             android:textSize="14sp" />
 
@@ -988,7 +756,7 @@
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
-                            android:text="@string/analytics_insight_highest_day"
+                            android:text=""
                             android:textColor="@color/finance_text_primary"
                             android:textSize="14sp" />
 
@@ -1018,7 +786,7 @@
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
-                            android:text="@string/analytics_insight_largest_expense"
+                            android:text=""
                             android:textColor="@color/finance_text_primary"
                             android:textSize="14sp" />
 
@@ -1028,19 +796,18 @@
 
             </com.google.android.material.card.MaterialCardView>
 
-            <!-- ================================================================ -->
-            <!-- SECTION: EMPTY STATE (Hidden by default)                         -->
-            <!-- ================================================================ -->
-            <androidx.constraintlayout.widget.ConstraintLayout
-                android:id="@+id/layoutEmptyState"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_marginHorizontal="@dimen/spacing_large"
-                android:layout_marginTop="60dp"
-                android:visibility="gone"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/hsvPeriodSelector">
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+        <!-- ================================================================ -->
+        <!-- SECTION: EMPTY STATE (sibling of the content so it can display)  -->
+        <!-- ================================================================ -->
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/layoutEmptyState"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="@dimen/spacing_large"
+            android:layout_marginTop="60dp"
+            android:visibility="gone">
 
                 <!-- Empty Illustration Placeholder -->
                 <com.google.android.material.card.MaterialCardView
@@ -1097,7 +864,7 @@
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@id/tvEmptyTitle" />
 
-                <!-- Add Expense Button (UI only) -->
+                <!-- Add Expense Button -->
                 <com.google.android.material.button.MaterialButton
                     android:id="@+id/btnEmptyAddExpense"
                     android:layout_width="wrap_content"
@@ -1121,9 +888,9 @@
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@id/tvEmptyDescription" />
 
-            </androidx.constraintlayout.widget.ConstraintLayout>
-
         </androidx.constraintlayout.widget.ConstraintLayout>
+
+        </LinearLayout>
 
     </androidx.core.widget.NestedScrollView>
 

@@ -7,26 +7,15 @@
     <string name="greeting_morning">Good Morning</string>
     <string name="greeting_afternoon">Good Afternoon</string>
     <string name="greeting_evening">Good Evening</string>
-    <string name="user_name">Pasan</string>
 
     <!-- Balance Card -->
     <string name="total_balance">Total Balance</string>
     <string name="total_income">Total Income</string>
     <string name="total_expenses">Total Expenses</string>
-    <string name="sample_balance">Rs. 45,500</string>
-    <string name="sample_income">Rs. 60,000</string>
-    <string name="sample_expenses">Rs. 14,500</string>
 
     <!-- Recent Transactions -->
     <string name="recent_transactions">Recent Transactions</string>
     <string name="view_all">View All</string>
-
-    <!-- Sample Transactions -->
-    <string name="sample_lunch">Lunch</string>
-    <string name="sample_groceries">Groceries</string>
-    <string name="sample_bus_fare">Bus Fare</string>
-    <string name="sample_netflix">Netflix Subscription</string>
-    <string name="sample_electricity">Electricity Bill</string>
 
     <!-- Categories -->
     <string name="cat_food">Food</string>
@@ -105,14 +94,6 @@
     <string name="expense_time">Time</string>
     <string name="expense_notes">Notes</string>
 
-    <!-- Sample Expense Detail Values -->
-    <string name="sample_detail_title">Lunch</string>
-    <string name="sample_detail_amount">Rs. 850.00</string>
-    <string name="sample_detail_category">Food</string>
-    <string name="sample_detail_date">15 July 2026</string>
-    <string name="sample_detail_time">1:30 PM</string>
-    <string name="sample_detail_payment">Cash</string>
-    <string name="sample_detail_notes">Lunch with friends after class.</string>
     <string name="sample_toast_placeholder">%1$s — coming soon in a future update</string>
     <string name="menu_edit">Edit</string>
     <string name="menu_delete">Delete</string>
@@ -126,69 +107,9 @@
     <string name="empty_title">No Expenses Yet</string>
     <string name="empty_description">Start tracking your spending by adding your first expense.</string>
     <string name="empty_add_expense">Add Expense</string>
-    <string name="sample_history_transactions_count">124 Transactions</string>
-    <string name="sample_history_total">Rs. 48,650</string>
 
-    <!-- Sample History Items (12+ items) -->
-    <string name="sample_history_title_1">Lunch</string>
-    <string name="sample_history_cat_1">Food</string>
-    <string name="sample_history_date_1">15 July 2026</string>
-    <string name="sample_history_amount_1">850</string>
 
-    <string name="sample_history_title_2">Fuel</string>
-    <string name="sample_history_cat_2">Transport</string>
-    <string name="sample_history_date_2">14 July 2026</string>
-    <string name="sample_history_amount_2">3500</string>
 
-    <string name="sample_history_title_3">Groceries</string>
-    <string name="sample_history_cat_3">Shopping</string>
-    <string name="sample_history_date_3">13 July 2026</string>
-    <string name="sample_history_amount_3">2750</string>
-
-    <string name="sample_history_title_4">Electricity Bill</string>
-    <string name="sample_history_cat_4">Bills</string>
-    <string name="sample_history_date_4">12 July 2026</string>
-    <string name="sample_history_amount_4">5200</string>
-
-    <string name="sample_history_title_5">Netflix</string>
-    <string name="sample_history_cat_5">Entertainment</string>
-    <string name="sample_history_date_5">11 July 2026</string>
-    <string name="sample_history_amount_5">1200</string>
-
-    <string name="sample_history_title_6">Doctor Visit</string>
-    <string name="sample_history_cat_6">Health</string>
-    <string name="sample_history_date_6">10 July 2026</string>
-    <string name="sample_history_amount_6">2000</string>
-
-    <string name="sample_history_title_7">Course Fee</string>
-    <string name="sample_history_cat_7">Education</string>
-    <string name="sample_history_date_7">9 July 2026</string>
-    <string name="sample_history_amount_7">8500</string>
-
-    <string name="sample_history_title_8">Dinner</string>
-    <string name="sample_history_cat_8">Food</string>
-    <string name="sample_history_date_8">8 July 2026</string>
-    <string name="sample_history_amount_8">1450</string>
-
-    <string name="sample_history_title_9">Bus Pass</string>
-    <string name="sample_history_cat_9">Transport</string>
-    <string name="sample_history_date_9">7 July 2026</string>
-    <string name="sample_history_amount_9">2500</string>
-
-    <string name="sample_history_title_10">Clothing</string>
-    <string name="sample_history_cat_10">Shopping</string>
-    <string name="sample_history_date_10">6 July 2026</string>
-    <string name="sample_history_amount_10">4200</string>
-
-    <string name="sample_history_title_11">Internet Bill</string>
-    <string name="sample_history_cat_11">Bills</string>
-    <string name="sample_history_date_11">5 July 2026</string>
-    <string name="sample_history_amount_11">1899</string>
-
-    <string name="sample_history_title_12">Movie Tickets</string>
-    <string name="sample_history_cat_12">Entertainment</string>
-    <string name="sample_history_date_12">4 July 2026</string>
-    <string name="sample_history_amount_12">1200</string>
 
     <!-- Expense History Content Descriptions -->
     <string name="cd_filter">Filter expenses</string>
@@ -199,7 +120,7 @@
     <string name="category_manager_title">Categories</string>
     <string name="category_summary_label">Categories</string>
     <string name="category_summary_description">Total categories</string>
-    <string name="sample_category_count">8</string>
+
     <string name="search_categories_hint">Search categories&#8230;</string>
 
     <!-- Category Item -->
@@ -247,56 +168,33 @@
     <!-- Financial Summary -->
     <string name="analytics_total_expenses">Total Expenses</string>
     <string name="analytics_total_transactions">Total Transactions</string>
-    <string name="analytics_average_expense">Average Expense</string>
-
-    <!-- Sample Values -->
-    <string name="analytics_sample_total_expenses">Rs. 48,650</string>
-    <string name="analytics_sample_transactions">124</string>
-    <string name="analytics_sample_average_expense">Rs. 392</string>
+    <string name="analytics_monthly_income">Monthly Income</string>
+    <string name="analytics_remaining_balance">Remaining Balance</string>
 
     <!-- Spending by Category -->
     <string name="analytics_spending_by_category">Spending by Category</string>
-    <string name="analytics_pie_chart_placeholder">Pie Chart Placeholder</string>
-
-    <!-- Category Legend Labels -->
-    <string name="analytics_legend_food">Food</string>
-    <string name="analytics_legend_transport">Transport</string>
-    <string name="analytics_legend_shopping">Shopping</string>
-    <string name="analytics_legend_bills">Bills</string>
-    <string name="analytics_legend_entertainment">Entertainment</string>
-
-    <!-- Category Legend Values -->
-    <string name="analytics_legend_food_amount">Rs. 18,000</string>
-    <string name="analytics_legend_transport_amount">Rs. 8,500</string>
-    <string name="analytics_legend_shopping_amount">Rs. 10,000</string>
-    <string name="analytics_legend_bills_amount">Rs. 12,150</string>
-    <string name="analytics_legend_entertainment_amount">Rs. 5,000</string>
 
     <!-- Monthly Spending -->
     <string name="analytics_monthly_spending">Monthly Spending</string>
-    <string name="analytics_bar_chart_placeholder">Bar Chart Placeholder</string>
-
-    <!-- Month Labels -->
-    <string name="month_jan">Jan</string>
-    <string name="month_feb">Feb</string>
-    <string name="month_mar">Mar</string>
-    <string name="month_apr">Apr</string>
-    <string name="month_may">May</string>
-    <string name="month_jun">Jun</string>
 
     <!-- Top Categories -->
     <string name="analytics_top_categories">Top Categories</string>
 
     <!-- Insights -->
     <string name="analytics_insights">Insights</string>
-    <string name="analytics_insight_highest_category">Highest spending category: %1$s</string>
+    <string name="analytics_insight_most_spent_on">You spent the most on %1$s %2$s.</string>
+    <string name="analytics_insight_remaining_balance">Your remaining monthly balance is %1$s.</string>
     <string name="analytics_insight_avg_daily">Average daily spending: %1$s</string>
-    <string name="analytics_insight_highest_day">Highest spending day: %1$s</string>
     <string name="analytics_insight_largest_expense">Largest single expense: %1$s</string>
+
+    <!-- Period Labels (used by insights) -->
+    <string name="period_insight_this_week">this week</string>
+    <string name="period_insight_this_month">this month</string>
+    <string name="period_insight_this_year">this year</string>
 
     <!-- Analytics Empty State -->
     <string name="analytics_empty_title">No Analytics Available</string>
-    <string name="analytics_empty_description">Add some expenses to start viewing your spending insights.</string>
+    <string name="analytics_empty_description">No expense data available yet. Start by adding your first expense.</string>
     <string name="analytics_empty_add_expense">Add Expense</string>
 
     <!-- Analytics Content Descriptions -->
@@ -311,16 +209,14 @@
 
     <!-- Profile Header -->
 
-    <string name="profile_email">pasan@example.com</string>
-    <string name="profile_member_since">Member since July 2026</string>
+    <string name="profile_member_since_format">Member since %1$s</string>
+    <string name="profile_income_value">Monthly Income: %1$s</string>
     <string name="cd_edit_profile">Edit profile</string>
 
     <!-- Financial Preferences -->
     <string name="profile_financial_preferences">Financial Preferences</string>
     <string name="profile_preferred_currency">Preferred Currency</string>
-    <string name="profile_currency_value">Sri Lankan Rupee (LKR)</string>
-    <string name="profile_monthly_budget">Monthly Budget</string>
-    <string name="profile_budget_value">Rs. 75,000</string>
+    <string name="profile_monthly_income">Monthly Income</string>
     <string name="profile_budget_reminder">Budget Reminder</string>
 
     <!-- Application Settings -->
@@ -350,14 +246,47 @@
     <string name="profile_technology">Technology</string>
     <string name="profile_technology_value">Kotlin + XML + Material Design 3</string>
 
+    <!-- Profile Editing -->
+    <string name="edit_profile_dialog_title">Edit Profile</string>
+    <string name="profile_edit">Edit Profile</string>
+    <string name="profile_updated">Profile updated</string>
+
     <!-- Logout -->
     <string name="profile_logout">Log Out</string>
+    <string name="profile_logout_disabled_note">Logout is disabled — this is an offline application</string>
+
+    <!-- Privacy & About -->
+    <string name="privacy_policy_message">Your data is stored only on this device in the local database. SpendWise does not collect, transmit or share any personal information. Clearing the app data or uninstalling the app permanently deletes all records.</string>
+    <string name="about_app_message">SpendWise — your personal finance tracker. Version: %1$s. Technology: %2$s.</string>
+
+    <!-- First-Time Setup -->
+    <string name="setup_title">Welcome to SpendWise</string>
+    <string name="setup_subtitle">Let us set up your profile so we can personalise your dashboard.</string>
+    <string name="setup_full_name_hint">Full Name</string>
+    <string name="setup_monthly_income_hint">Monthly Income</string>
+    <string name="setup_get_started">Get Started</string>
+    <string name="setup_error_name">Please enter your name</string>
+    <string name="setup_error_income">Income must be greater than zero</string>
+    <string name="setup_note">Your profile and income are stored only on this device.</string>
+
+    <!-- Currencies for the Edit Profile dialog -->
+    <string-array name="currencies">
+        <item>LKR</item>
+        <item>USD</item>
+        <item>EUR</item>
+        <item>GBP</item>
+        <item>INR</item>
+        <item>JPY</item>
+        <item>AUD</item>
+        <item>CAD</item>
+    </string-array>
 
     <!-- Profile Content Descriptions -->
     <string name="cd_profile_back">Navigate back</string>
 
     <!-- Navigation Placeholder Messages -->
     <string name="feature_coming_soon">Feature coming soon.</string>
+    <string name="action_ok">OK</string>
 
     <!-- ========================================== -->
     <!-- ROOM DATABASE / CRUD MESSAGES             -->

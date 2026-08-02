@@ -6,7 +6,7 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.firstapp.myapplication.databinding.ItemExpenseHistoryBinding
-import java.text.NumberFormat
+import com.firstapp.myapplication.utils.CurrencyUtils
 
 /**
  * RecyclerView Adapter for displaying a list of [Transaction] items
@@ -41,8 +41,7 @@ class ExpenseHistoryAdapter(
             binding.tvDate.text = transaction.date
 
             // Format and set the amount using primary text color
-            val currencyFormat = NumberFormat.getCurrencyInstance()
-            val formattedAmount = currencyFormat.format(transaction.amount)
+            val formattedAmount = CurrencyUtils.format(transaction.amount)
 
             binding.tvAmount.text = if (transaction.isExpense) {
                 "-$formattedAmount"

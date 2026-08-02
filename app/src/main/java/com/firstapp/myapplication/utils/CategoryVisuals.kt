@@ -17,6 +17,7 @@ object CategoryVisuals {
         "ic_entertainment",
         "ic_health",
         "ic_education",
+        "ic_payment",
         "ic_category_outline"
     )
 
@@ -40,6 +41,7 @@ object CategoryVisuals {
         "ic_entertainment" to R.drawable.ic_entertainment,
         "ic_health" to R.drawable.ic_health,
         "ic_education" to R.drawable.ic_education,
+        "ic_payment" to R.drawable.ic_payment,
         "ic_category_outline" to R.drawable.ic_category_outline
     )
 
