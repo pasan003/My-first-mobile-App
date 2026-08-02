@@ -17,7 +17,7 @@ object DateUtils {
     private val shortDateFormatter = SimpleDateFormat("EEE, dd MMM yyyy", Locale.getDefault())
     private val timeFormatter = SimpleDateFormat("hh:mm a", Locale.getDefault())
     private val dayNameFormatter = SimpleDateFormat("EEEE", Locale.getDefault())
-    private val monthLabelFormatter = SimpleDateFormat("MMM", Locale.getDefault())
+    private val monthYearLabelFormatter = SimpleDateFormat("MMM yyyy", Locale.getDefault())
 
     /** Formats an epoch-millis timestamp as "15 Jul 2026". */
     fun formatDate(millis: Long): String = displayDateFormatter.format(Date(millis))
@@ -31,8 +31,8 @@ object DateUtils {
     /** Returns the weekday name (e.g. "Friday") for a timestamp. */
     fun formatDayName(millis: Long): String = dayNameFormatter.format(Date(millis))
 
-    /** Returns the month abbreviation (e.g. "Jan") for a timestamp. */
-    fun formatMonthLabel(millis: Long): String = monthLabelFormatter.format(Date(millis))
+    /** Returns the month + year (e.g. "Jan 2026") for a timestamp. */
+    fun formatMonthYearLabel(millis: Long): String = monthYearLabelFormatter.format(Date(millis))
 
     /**
      * Returns a [startDate, endDate) range for the given analytics period.
@@ -75,10 +75,10 @@ object DateUtils {
     }
 
     /**
-     * Returns the start/end timestamps for each of the first six months of the
-     * current year (Jan–Jun), used by the "Monthly Spending" section.
+     * Returns the start/end timestamps for each month of the current year
+     * (Jan–Dec), used by the "Monthly Spending" section.
      */
-    fun firstSixMonthsOfYear(): List<Pair<Long, Long>> {
+    fun monthsOfYear(): List<Pair<Long, Long>> {
         val cal = Calendar.getInstance()
         cal.set(Calendar.DAY_OF_YEAR, 1)
         cal.set(Calendar.HOUR_OF_DAY, 0)
@@ -86,7 +86,7 @@ object DateUtils {
         cal.set(Calendar.SECOND, 0)
         cal.set(Calendar.MILLISECOND, 0)
 
-        return (0 until 6).map { monthIndex ->
+        return (0 until 12).map { monthIndex ->
             cal.set(Calendar.MONTH, monthIndex)
             val start = cal.timeInMillis
             cal.add(Calendar.MONTH, 1)
