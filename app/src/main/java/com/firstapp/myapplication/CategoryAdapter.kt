@@ -6,20 +6,28 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.firstapp.myapplication.databinding.ItemCategoryBinding
+import com.firstapp.myapplication.utils.CurrencyUtils
 
 /**
  * RecyclerView Adapter for displaying a list of [CategoryItem] objects
  * on the Category Manager screen.
  *
- * Each item displays a category icon, name, expense count, color indicator,
- * and an edit icon on the right.
+ * Each item displays a category icon, name, transaction count, total amount
+ * spent, color indicator, and an edit icon on the right.
  *
  * @param onEditClick Callback invoked when the edit icon on a category is tapped.
+ * @param onItemLongClick Callback invoked when a category row is long-pressed.
  */
 class CategoryAdapter(
     private val onEditClick: ((CategoryItem) -> Unit)? = null,
     private val onItemLongClick: ((CategoryItem) -> Unit)? = null
 ) : ListAdapter<CategoryItem, CategoryAdapter.ViewHolder>(DiffCallback()) {
+
+    /**
+     * Currency symbol used to format the total amount. Set by the screen
+     * (from the user profile) and applied on the next re-bind.
+     */
+    var currencySymbol: String = CurrencyUtils.DEFAULT_SYMBOL
 
     /**
      * Holds references to the views in a single category item.
@@ -29,6 +37,7 @@ class CategoryAdapter(
 
         fun bind(
             category: CategoryItem,
+            currencySymbol: String,
             onEditClick: ((CategoryItem) -> Unit)?,
             onItemLongClick: ((CategoryItem) -> Unit)?
         ) {
@@ -40,12 +49,16 @@ class CategoryAdapter(
             // Set category name
             binding.tvCategoryName.text = category.name
 
-            // Set expense count with plural handling
+            // Set transaction count with plural handling
             binding.tvExpenseCount.text = context.resources.getQuantityString(
                 R.plurals.category_expense_count,
                 category.expenseCount,
                 category.expenseCount
             )
+
+            // Set total amount spent in this category
+            binding.tvTotalAmount.text =
+                CurrencyUtils.format(category.totalAmount, currencySymbol)
 
             // Set color indicator background
             binding.viewColorIndicator.setBackgroundColor(
@@ -73,13 +86,13 @@ class CategoryAdapter(
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        holder.bind(getItem(position), onEditClick, onItemLongClick)
+        holder.bind(getItem(position), currencySymbol, onEditClick, onItemLongClick)
     }
 
     /**
      * DiffUtil callback for efficient list updates.
-     * Matches on [CategoryItem.id] for item identity and [CategoryItem.name]
-     * and [CategoryItem.expenseCount] for content comparison.
+     * Matches on [CategoryItem.id] for item identity; the data class equals
+     * (name, expenseCount, totalAmount, icon, color) for content comparison.
      */
     class DiffCallback : DiffUtil.ItemCallback<CategoryItem>() {
         override fun areItemsTheSame(oldItem: CategoryItem, newItem: CategoryItem): Boolean {

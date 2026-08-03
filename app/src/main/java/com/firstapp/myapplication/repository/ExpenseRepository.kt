@@ -2,6 +2,7 @@ package com.firstapp.myapplication.repository
 
 import com.firstapp.myapplication.database.dao.ExpenseDao
 import com.firstapp.myapplication.database.entity.Expense
+import com.firstapp.myapplication.database.relation.CategoryStats
 import com.firstapp.myapplication.database.relation.ExpenseWithCategory
 import kotlinx.coroutines.flow.Flow
 
@@ -21,6 +22,9 @@ class ExpenseRepository(private val expenseDao: ExpenseDao) {
         expenseDao.getRecentExpenses(limit)
 
     fun getTotalExpenses(): Flow<Double> = expenseDao.getTotalExpenses()
+
+    /** Aggregated transaction count + total amount per category. */
+    fun getCategoryStats(): Flow<List<CategoryStats>> = expenseDao.getCategoryStats()
 
     fun getMonthlyExpenses(startDate: Long, endDate: Long): Flow<Double> =
         expenseDao.getMonthlyExpenses(startDate, endDate)

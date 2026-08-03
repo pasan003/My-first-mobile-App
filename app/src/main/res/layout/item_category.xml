@@ -80,7 +80,22 @@
             app:layout_constraintEnd_toStartOf="@id/ivEditCategory"
             app:layout_constraintStart_toStartOf="@id/tvCategoryName"
             app:layout_constraintTop_toBottomOf="@id/tvCategoryName"
-            tools:text="42 Expenses" />
+            tools:text="42 Transactions" />
+
+        <!-- ===== CENTER: Total Amount Spent ===== -->
+        <TextView
+            android:id="@+id/tvTotalAmount"
+            style="@style/TextAppearance.Material3.BodyMedium"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="4dp"
+            android:textColor="@color/primary"
+            android:textSize="15sp"
+            android:textStyle="bold"
+            app:layout_constraintEnd_toStartOf="@id/ivEditCategory"
+            app:layout_constraintStart_toStartOf="@id/tvCategoryName"
+            app:layout_constraintTop_toBottomOf="@id/tvExpenseCount"
+            tools:text="Rs. 25,600" />
 
         <!-- ===== RIGHT: Edit Icon ===== -->
         <ImageView
