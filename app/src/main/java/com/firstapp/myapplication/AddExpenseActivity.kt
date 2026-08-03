@@ -34,6 +34,9 @@ class AddExpenseActivity : BaseActivity() {
     /** Original createdAt of the expense being edited (preserved on update). */
     private var originalCreatedAt: Long = System.currentTimeMillis()
 
+    /** Guards against double-tapping Save, which would insert duplicate rows. */
+    private var isSaving = false
+
     companion object {
         const val EXTRA_EXPENSE_ID = "extra_expense_id"
     }
@@ -189,8 +192,11 @@ class AddExpenseActivity : BaseActivity() {
     /**
      * Validates the form and saves the expense to the Room database.
      * Shows a success message and returns to the previous screen.
+     * Concurrent taps are ignored so a single save cannot insert duplicate rows.
      */
     private fun handleSave() {
+        if (isSaving) return
+
         val title = binding.etExpenseTitle.text?.toString()?.trim().orEmpty()
         val amountText = binding.etAmount.text?.toString()?.trim().orEmpty()
         val categoryName = binding.actvCategory.text?.toString()?.trim().orEmpty()
@@ -237,6 +243,9 @@ class AddExpenseActivity : BaseActivity() {
                 Toast.makeText(this, R.string.error_select_valid_category, Toast.LENGTH_SHORT).show()
                 return
             }
+
+        isSaving = true
+        binding.btnSaveExpense.isEnabled = false
 
         if (editingExpenseId != null) {
             // Update existing expense

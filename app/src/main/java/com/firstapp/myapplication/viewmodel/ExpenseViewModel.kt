@@ -12,6 +12,11 @@ import com.firstapp.myapplication.database.relation.ExpenseWithCategory
 import com.firstapp.myapplication.repository.ExpenseRepository
 import com.firstapp.myapplication.utils.Mapper
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
 
@@ -19,14 +24,39 @@ import kotlinx.coroutines.launch
  * Exposes expense data from the repository as [LiveData] so Activities can
  * observe it instead of querying the database directly.
  */
+@OptIn(ExperimentalCoroutinesApi::class)
 class ExpenseViewModel(application: Application) : AndroidViewModel(application) {
 
     private val repository =
         ExpenseRepository(AppDatabase.getInstance(application.applicationContext).expenseDao())
 
+    /**
+     * Currently selected category filter for Expense History.
+     * `null` means "All" (no category filter).
+     */
+    private val _selectedCategoryId = MutableStateFlow<Long?>(null)
+    val selectedCategoryId: StateFlow<Long?> = _selectedCategoryId.asStateFlow()
+
     /** All expenses (newest first) with their category info — used by Expense History. */
     val allExpenses: LiveData<List<Transaction>> = repository.getAllExpenses()
         .map { list -> list.map { Mapper.toTransaction(it) } }
+        .asLiveData()
+
+    /**
+     * Expenses for Expense History, filtered by [selectedCategoryId] via Room.
+     * When the selected id is null, every expense is returned; otherwise only
+     * expenses that match that category id are returned. Emits again whenever
+     * the filter changes or the underlying expenses table changes.
+     */
+    val filteredExpenses: LiveData<List<Transaction>> = _selectedCategoryId
+        .flatMapLatest { categoryId ->
+            val source = if (categoryId == null) {
+                repository.getAllExpenses()
+            } else {
+                repository.getExpensesByCategory(categoryId)
+            }
+            source.map { list -> list.map { Mapper.toTransaction(it) } }
+        }
         .asLiveData()
 
     /** Total amount of all expenses — used by the Dashboard balance card. */
@@ -56,6 +86,16 @@ class ExpenseViewModel(application: Application) : AndroidViewModel(application)
     /** Total expenses for the current month — used by History summary. */
     fun getMonthlyExpenses(startDate: Long, endDate: Long): LiveData<Double> =
         repository.getMonthlyExpenses(startDate, endDate).asLiveData()
+
+    /**
+     * Updates the category filter used by [filteredExpenses].
+     * Pass `null` to show every transaction ("All").
+     */
+    fun selectCategoryFilter(categoryId: Long?) {
+        if (_selectedCategoryId.value != categoryId) {
+            _selectedCategoryId.value = categoryId
+        }
+    }
 
     // ---------- WRITE OPERATIONS ----------
 
