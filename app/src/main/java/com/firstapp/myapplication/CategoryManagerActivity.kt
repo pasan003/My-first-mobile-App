@@ -7,7 +7,6 @@ import android.view.View
 import android.widget.ArrayAdapter
 import android.widget.Toast
 import androidx.activity.viewModels
-import androidx.appcompat.app.AppCompatActivity
 import androidx.core.widget.addTextChangedListener
 import com.firstapp.myapplication.databinding.ActivityCategoryManagerBinding
 import com.firstapp.myapplication.databinding.DialogAddEditCategoryBinding
@@ -15,11 +14,13 @@ import com.firstapp.myapplication.databinding.DialogDeleteCategoryBinding
 import com.firstapp.myapplication.database.entity.Category
 import com.firstapp.myapplication.utils.CategoryVisuals
 import com.firstapp.myapplication.utils.CurrencyUtils
+import com.firstapp.myapplication.utils.UiAnimations
 import com.firstapp.myapplication.viewmodel.CategorySaveResult
 import com.firstapp.myapplication.viewmodel.CategorySortOption
 import com.firstapp.myapplication.viewmodel.CategoryViewModel
 import com.firstapp.myapplication.viewmodel.UserProfileViewModel
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
+import com.google.android.material.snackbar.Snackbar
 
 /**
  * Category Manager backed by the Room database.
@@ -36,7 +37,7 @@ import com.google.android.material.dialog.MaterialAlertDialogBuilder
  *   to "Other" inside one Room transaction, so no expense is ever orphaned
  * - Amounts are formatted with the user profile's currency
  */
-class CategoryManagerActivity : AppCompatActivity() {
+class CategoryManagerActivity : BaseActivity() {
 
     private lateinit var binding: ActivityCategoryManagerBinding
     private val viewModel: CategoryViewModel by viewModels()
@@ -58,6 +59,7 @@ class CategoryManagerActivity : AppCompatActivity() {
         setupFab()
         observeData()
         observeCurrency()
+        UiAnimations.pressFeedback(binding.fabAddCategory)
     }
 
     /**
@@ -270,7 +272,7 @@ class CategoryManagerActivity : AppCompatActivity() {
                 viewModel.insert(
                     Category(name = name, icon = selectedIcon, color = selectedColor)
                 ) { result ->
-                    showSaveResultToast(result, R.string.category_added)
+                    showSaveResultMessage(result, R.string.category_added)
                 }
             } else {
                 viewModel.update(
@@ -281,7 +283,7 @@ class CategoryManagerActivity : AppCompatActivity() {
                         color = selectedColor
                     )
                 ) { result ->
-                    showSaveResultToast(result, R.string.category_updated)
+                    showSaveResultMessage(result, R.string.category_updated)
                 }
             }
             dialog.dismiss()
@@ -291,15 +293,15 @@ class CategoryManagerActivity : AppCompatActivity() {
     }
 
     /**
-     * Shows a toast for the outcome of an insert/update, e.g. success or duplicate name.
+     * Shows a Snackbar for the outcome of an insert/update, e.g. success or duplicate name.
      */
-    private fun showSaveResultToast(result: CategorySaveResult, successMessage: Int) {
+    private fun showSaveResultMessage(result: CategorySaveResult, successMessage: Int) {
         runOnUiThread {
             val messageRes = when (result) {
                 CategorySaveResult.SUCCESS -> successMessage
                 CategorySaveResult.DUPLICATE_NAME -> R.string.error_category_duplicate
             }
-            Toast.makeText(this, messageRes, Toast.LENGTH_SHORT).show()
+            Snackbar.make(binding.root, messageRes, Snackbar.LENGTH_SHORT).show()
         }
     }
 
@@ -337,11 +339,11 @@ class CategoryManagerActivity : AppCompatActivity() {
                 moveExpensesToOther = inUse
             ) { success ->
                 runOnUiThread {
-                    Toast.makeText(
-                        this,
+                    Snackbar.make(
+                        binding.root,
                         if (success) R.string.category_deleted
                         else R.string.error_category_delete_blocked,
-                        Toast.LENGTH_SHORT
+                        Snackbar.LENGTH_SHORT
                     ).show()
                 }
             }

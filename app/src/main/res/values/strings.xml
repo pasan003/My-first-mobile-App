@@ -225,51 +225,38 @@
     <string name="profile_income_value">Monthly Income: %1$s</string>
     <string name="cd_edit_profile">Edit profile</string>
 
-    <!-- Financial Preferences -->
-    <string name="profile_financial_preferences">Financial Preferences</string>
-    <string name="profile_preferred_currency">Preferred Currency</string>
+    <!-- Financial Summary -->
+    <string name="profile_financial_summary">Financial Summary</string>
     <string name="profile_monthly_income">Monthly Income</string>
-    <string name="profile_budget_reminder">Budget Reminder</string>
+    <string name="profile_remaining_balance">Remaining Balance</string>
+    <string name="profile_total_transactions">Total Transactions</string>
 
     <!-- Application Settings -->
     <string name="profile_application_settings">Application Settings</string>
-    <string name="profile_notifications">Notifications</string>
-    <string name="profile_notifications_desc">Manage your notification preferences</string>
-    <string name="profile_language">Language</string>
-    <string name="profile_language_desc">Select your preferred language</string>
-    <string name="profile_date_format">Date Format</string>
-    <string name="profile_date_format_desc">Choose how dates are displayed</string>
-    <string name="profile_currency_format">Currency Format</string>
-    <string name="profile_currency_format_desc">Customise currency display</string>
-
-    <!-- Help & Support -->
+    <string name="profile_currency">Currency</string>
+    <string name="profile_about_spendwise">About SpendWise</string>
     <string name="profile_help_support">Help &amp; Support</string>
-    <string name="profile_help_center">Help Center</string>
-    <string name="profile_contact_support">Contact Support</string>
     <string name="profile_privacy_policy">Privacy Policy</string>
-    <string name="profile_terms_conditions">Terms &amp; Conditions</string>
+    <string name="profile_app_version">App Version</string>
 
-    <!-- About SpendWise -->
-    <string name="profile_about_title">About SpendWise</string>
-    <string name="profile_version">Application Version</string>
-    <string name="profile_version_value">Version 1.0.0</string>
-    <string name="profile_developer">Developer</string>
-    <string name="profile_developer_value">Student Project</string>
-    <string name="profile_technology">Technology</string>
-    <string name="profile_technology_value">Kotlin + XML + Material Design 3</string>
+    <!-- Storage Information -->
+    <string name="profile_storage_information">Storage Information</string>
+    <string name="profile_total_categories">Total Categories</string>
+    <string name="profile_database_status">Database Status</string>
+    <string name="profile_database_status_value">Local database • Active</string>
 
     <!-- Profile Editing -->
     <string name="edit_profile_dialog_title">Edit Profile</string>
     <string name="profile_edit">Edit Profile</string>
     <string name="profile_updated">Profile updated</string>
 
-    <!-- Logout -->
-    <string name="profile_logout">Log Out</string>
-    <string name="profile_logout_disabled_note">Logout is disabled — this is an offline application</string>
-
-    <!-- Privacy & About -->
+    <!-- About / Privacy / Help dialogs -->
+    <string name="profile_version_value">Version 1.0.0</string>
+    <string name="profile_technology_value">Kotlin + XML + Material Design 3</string>
+    <string name="profile_about_title">About SpendWise</string>
     <string name="privacy_policy_message">Your data is stored only on this device in the local database. SpendWise does not collect, transmit or share any personal information. Clearing the app data or uninstalling the app permanently deletes all records.</string>
     <string name="about_app_message">SpendWise — your personal finance tracker. Version: %1$s. Technology: %2$s.</string>
+    <string name="profile_help_support_message">SpendWise runs completely offline. All your data stays on this device and is never uploaded anywhere. If you need help, check the app documentation or contact the developer through the project repository.</string>
 
     <!-- First-Time Setup -->
     <string name="setup_title">Welcome to SpendWise</string>
@@ -296,8 +283,7 @@
     <!-- Profile Content Descriptions -->
     <string name="cd_profile_back">Navigate back</string>
 
-    <!-- Navigation Placeholder Messages -->
-    <string name="feature_coming_soon">Feature coming soon.</string>
+    <!-- Generic action labels -->
     <string name="action_ok">OK</string>
 
     <!-- ========================================== -->
@@ -306,6 +292,7 @@
     <string name="expense_saved">Expense saved</string>
     <string name="expense_updated">Expense updated</string>
     <string name="expense_deleted">Expense deleted</string>
+    <string name="expense_added_success">Expense Added Successfully</string>
     <string name="delete_expense_confirm_message">This expense will be permanently deleted.</string>
     <string name="error_expense_not_found">Expense not found</string>
     <string name="not_specified">Not specified</string>

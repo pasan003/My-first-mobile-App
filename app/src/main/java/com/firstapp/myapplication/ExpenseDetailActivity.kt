@@ -6,14 +6,15 @@ import android.view.Menu
 import android.view.MenuItem
 import android.widget.Toast
 import androidx.activity.viewModels
-import androidx.appcompat.app.AppCompatActivity
 import com.firstapp.myapplication.databinding.ActivityExpenseDetailBinding
 import com.firstapp.myapplication.database.relation.ExpenseWithCategory
 import com.firstapp.myapplication.utils.CategoryVisuals
 import com.firstapp.myapplication.utils.CurrencyUtils
 import com.firstapp.myapplication.utils.DateUtils
+import com.firstapp.myapplication.utils.UiAnimations
 import com.firstapp.myapplication.viewmodel.ExpenseViewModel
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
+import com.google.android.material.snackbar.Snackbar
 
 /**
  * Displays the details of a single expense loaded from the Room database.
@@ -22,7 +23,7 @@ import com.google.android.material.dialog.MaterialAlertDialogBuilder
  * record (including category, notes, payment method and time) and supports
  * editing (via AddExpenseActivity) and deleting the expense.
  */
-class ExpenseDetailActivity : AppCompatActivity() {
+class ExpenseDetailActivity : BaseActivity() {
 
     private lateinit var binding: ActivityExpenseDetailBinding
     private val viewModel: ExpenseViewModel by viewModels()
@@ -44,6 +45,8 @@ class ExpenseDetailActivity : AppCompatActivity() {
         setupToolbar()
         setupButtons()
         observeExpense()
+        UiAnimations.pressFeedback(binding.btnEditExpense)
+        UiAnimations.pressFeedback(binding.btnDeleteExpense)
     }
 
     /**
@@ -157,10 +160,10 @@ class ExpenseDetailActivity : AppCompatActivity() {
             .setPositiveButton(R.string.delete) { _, _ ->
                 viewModel.delete(expense) {
                     runOnUiThread {
-                        Toast.makeText(
-                            this,
+                        Snackbar.make(
+                            binding.root,
                             R.string.expense_deleted,
-                            Toast.LENGTH_SHORT
+                            Snackbar.LENGTH_SHORT
                         ).show()
                         finish()
                     }

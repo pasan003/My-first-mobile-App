@@ -6,10 +6,10 @@ import android.view.MenuItem
 import android.widget.ArrayAdapter
 import android.widget.Toast
 import androidx.activity.viewModels
-import androidx.appcompat.app.AppCompatActivity
 import com.firstapp.myapplication.databinding.ActivityAddExpenseBinding
 import com.firstapp.myapplication.database.entity.Expense
 import com.firstapp.myapplication.utils.DateUtils
+import com.firstapp.myapplication.utils.UiAnimations
 import com.firstapp.myapplication.viewmodel.CategoryViewModel
 import com.firstapp.myapplication.viewmodel.ExpenseViewModel
 import com.google.android.material.datepicker.MaterialDatePicker
@@ -17,7 +17,7 @@ import com.google.android.material.snackbar.Snackbar
 import java.util.Date
 import java.util.TimeZone
 
-class AddExpenseActivity : AppCompatActivity() {
+class AddExpenseActivity : BaseActivity() {
 
     private lateinit var binding: ActivityAddExpenseBinding
 
@@ -50,6 +50,7 @@ class AddExpenseActivity : AppCompatActivity() {
         setupDatePicker()
         setupClickListeners()
         observeCategories()
+        UiAnimations.pressFeedback(binding.btnSaveExpense)
 
         if (editingExpenseId != null) {
             setupEditMode()
@@ -251,6 +252,7 @@ class AddExpenseActivity : AppCompatActivity() {
             )
             expenseViewModel.update(existing) {
                 runOnUiThread {
+                    setResult(RESULT_OK)
                     Snackbar.make(binding.root, getString(R.string.expense_updated), Snackbar.LENGTH_SHORT).show()
                     binding.root.postDelayed({ finish() }, 500)
                 }
@@ -267,6 +269,7 @@ class AddExpenseActivity : AppCompatActivity() {
             )
             expenseViewModel.insert(expense) {
                 runOnUiThread {
+                    setResult(RESULT_OK)
                     Snackbar.make(binding.root, getString(R.string.expense_saved), Snackbar.LENGTH_SHORT).show()
                     binding.root.postDelayed({ finish() }, 500)
                 }
