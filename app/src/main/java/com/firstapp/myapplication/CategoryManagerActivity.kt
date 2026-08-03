@@ -8,28 +8,44 @@ import android.widget.ArrayAdapter
 import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.widget.addTextChangedListener
 import com.firstapp.myapplication.databinding.ActivityCategoryManagerBinding
 import com.firstapp.myapplication.databinding.DialogAddEditCategoryBinding
 import com.firstapp.myapplication.databinding.DialogDeleteCategoryBinding
 import com.firstapp.myapplication.database.entity.Category
 import com.firstapp.myapplication.utils.CategoryVisuals
+import com.firstapp.myapplication.utils.CurrencyUtils
+import com.firstapp.myapplication.viewmodel.CategorySaveResult
+import com.firstapp.myapplication.viewmodel.CategorySortOption
 import com.firstapp.myapplication.viewmodel.CategoryViewModel
+import com.firstapp.myapplication.viewmodel.UserProfileViewModel
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 
 /**
  * Category Manager backed by the Room database.
  *
- * - Categories + live expense counts load from Room
- * - FAB / edit icon open the add-edit dialog (name, icon, color)
- * - Long-press opens the delete confirmation dialog
- * - Deleting a category that still has expenses is blocked with a message
+ * - Categories load from Room together with their live transaction count
+ *   and total amount (both aggregated by SQL queries, not the UI)
+ * - The search bar filters categories in real time while typing
+ * - The toolbar menu opens the sort dialog (name, most/least used,
+ *   highest/lowest spending — remembered until the screen closes)
+ * - FAB / edit icon open the add-edit dialog (name, icon, color) with
+ *   duplicate-name validation
+ * - Long-press opens the delete flow: categories without expenses are
+ *   deleted normally; categories in use first ask to move their expenses
+ *   to "Other" inside one Room transaction, so no expense is ever orphaned
+ * - Amounts are formatted with the user profile's currency
  */
 class CategoryManagerActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityCategoryManagerBinding
     private val viewModel: CategoryViewModel by viewModels()
+    private val profileViewModel: UserProfileViewModel by viewModels()
 
     private lateinit var adapter: CategoryAdapter
+
+    /** Current search text — drives the "no matching categories" message. */
+    private var searchQuery = ""
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -38,8 +54,10 @@ class CategoryManagerActivity : AppCompatActivity() {
 
         setupToolbar()
         setupRecyclerView()
+        setupSearch()
         setupFab()
         observeData()
+        observeCurrency()
     }
 
     /**
@@ -63,7 +81,7 @@ class CategoryManagerActivity : AppCompatActivity() {
                 true
             }
             R.id.action_more_options -> {
-                showPlaceholderToast(getString(R.string.cd_more_options))
+                showSortDialog()
                 true
             }
             else -> super.onOptionsItemSelected(item)
@@ -83,14 +101,13 @@ class CategoryManagerActivity : AppCompatActivity() {
     }
 
     /**
-     * Shows a short toast as a placeholder for future functionality.
+     * Wires the search bar so every keystroke filters the categories in real time.
      */
-    private fun showPlaceholderToast(action: String) {
-        Toast.makeText(
-            this,
-            getString(R.string.sample_toast_placeholder, action),
-            Toast.LENGTH_SHORT
-        ).show()
+    private fun setupSearch() {
+        binding.etSearch.addTextChangedListener { editable ->
+            searchQuery = editable?.toString().orEmpty()
+            viewModel.setSearchQuery(searchQuery)
+        }
     }
 
     /**
@@ -109,22 +126,62 @@ class CategoryManagerActivity : AppCompatActivity() {
     }
 
     /**
-     * Observes categories and updates the list, summary badge and empty state.
+     * Observes the raw category count (empty state) and the filtered list
+     * (RecyclerView + "no matching categories" message).
      */
     private fun observeData() {
-        viewModel.categories.observe(this) { categories ->
-            adapter.submitList(categories)
+        viewModel.categoryCount.observe(this) { total ->
+            binding.tvSummaryCount.text = total.toString()
 
-            // Summary count badge
-            binding.tvSummaryCount.text = categories.size.toString()
-
-            // Empty state
-            val isEmpty = categories.isEmpty()
-            binding.rvCategories.visibility = if (isEmpty) View.GONE else View.VISIBLE
+            val isEmpty = total == 0
             binding.cardSummary.visibility = if (isEmpty) View.GONE else View.VISIBLE
             binding.cardSearch.visibility = if (isEmpty) View.GONE else View.VISIBLE
             binding.layoutEmptyState.root.visibility = if (isEmpty) View.VISIBLE else View.GONE
         }
+
+        viewModel.categories.observe(this) { categories ->
+            adapter.submitList(categories)
+
+            val noResults = categories.isEmpty() && searchQuery.isNotBlank()
+            binding.rvCategories.visibility = if (categories.isEmpty()) View.GONE else View.VISIBLE
+            binding.tvNoResults.visibility = if (noResults) View.VISIBLE else View.GONE
+        }
+    }
+
+    /**
+     * Observes the user profile so amounts are formatted with the preferred currency.
+     */
+    private fun observeCurrency() {
+        profileViewModel.profile.observe(this) { profile ->
+            adapter.currencySymbol = profile?.let { CurrencyUtils.symbolFor(it.currency) }
+                ?: CurrencyUtils.DEFAULT_SYMBOL
+            adapter.notifyDataSetChanged()
+        }
+    }
+
+    /**
+     * Shows the sort selection dialog with the five sort options.
+     * The chosen option is stored in the ViewModel, so it is remembered
+     * until the screen is closed (but survives rotation).
+     */
+    private fun showSortDialog() {
+        val options = listOf(
+            getString(R.string.sort_name_az),
+            getString(R.string.sort_most_used),
+            getString(R.string.sort_least_used),
+            getString(R.string.sort_highest_spending),
+            getString(R.string.sort_lowest_spending)
+        )
+        val selectedIndex = viewModel.sortOption.value.ordinal
+
+        MaterialAlertDialogBuilder(this)
+            .setTitle(R.string.sort_categories_title)
+            .setSingleChoiceItems(options.toTypedArray(), selectedIndex) { dialog, which ->
+                viewModel.setSortOption(CategorySortOption.entries[which])
+                dialog.dismiss()
+            }
+            .setNegativeButton(R.string.cancel, null)
+            .show()
     }
 
     /**
@@ -212,10 +269,8 @@ class CategoryManagerActivity : AppCompatActivity() {
             if (category == null) {
                 viewModel.insert(
                     Category(name = name, icon = selectedIcon, color = selectedColor)
-                ) {
-                    runOnUiThread {
-                        Toast.makeText(this, R.string.category_added, Toast.LENGTH_SHORT).show()
-                    }
+                ) { result ->
+                    showSaveResultToast(result, R.string.category_added)
                 }
             } else {
                 viewModel.update(
@@ -225,10 +280,8 @@ class CategoryManagerActivity : AppCompatActivity() {
                         icon = selectedIcon,
                         color = selectedColor
                     )
-                ) {
-                    runOnUiThread {
-                        Toast.makeText(this, R.string.category_updated, Toast.LENGTH_SHORT).show()
-                    }
+                ) { result ->
+                    showSaveResultToast(result, R.string.category_updated)
                 }
             }
             dialog.dismiss()
@@ -238,21 +291,35 @@ class CategoryManagerActivity : AppCompatActivity() {
     }
 
     /**
-     * Shows the delete confirmation dialog. Categories that still have
-     * expenses cannot be deleted (would break the foreign key), so a
-     * friendly message is shown instead.
+     * Shows a toast for the outcome of an insert/update, e.g. success or duplicate name.
+     */
+    private fun showSaveResultToast(result: CategorySaveResult, successMessage: Int) {
+        runOnUiThread {
+            val messageRes = when (result) {
+                CategorySaveResult.SUCCESS -> successMessage
+                CategorySaveResult.DUPLICATE_NAME -> R.string.error_category_duplicate
+            }
+            Toast.makeText(this, messageRes, Toast.LENGTH_SHORT).show()
+        }
+    }
+
+    /**
+     * Shows the delete flow.
+     *
+     * Categories without expenses are deleted normally. Categories that are
+     * still used by expenses show a warning with a "Move to Other & Delete"
+     * action that reassigns every expense to the "Other" category inside one
+     * Room transaction, so no expense is ever left without a valid category.
      */
     private fun showDeleteDialog(category: CategoryItem) {
-        if (category.expenseCount > 0) {
-            Toast.makeText(
-                this,
-                getString(R.string.error_category_in_use, category.expenseCount),
-                Toast.LENGTH_LONG
-            ).show()
-            return
-        }
-
         val dialogBinding = DialogDeleteCategoryBinding.inflate(layoutInflater)
+
+        val inUse = category.expenseCount > 0
+        if (inUse) {
+            dialogBinding.tvDeleteMessage.text =
+                getString(R.string.delete_category_in_use_message, category.expenseCount)
+            dialogBinding.btnDeleteConfirm.text = getString(R.string.delete_category_move_to_other)
+        }
 
         val dialog = MaterialAlertDialogBuilder(this)
             .setView(dialogBinding.root)
@@ -266,10 +333,16 @@ class CategoryManagerActivity : AppCompatActivity() {
                     name = category.name,
                     icon = reverseIconName(category.iconResId),
                     color = reverseColorName(category.colorIndicatorResId)
-                )
-            ) {
+                ),
+                moveExpensesToOther = inUse
+            ) { success ->
                 runOnUiThread {
-                    Toast.makeText(this, R.string.category_deleted, Toast.LENGTH_SHORT).show()
+                    Toast.makeText(
+                        this,
+                        if (success) R.string.category_deleted
+                        else R.string.error_category_delete_blocked,
+                        Toast.LENGTH_SHORT
+                    ).show()
                 }
             }
             dialog.dismiss()

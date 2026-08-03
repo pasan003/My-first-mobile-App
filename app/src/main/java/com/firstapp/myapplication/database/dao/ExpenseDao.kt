@@ -7,6 +7,7 @@ import androidx.room.Query
 import androidx.room.Transaction
 import androidx.room.Update
 import com.firstapp.myapplication.database.entity.Expense
+import com.firstapp.myapplication.database.relation.CategoryStats
 import com.firstapp.myapplication.database.relation.ExpenseWithCategory
 import kotlinx.coroutines.flow.Flow
 
@@ -41,6 +42,18 @@ interface ExpenseDao {
     /** Total amount of all expenses. */
     @Query("SELECT COALESCE(SUM(amount), 0.0) FROM expenses")
     fun getTotalExpenses(): Flow<Double>
+
+    /**
+     * Aggregated transaction count and total amount per category.
+     * Categories with no expenses simply have no row (treated as 0 / 0.0).
+     */
+    @Query(
+        "SELECT categoryId AS categoryId, " +
+            "COUNT(*) AS transactionCount, " +
+            "COALESCE(SUM(amount), 0.0) AS totalAmount " +
+            "FROM expenses GROUP BY categoryId"
+    )
+    fun getCategoryStats(): Flow<List<CategoryStats>>
 
     /** Total amount of expenses recorded between two timestamps (inclusive start, exclusive end). */
     @Query(

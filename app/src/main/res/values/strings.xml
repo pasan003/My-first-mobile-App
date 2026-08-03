@@ -125,9 +125,18 @@
 
     <!-- Category Item -->
     <plurals name="category_expense_count">
-        <item quantity="one">%d Expense</item>
-        <item quantity="other">%d Expenses</item>
+        <item quantity="one">%d Transaction</item>
+        <item quantity="other">%d Transactions</item>
     </plurals>
+
+    <!-- Category Search & Sort -->
+    <string name="search_no_results">No matching categories found.</string>
+    <string name="sort_categories_title">Sort categories</string>
+    <string name="sort_name_az">Name (A–Z)</string>
+    <string name="sort_most_used">Most Used</string>
+    <string name="sort_least_used">Least Used</string>
+    <string name="sort_highest_spending">Highest Spending</string>
+    <string name="sort_lowest_spending">Lowest Spending</string>
 
     <!-- Add/Edit Category Dialog -->
     <string name="add_category_dialog_title">Add Category</string>
@@ -140,11 +149,14 @@
 
     <!-- Delete Confirmation Dialog -->
     <string name="delete_category_title">Delete Category?</string>
-    <string name="delete_category_message">Deleting this category will not remove existing expenses. They can be reassigned later.</string>
+    <string name="delete_category_message">This category will be permanently deleted.</string>
+    <string name="delete_category_in_use_message">This category is used by %1$d expense(s). Deleting it may affect existing records. Move them to "Other" to continue.</string>
+    <string name="delete_category_move_to_other">Move to Other &amp; Delete</string>
+    <string name="error_category_delete_blocked">This category cannot be deleted while it has expenses.</string>
 
     <!-- Empty State -->
-    <string name="empty_categories_title">No Categories Found</string>
-    <string name="empty_categories_description">Create your first category to organize your expenses.</string>
+    <string name="empty_categories_title">No categories available.</string>
+    <string name="empty_categories_description">Tap the + button to create your first category.</string>
     <string name="empty_add_category">Add Category</string>
 
     <!-- Content Descriptions -->
@@ -304,7 +316,7 @@
     <string name="category_updated">Category updated</string>
     <string name="category_deleted">Category deleted</string>
     <string name="error_category_name_required">Category name is required</string>
-    <string name="error_category_in_use">This category has %1$d expenses and cannot be deleted yet.</string>
+    <string name="error_category_duplicate">A category with this name already exists.</string>
 
     <plurals name="transaction_count">
         <item quantity="one">%d Transaction</item>

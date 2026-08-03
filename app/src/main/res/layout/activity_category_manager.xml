@@ -149,11 +149,10 @@
                         android:layout_marginStart="12dp"
                         android:layout_weight="1"
                         android:background="@null"
-                        android:clickable="false"
-                        android:focusable="false"
                         android:fontFamily="sans-serif"
                         android:hint="@string/search_categories_hint"
-                        android:inputType="none"
+                        android:imeOptions="actionDone"
+                        android:inputType="text"
                         android:maxLines="1"
                         android:textColor="@color/finance_text_primary"
                         android:textColorHint="@color/finance_hint_text"
@@ -176,6 +175,24 @@
                 app:layout_constraintTop_toBottomOf="@id/cardSearch"
                 tools:itemCount="8"
                 tools:listitem="@layout/item_category" />
+
+            <!-- ========== 5b. NO SEARCH RESULTS MESSAGE (Hidden by default) ========== -->
+            <TextView
+                android:id="@+id/tvNoResults"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="@dimen/spacing_medium"
+                android:layout_marginTop="@dimen/spacing_large"
+                android:fontFamily="sans-serif"
+                android:gravity="center"
+                android:lineSpacingExtra="4dp"
+                android:text="@string/search_no_results"
+                android:textColor="@color/finance_text_secondary"
+                android:textSize="14sp"
+                android:visibility="gone"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/cardSearch" />
 
             <!-- ========== 6. EMPTY STATE (Hidden by default) ========== -->
             <include
