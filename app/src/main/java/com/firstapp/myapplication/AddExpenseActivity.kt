@@ -6,10 +6,10 @@ import android.view.MenuItem
 import android.widget.ArrayAdapter
 import android.widget.Toast
 import androidx.activity.viewModels
-import androidx.appcompat.app.AppCompatActivity
 import com.firstapp.myapplication.databinding.ActivityAddExpenseBinding
 import com.firstapp.myapplication.database.entity.Expense
 import com.firstapp.myapplication.utils.DateUtils
+import com.firstapp.myapplication.utils.UiAnimations
 import com.firstapp.myapplication.viewmodel.CategoryViewModel
 import com.firstapp.myapplication.viewmodel.ExpenseViewModel
 import com.google.android.material.datepicker.MaterialDatePicker
@@ -17,7 +17,7 @@ import com.google.android.material.snackbar.Snackbar
 import java.util.Date
 import java.util.TimeZone
 
-class AddExpenseActivity : AppCompatActivity() {
+class AddExpenseActivity : BaseActivity() {
 
     private lateinit var binding: ActivityAddExpenseBinding
 
@@ -33,6 +33,9 @@ class AddExpenseActivity : AppCompatActivity() {
 
     /** Original createdAt of the expense being edited (preserved on update). */
     private var originalCreatedAt: Long = System.currentTimeMillis()
+
+    /** Guards against double-tapping Save, which would insert duplicate rows. */
+    private var isSaving = false
 
     companion object {
         const val EXTRA_EXPENSE_ID = "extra_expense_id"
@@ -50,6 +53,7 @@ class AddExpenseActivity : AppCompatActivity() {
         setupDatePicker()
         setupClickListeners()
         observeCategories()
+        UiAnimations.pressFeedback(binding.btnSaveExpense)
 
         if (editingExpenseId != null) {
             setupEditMode()
@@ -188,8 +192,11 @@ class AddExpenseActivity : AppCompatActivity() {
     /**
      * Validates the form and saves the expense to the Room database.
      * Shows a success message and returns to the previous screen.
+     * Concurrent taps are ignored so a single save cannot insert duplicate rows.
      */
     private fun handleSave() {
+        if (isSaving) return
+
         val title = binding.etExpenseTitle.text?.toString()?.trim().orEmpty()
         val amountText = binding.etAmount.text?.toString()?.trim().orEmpty()
         val categoryName = binding.actvCategory.text?.toString()?.trim().orEmpty()
@@ -237,6 +244,9 @@ class AddExpenseActivity : AppCompatActivity() {
                 return
             }
 
+        isSaving = true
+        binding.btnSaveExpense.isEnabled = false
+
         if (editingExpenseId != null) {
             // Update existing expense
             val existing = Expense(
@@ -251,6 +261,7 @@ class AddExpenseActivity : AppCompatActivity() {
             )
             expenseViewModel.update(existing) {
                 runOnUiThread {
+                    setResult(RESULT_OK)
                     Snackbar.make(binding.root, getString(R.string.expense_updated), Snackbar.LENGTH_SHORT).show()
                     binding.root.postDelayed({ finish() }, 500)
                 }
@@ -267,6 +278,7 @@ class AddExpenseActivity : AppCompatActivity() {
             )
             expenseViewModel.insert(expense) {
                 runOnUiThread {
+                    setResult(RESULT_OK)
                     Snackbar.make(binding.root, getString(R.string.expense_saved), Snackbar.LENGTH_SHORT).show()
                     binding.root.postDelayed({ finish() }, 500)
                 }

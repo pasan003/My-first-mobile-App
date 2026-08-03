@@ -2,17 +2,19 @@ package com.firstapp.myapplication
 
 import android.content.Intent
 import android.os.Bundle
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
-import androidx.appcompat.app.AppCompatActivity
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.recyclerview.widget.DividerItemDecoration
 import com.firstapp.myapplication.databinding.ActivityMainBinding
 import com.firstapp.myapplication.utils.CurrencyUtils
+import com.firstapp.myapplication.utils.UiAnimations
 import com.firstapp.myapplication.viewmodel.ExpenseViewModel
 import com.firstapp.myapplication.viewmodel.UserProfileViewModel
+import com.google.android.material.snackbar.Snackbar
 import java.util.Calendar
 
-class MainActivity : AppCompatActivity() {
+class MainActivity : BaseActivity() {
 
     private lateinit var binding: ActivityMainBinding
     private val viewModel: ExpenseViewModel by viewModels()
@@ -29,6 +31,20 @@ class MainActivity : AppCompatActivity() {
     /** Guards against redirecting to setup more than once. */
     private var isRedirectingToSetup = false
 
+    /**
+     * Launches the Add Expense screen and, when an expense was actually saved
+     * (RESULT_OK), confirms it on the dashboard with a Snackbar. The balance,
+     * totals and recent transactions refresh automatically because they observe
+     * the Room database.
+     */
+    private val addExpenseLauncher = registerForActivityResult(
+        ActivityResultContracts.StartActivityForResult()
+    ) { result ->
+        if (result.resultCode == RESULT_OK) {
+            Snackbar.make(binding.root, R.string.expense_added_success, Snackbar.LENGTH_SHORT).show()
+        }
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         installSplashScreen()
         super.onCreate(savedInstanceState)
@@ -39,6 +55,7 @@ class MainActivity : AppCompatActivity() {
         setupClickListeners()
         setupBottomNavigation()
         observeData()
+        UiAnimations.pressFeedback(binding.fabAddExpense)
     }
 
     /**
@@ -48,8 +65,7 @@ class MainActivity : AppCompatActivity() {
      */
     private fun setupClickListeners() {
         binding.fabAddExpense.setOnClickListener {
-            val intent = Intent(this, AddExpenseActivity::class.java)
-            startActivity(intent)
+            addExpenseLauncher.launch(Intent(this, AddExpenseActivity::class.java))
         }
 
         binding.tvViewAll.setOnClickListener {
@@ -111,13 +127,16 @@ class MainActivity : AppCompatActivity() {
     }
 
     /**
-     * Sets up the RecyclerView and observes the Room database for changes.
+     * Sets up the RecyclerView once. List updates go through [ListAdapter.submitList]
+     * so the adapter always reflects the current Room snapshot — never appends.
      */
     private fun setupRecyclerView() {
         adapter = TransactionAdapter { transaction ->
             startActivity(getExpenseDetailIntent(transaction))
         }
         binding.rvRecentTransactions.adapter = adapter
+        // Avoid stacking DiffUtil insert animations on top of item entrance fades.
+        binding.rvRecentTransactions.itemAnimator = null
 
         // Add subtle divider between items
         binding.rvRecentTransactions.addItemDecoration(
@@ -129,11 +148,13 @@ class MainActivity : AppCompatActivity() {
 
     /**
      * Observes the ViewModels and updates the dashboard with real database data.
+     * Observers are registered once in [onCreate]; Room Flows push every change
+     * so totals and recent transactions stay in sync after add / edit / delete.
      */
     private fun observeData() {
-        // Recent transactions (top 5) from Room
+        // Recent transactions (top 5) from Room — replace the list, never append.
         viewModel.getRecentExpenses(5).observe(this) { transactions ->
-            adapter.submitList(transactions)
+            adapter.submitList(transactions.toList())
         }
 
         // Profile drives the first-launch gate, greeting, name and income.
@@ -195,6 +216,6 @@ class MainActivity : AppCompatActivity() {
             addFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK)
         }
         startActivity(intent)
-        finish()
+        finishWithoutAnimation()
     }
 }

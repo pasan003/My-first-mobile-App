@@ -2,7 +2,6 @@ package com.firstapp.myapplication.utils
 
 import java.text.DecimalFormat
 import java.text.NumberFormat
-import java.util.Locale
 
 /**
  * Consistent currency formatting helper.
@@ -53,15 +52,4 @@ object CurrencyUtils {
         "CAD" -> "Canadian Dollar (CAD)"
         else -> currencyCode.uppercase()
     }
-
-    /** Parses a user-entered amount string like "1,250" or "1250.50" into a Double. */
-    fun parse(amountText: String): Double {
-        return amountText
-            .replace(",", "")
-            .trim()
-            .toDoubleOrNull() ?: 0.0
-    }
-
-    @Suppress("unused")
-    private fun defaultLocale(): Locale = Locale.getDefault()
 }

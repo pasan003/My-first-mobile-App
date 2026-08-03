@@ -9,7 +9,6 @@ import android.view.View
 import android.widget.TextView
 import android.widget.Toast
 import androidx.activity.viewModels
-import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import com.firstapp.myapplication.databinding.ActivityAnalyticsBinding
 import com.firstapp.myapplication.databinding.ItemCategorySpendingBinding
@@ -31,7 +30,7 @@ import com.firstapp.myapplication.viewmodel.UserProfileViewModel
  *
  * Currency formatting follows the user profile's stored currency.
  */
-class AnalyticsActivity : AppCompatActivity() {
+class AnalyticsActivity : BaseActivity() {
 
     private lateinit var binding: ActivityAnalyticsBinding
     private val viewModel: AnalyticsViewModel by viewModels()

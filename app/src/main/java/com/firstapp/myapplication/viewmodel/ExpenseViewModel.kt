@@ -12,6 +12,12 @@ import com.firstapp.myapplication.database.relation.ExpenseWithCategory
 import com.firstapp.myapplication.repository.ExpenseRepository
 import com.firstapp.myapplication.utils.Mapper
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
 
@@ -19,15 +25,51 @@ import kotlinx.coroutines.launch
  * Exposes expense data from the repository as [LiveData] so Activities can
  * observe it instead of querying the database directly.
  */
+@OptIn(ExperimentalCoroutinesApi::class)
 class ExpenseViewModel(application: Application) : AndroidViewModel(application) {
 
     private val repository =
         ExpenseRepository(AppDatabase.getInstance(application.applicationContext).expenseDao())
 
+    /**
+     * Currently selected category filter for Expense History.
+     * `null` means "All" (no category filter).
+     */
+    private val _selectedCategoryId = MutableStateFlow<Long?>(null)
+    val selectedCategoryId: StateFlow<Long?> = _selectedCategoryId.asStateFlow()
+
+    /**
+     * The text currently typed in the Expense History search bar.
+     * Empty string means no search is active.
+     */
+    private val _searchQuery = MutableStateFlow("")
+    val searchQuery: StateFlow<String> = _searchQuery.asStateFlow()
+
     /** All expenses (newest first) with their category info — used by Expense History. */
     val allExpenses: LiveData<List<Transaction>> = repository.getAllExpenses()
         .map { list -> list.map { Mapper.toTransaction(it) } }
         .asLiveData()
+
+    /**
+     * Expenses for Expense History, filtered by the selected category
+     * ([selectedCategoryId], `null` = All) AND the search query via Room.
+     *
+     * The matching (title, notes or category name, case-insensitive) happens
+     * in SQLite with LIKE, so only matching rows ever leave the database.
+     * Emits again whenever the category filter, the search text or the
+     * underlying expenses table changes — giving real-time search results.
+     * An empty query matches every row, so clearing the search text restores
+     * the plain category-filtered list.
+     */
+    val filteredExpenses: LiveData<List<Transaction>> =
+        combine(_selectedCategoryId, _searchQuery) { categoryId, query ->
+            categoryId to query.escapeLike()
+        }
+            .flatMapLatest { (categoryId, query) ->
+                repository.searchExpenses(query, categoryId)
+                    .map { list -> list.map { Mapper.toTransaction(it) } }
+            }
+            .asLiveData()
 
     /** Total amount of all expenses — used by the Dashboard balance card. */
     val totalExpenses: LiveData<Double> = repository.getTotalExpenses().asLiveData()
@@ -56,6 +98,39 @@ class ExpenseViewModel(application: Application) : AndroidViewModel(application)
     /** Total expenses for the current month — used by History summary. */
     fun getMonthlyExpenses(startDate: Long, endDate: Long): LiveData<Double> =
         repository.getMonthlyExpenses(startDate, endDate).asLiveData()
+
+    /**
+     * Updates the category filter used by [filteredExpenses].
+     * Pass `null` to show every transaction ("All").
+     */
+    fun selectCategoryFilter(categoryId: Long?) {
+        if (_selectedCategoryId.value != categoryId) {
+            _selectedCategoryId.value = categoryId
+        }
+    }
+
+    /**
+     * Updates the search text used by [filteredExpenses] in real time while
+     * the user types. Pass an empty string to disable searching; the selected
+     * category filter, if any, stays active. The query is trimmed so stray
+     * leading/trailing whitespace never changes the results.
+     */
+    fun setSearchQuery(query: String) {
+        val trimmed = query.trim()
+        if (_searchQuery.value != trimmed) {
+            _searchQuery.value = trimmed
+        }
+    }
+
+    /**
+     * Escapes SQL LIKE wildcards (`\`, `%` and `_`) so the text typed by the
+     * user is matched literally instead of acting as a wildcard pattern.
+     * Paired with the `ESCAPE '\'` clause in [com.firstapp.myapplication.database.dao.ExpenseDao.searchExpenses].
+     */
+    private fun String.escapeLike(): String =
+        replace("\\", "\\\\")
+            .replace("%", "\\%")
+            .replace("_", "\\_")
 
     // ---------- WRITE OPERATIONS ----------
 

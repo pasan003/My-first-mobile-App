@@ -5,8 +5,8 @@ import android.os.Bundle
 import android.view.View
 import android.widget.Toast
 import androidx.activity.viewModels
-import androidx.appcompat.app.AppCompatActivity
 import com.firstapp.myapplication.databinding.ActivitySetupBinding
+import com.firstapp.myapplication.utils.UiAnimations
 import com.firstapp.myapplication.viewmodel.UserProfileViewModel
 
 /**
@@ -17,7 +17,7 @@ import com.firstapp.myapplication.viewmodel.UserProfileViewModel
  * stored persistently, this screen is never shown again unless the app data
  * is cleared (or the app is reinstalled).
  */
-class SetupActivity : AppCompatActivity() {
+class SetupActivity : BaseActivity() {
 
     private lateinit var binding: ActivitySetupBinding
     private val viewModel: UserProfileViewModel by viewModels()
@@ -30,6 +30,7 @@ class SetupActivity : AppCompatActivity() {
         binding.btnGetStarted.setOnClickListener {
             handleGetStarted()
         }
+        UiAnimations.pressFeedback(binding.btnGetStarted)
     }
 
     /**
@@ -81,7 +82,7 @@ class SetupActivity : AppCompatActivity() {
                     addFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK)
                 }
                 startActivity(intent)
-                finish()
+                finishWithoutAnimation()
             }
         }
     }
