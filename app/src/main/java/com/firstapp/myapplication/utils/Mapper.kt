@@ -31,15 +31,20 @@ object Mapper {
     }
 
     /**
-     * Converts a [Category] entity plus its live expense count into the
-     * [CategoryItem] UI model.
+     * Converts a [Category] entity plus its live stats (transaction count and
+     * total amount, aggregated by the DAO) into the [CategoryItem] UI model.
      */
-    fun toCategoryItem(category: Category, expenseCount: Int): CategoryItem {
+    fun toCategoryItem(
+        category: Category,
+        expenseCount: Int,
+        totalAmount: Double
+    ): CategoryItem {
         return CategoryItem(
             id = category.id.toInt(),
             name = category.name,
             iconResId = CategoryVisuals.iconResId(category.icon),
             expenseCount = expenseCount,
+            totalAmount = totalAmount,
             colorIndicatorResId = CategoryVisuals.colorResId(category.color)
         )
     }

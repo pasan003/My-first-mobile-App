@@ -18,6 +18,11 @@ class CategoryRepository(private val categoryDao: CategoryDao) {
 
     fun getCategoryCount(): Flow<Int> = categoryDao.getCategoryCount()
 
+    suspend fun countByName(name: String, excludeId: Long): Int =
+        categoryDao.countByName(name, excludeId)
+
+    suspend fun getByName(name: String): Category? = categoryDao.getByName(name)
+
     // ---------- CREATE ----------
 
     suspend fun insert(category: Category): Long = categoryDao.insert(category)
@@ -29,6 +34,10 @@ class CategoryRepository(private val categoryDao: CategoryDao) {
     // ---------- DELETE ----------
 
     suspend fun delete(category: Category) = categoryDao.delete(category)
+
+    /** Moves a category's expenses to another category, then deletes it — atomically. */
+    suspend fun deleteCategoryAndMoveExpenses(categoryId: Long, targetCategoryId: Long) =
+        categoryDao.deleteCategoryAndMoveExpenses(categoryId, targetCategoryId)
 
     suspend fun deleteAll() = categoryDao.deleteAll()
 }
