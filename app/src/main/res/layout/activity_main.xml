@@ -56,7 +56,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="2dp"
-                    android:text="@string/user_name"
+                    android:text=""
                     android:textColor="@color/text_primary"
                     android:textSize="22sp"
                     android:textStyle="bold"
@@ -69,6 +69,9 @@
                     android:id="@+id/cardProfileAvatar"
                     android:layout_width="44dp"
                     android:layout_height="44dp"
+                    android:clickable="true"
+                    android:focusable="true"
+                    android:foreground="?attr/selectableItemBackground"
                     android:contentDescription="@string/cd_profile_avatar"
                     app:cardBackgroundColor="@color/primary"
                     app:cardCornerRadius="22dp"
@@ -129,7 +132,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="4dp"
-                        android:text="@string/sample_balance"
+                        android:text=""
                         android:textColor="@color/text_white"
                         android:textSize="32sp"
                         android:textStyle="bold"
@@ -173,7 +176,7 @@
                             style="@style/TextAppearance.Material3.BodyMedium"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="@string/sample_income"
+                            android:text=""
                             android:textColor="@color/text_white"
                             android:textSize="15sp"
                             android:textStyle="bold" />
@@ -206,7 +209,7 @@
                             style="@style/TextAppearance.Material3.BodyMedium"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="@string/sample_expenses"
+                            android:text=""
                             android:textColor="#FFFFCDD2"
                             android:textSize="15sp"
                             android:textStyle="bold" />
@@ -241,6 +244,7 @@
                     android:textStyle="bold" />
 
                 <TextView
+                    android:id="@+id/tvViewAll"
                     style="@style/TextAppearance.Material3.LabelMedium"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"

@@ -7,26 +7,15 @@
     <string name="greeting_morning">Good Morning</string>
     <string name="greeting_afternoon">Good Afternoon</string>
     <string name="greeting_evening">Good Evening</string>
-    <string name="user_name">Pasan</string>
 
     <!-- Balance Card -->
     <string name="total_balance">Total Balance</string>
     <string name="total_income">Total Income</string>
     <string name="total_expenses">Total Expenses</string>
-    <string name="sample_balance">Rs. 45,500</string>
-    <string name="sample_income">Rs. 60,000</string>
-    <string name="sample_expenses">Rs. 14,500</string>
 
     <!-- Recent Transactions -->
     <string name="recent_transactions">Recent Transactions</string>
     <string name="view_all">View All</string>
-
-    <!-- Sample Transactions -->
-    <string name="sample_lunch">Lunch</string>
-    <string name="sample_groceries">Groceries</string>
-    <string name="sample_bus_fare">Bus Fare</string>
-    <string name="sample_netflix">Netflix Subscription</string>
-    <string name="sample_electricity">Electricity Bill</string>
 
     <!-- Categories -->
     <string name="cat_food">Food</string>
@@ -45,7 +34,280 @@
     <string name="nav_analytics">Analytics</string>
     <string name="nav_profile">Profile</string>
 
+    <!-- Add Expense Screen -->
+    <string name="add_expense">Add Expense</string>
+    <string name="expense_title_hint">Expense Title</string>
+    <string name="expense_title_example">Lunch, Grocery Shopping, Fuel</string>
+    <string name="amount_hint">Amount</string>
+    <string name="amount_prefix">Rs.</string>
+    <string name="category_hint">Category</string>
+    <string name="date_hint">Date</string>
+    <string name="payment_method_hint">Payment Method</string>
+    <string name="notes_hint">Add a note (optional)</string>
+    <string name="save_expense">Save Expense</string>
+    <string name="cancel">Cancel</string>
+
+    <!-- Categories -->
+    <string name="cat_health">Health</string>
+    <string name="cat_education">Education</string>
+    <string name="cat_other">Other</string>
+
+    <!-- Payment Methods -->
+    <string name="payment_cash">Cash</string>
+    <string name="payment_credit_card">Credit Card</string>
+    <string name="payment_debit_card">Debit Card</string>
+    <string name="payment_bank_transfer">Bank Transfer</string>
+    <string name="payment_digital_wallet">Digital Wallet</string>
+
+    <!-- String arrays for dropdowns -->
+    <string-array name="expense_categories">
+        <item>@string/cat_food</item>
+        <item>@string/cat_transport</item>
+        <item>@string/cat_shopping</item>
+        <item>@string/cat_bills</item>
+        <item>@string/cat_entertainment</item>
+        <item>@string/cat_health</item>
+        <item>@string/cat_education</item>
+        <item>@string/cat_other</item>
+    </string-array>
+
+    <string-array name="payment_methods">
+        <item>@string/payment_cash</item>
+        <item>@string/payment_credit_card</item>
+        <item>@string/payment_debit_card</item>
+        <item>@string/payment_bank_transfer</item>
+        <item>@string/payment_digital_wallet</item>
+    </string-array>
+
+    <!-- Validation Error Placeholders -->
+    <string name="error_title_required">Expense title required</string>
+    <string name="error_amount_required">Amount required</string>
+    <string name="error_category_required">Category required</string>
+
+    <!-- Expense Details Screen -->
+    <string name="expense_details">Expense Details</string>
+    <string name="expense_information">Expense Information</string>
+    <string name="actions">Actions</string>
+    <string name="edit_expense">Edit Expense</string>
+    <string name="delete_expense">Delete Expense</string>
+    <string name="payment_method">Payment Method</string>
+    <string name="expense_time">Time</string>
+    <string name="expense_notes">Notes</string>
+
+    <string name="sample_toast_placeholder">%1$s — coming soon in a future update</string>
+    <string name="menu_edit">Edit</string>
+    <string name="menu_delete">Delete</string>
+
+    <!-- Expense History Screen -->
+    <string name="expense_history">Expense History</string>
+    <string name="summary_total_expenses">Total Expenses</string>
+    <string name="summary_this_month">This Month</string>
+    <string name="search_expenses_hint">Search expenses&#8230;</string>
+    <string name="chip_all">All</string>
+    <string name="empty_title">No Expenses Yet</string>
+    <string name="empty_description">Start tracking your spending by adding your first expense.</string>
+    <string name="empty_add_expense">Add Expense</string>
+
+
+
+
+    <!-- Expense History Content Descriptions -->
+    <string name="cd_filter">Filter expenses</string>
+    <string name="cd_add_expense_fab">Add new expense</string>
+    <string name="cd_empty_illustration">Empty state illustration</string>
+
+    <!-- Category Manager Screen -->
+    <string name="category_manager_title">Categories</string>
+    <string name="category_summary_label">Categories</string>
+    <string name="category_summary_description">Total categories</string>
+
+    <string name="search_categories_hint">Search categories&#8230;</string>
+
+    <!-- Category Item -->
+    <plurals name="category_expense_count">
+        <item quantity="one">%d Expense</item>
+        <item quantity="other">%d Expenses</item>
+    </plurals>
+
+    <!-- Add/Edit Category Dialog -->
+    <string name="add_category_dialog_title">Add Category</string>
+    <string name="edit_category_dialog_title">Edit Category</string>
+    <string name="category_name_hint">Category Name</string>
+    <string name="category_icon_hint">Category Icon</string>
+    <string name="category_color_hint">Category Color</string>
+    <string name="save">Save</string>
+    <string name="delete">Delete</string>
+
+    <!-- Delete Confirmation Dialog -->
+    <string name="delete_category_title">Delete Category?</string>
+    <string name="delete_category_message">Deleting this category will not remove existing expenses. They can be reassigned later.</string>
+
+    <!-- Empty State -->
+    <string name="empty_categories_title">No Categories Found</string>
+    <string name="empty_categories_description">Create your first category to organize your expenses.</string>
+    <string name="empty_add_category">Add Category</string>
+
     <!-- Content Descriptions -->
     <string name="cd_profile_avatar">Profile avatar</string>
     <string name="cd_add_expense">Add new expense</string>
+    <string name="cd_back_button">Navigate back</string>
+    <string name="cd_save_expense">Save expense</string>
+    <string name="cd_calendar_icon">Select date</string>
+    <string name="cd_more_options">More options</string>
+    <string name="cd_add_category_fab">Add new category</string>
+    <string name="cd_edit_category">Edit %1$s</string>
+    <!-- Analytics Screen -->
+    <string name="analytics_title">Analytics</string>
+    <string name="analytics_calendar">Select date range</string>
+
+    <!-- Period Selector -->
+    <string name="period_this_week">This Week</string>
+    <string name="period_this_month">This Month</string>
+    <string name="period_this_year">This Year</string>
+
+    <!-- Financial Summary -->
+    <string name="analytics_total_expenses">Total Expenses</string>
+    <string name="analytics_total_transactions">Total Transactions</string>
+    <string name="analytics_monthly_income">Monthly Income</string>
+    <string name="analytics_remaining_balance">Remaining Balance</string>
+
+    <!-- Spending by Category -->
+    <string name="analytics_spending_by_category">Spending by Category</string>
+
+    <!-- Monthly Spending -->
+    <string name="analytics_monthly_spending">Monthly Spending</string>
+
+    <!-- Top Categories -->
+    <string name="analytics_top_categories">Top Categories</string>
+
+    <!-- Insights -->
+    <string name="analytics_insights">Insights</string>
+    <string name="analytics_insight_most_spent_on">You spent the most on %1$s %2$s.</string>
+    <string name="analytics_insight_remaining_balance">Your remaining monthly balance is %1$s.</string>
+    <string name="analytics_insight_avg_daily">Average daily spending: %1$s</string>
+    <string name="analytics_insight_largest_expense">Largest single expense: %1$s</string>
+
+    <!-- Period Labels (used by insights) -->
+    <string name="period_insight_this_week">this week</string>
+    <string name="period_insight_this_month">this month</string>
+    <string name="period_insight_this_year">this year</string>
+
+    <!-- Analytics Empty State -->
+    <string name="analytics_empty_title">No Analytics Available</string>
+    <string name="analytics_empty_description">No expense data available yet. Start by adding your first expense.</string>
+    <string name="analytics_empty_add_expense">Add Expense</string>
+
+    <!-- Analytics Content Descriptions -->
+    <string name="cd_analytics_back">Navigate back</string>
+    <string name="cd_analytics_calendar">Select date range</string>
+    <string name="cd_analytics_empty_illustration">No analytics illustration</string>
+
+    <!-- ========================================== -->
+    <!-- PROFILE &amp; SETTINGS SCREEN               -->
+    <!-- ========================================== -->
+    <string name="profile_settings_title">Profile &amp; Settings</string>
+
+    <!-- Profile Header -->
+
+    <string name="profile_member_since_format">Member since %1$s</string>
+    <string name="profile_income_value">Monthly Income: %1$s</string>
+    <string name="cd_edit_profile">Edit profile</string>
+
+    <!-- Financial Preferences -->
+    <string name="profile_financial_preferences">Financial Preferences</string>
+    <string name="profile_preferred_currency">Preferred Currency</string>
+    <string name="profile_monthly_income">Monthly Income</string>
+    <string name="profile_budget_reminder">Budget Reminder</string>
+
+    <!-- Application Settings -->
+    <string name="profile_application_settings">Application Settings</string>
+    <string name="profile_notifications">Notifications</string>
+    <string name="profile_notifications_desc">Manage your notification preferences</string>
+    <string name="profile_language">Language</string>
+    <string name="profile_language_desc">Select your preferred language</string>
+    <string name="profile_date_format">Date Format</string>
+    <string name="profile_date_format_desc">Choose how dates are displayed</string>
+    <string name="profile_currency_format">Currency Format</string>
+    <string name="profile_currency_format_desc">Customise currency display</string>
+
+    <!-- Help & Support -->
+    <string name="profile_help_support">Help &amp; Support</string>
+    <string name="profile_help_center">Help Center</string>
+    <string name="profile_contact_support">Contact Support</string>
+    <string name="profile_privacy_policy">Privacy Policy</string>
+    <string name="profile_terms_conditions">Terms &amp; Conditions</string>
+
+    <!-- About SpendWise -->
+    <string name="profile_about_title">About SpendWise</string>
+    <string name="profile_version">Application Version</string>
+    <string name="profile_version_value">Version 1.0.0</string>
+    <string name="profile_developer">Developer</string>
+    <string name="profile_developer_value">Student Project</string>
+    <string name="profile_technology">Technology</string>
+    <string name="profile_technology_value">Kotlin + XML + Material Design 3</string>
+
+    <!-- Profile Editing -->
+    <string name="edit_profile_dialog_title">Edit Profile</string>
+    <string name="profile_edit">Edit Profile</string>
+    <string name="profile_updated">Profile updated</string>
+
+    <!-- Logout -->
+    <string name="profile_logout">Log Out</string>
+    <string name="profile_logout_disabled_note">Logout is disabled — this is an offline application</string>
+
+    <!-- Privacy & About -->
+    <string name="privacy_policy_message">Your data is stored only on this device in the local database. SpendWise does not collect, transmit or share any personal information. Clearing the app data or uninstalling the app permanently deletes all records.</string>
+    <string name="about_app_message">SpendWise — your personal finance tracker. Version: %1$s. Technology: %2$s.</string>
+
+    <!-- First-Time Setup -->
+    <string name="setup_title">Welcome to SpendWise</string>
+    <string name="setup_subtitle">Let us set up your profile so we can personalise your dashboard.</string>
+    <string name="setup_full_name_hint">Full Name</string>
+    <string name="setup_monthly_income_hint">Monthly Income</string>
+    <string name="setup_get_started">Get Started</string>
+    <string name="setup_error_name">Please enter your name</string>
+    <string name="setup_error_income">Income must be greater than zero</string>
+    <string name="setup_note">Your profile and income are stored only on this device.</string>
+
+    <!-- Currencies for the Edit Profile dialog -->
+    <string-array name="currencies">
+        <item>LKR</item>
+        <item>USD</item>
+        <item>EUR</item>
+        <item>GBP</item>
+        <item>INR</item>
+        <item>JPY</item>
+        <item>AUD</item>
+        <item>CAD</item>
+    </string-array>
+
+    <!-- Profile Content Descriptions -->
+    <string name="cd_profile_back">Navigate back</string>
+
+    <!-- Navigation Placeholder Messages -->
+    <string name="feature_coming_soon">Feature coming soon.</string>
+    <string name="action_ok">OK</string>
+
+    <!-- ========================================== -->
+    <!-- ROOM DATABASE / CRUD MESSAGES             -->
+    <!-- ========================================== -->
+    <string name="expense_saved">Expense saved</string>
+    <string name="expense_updated">Expense updated</string>
+    <string name="expense_deleted">Expense deleted</string>
+    <string name="delete_expense_confirm_message">This expense will be permanently deleted.</string>
+    <string name="error_expense_not_found">Expense not found</string>
+    <string name="not_specified">Not specified</string>
+    <string name="error_fill_required_fields">Please fill in all required fields</string>
+    <string name="error_select_valid_category">Please select a valid category</string>
+
+    <string name="category_added">Category added</string>
+    <string name="category_updated">Category updated</string>
+    <string name="category_deleted">Category deleted</string>
+    <string name="error_category_name_required">Category name is required</string>
+    <string name="error_category_in_use">This category has %1$d expenses and cannot be deleted yet.</string>
+
+    <plurals name="transaction_count">
+        <item quantity="one">%d Transaction</item>
+        <item quantity="other">%d Transactions</item>
+    </plurals>
 </resources>

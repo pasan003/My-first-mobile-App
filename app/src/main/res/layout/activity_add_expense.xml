@@ -1,0 +1,399 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.coordinatorlayout.widget.CoordinatorLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/finance_background"
+    tools:context=".AddExpenseActivity">
+
+    <!-- ========== 1. TOP APP BAR ========== -->
+    <com.google.android.material.appbar.MaterialToolbar
+        android:id="@+id/toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="?attr/actionBarSize"
+        android:background="@color/finance_card"
+        android:contentInsetStart="4dp"
+        android:contentInsetEnd="8dp"                android:elevation="2dp"
+                app:menu="@menu/menu_add_expense"
+                app:navigationContentDescription="@string/cd_back_button"
+        app:navigationIcon="@drawable/ic_arrow_back"
+        app:title="@string/add_expense"
+        app:titleTextAppearance="@style/TextAppearance.Material3.TitleLarge"
+        app:titleTextColor="@color/finance_text_primary" />
+
+    <!-- ========== 2. SCROLLABLE FORM AREA ========== -->
+    <androidx.core.widget.NestedScrollView
+        android:id="@+id/nestedScrollView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginTop="?attr/actionBarSize"
+        android:clipToPadding="false"
+        android:fillViewport="true"
+        android:paddingHorizontal="@dimen/spacing_medium"
+        android:paddingTop="@dimen/spacing_medium"
+        android:paddingBottom="@dimen/spacing_large">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <!-- ========== EXPENSE FORM CARD ========== -->
+            <com.google.android.material.card.MaterialCardView
+                android:id="@+id/cardExpenseForm"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                app:cardBackgroundColor="@color/finance_card"
+                app:cardCornerRadius="@dimen/card_corner_radius"
+                app:cardElevation="2dp"
+                app:contentPadding="@dimen/card_padding"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent">
+
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+
+                    <!-- ===== 2a. EXPENSE TITLE ===== -->
+                    <com.google.android.material.textfield.TextInputLayout
+                        android:id="@+id/tilExpenseTitle"
+                        style="@style/Widget.Material3.TextInputLayout.OutlinedBox"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:hint="@string/expense_title_hint"
+                        app:boxCornerRadiusBottomEnd="16dp"
+                        app:boxCornerRadiusBottomStart="16dp"
+                        app:boxCornerRadiusTopEnd="16dp"
+                        app:boxCornerRadiusTopStart="16dp"
+                        app:boxStrokeColor="@color/text_field_stroke_color"
+                        app:boxStrokeWidth="1.5dp"
+                        app:boxStrokeWidthFocused="2dp"
+                        app:endIconMode="clear_text"
+                        app:hintTextColor="@color/text_field_hint_color"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent">
+
+                        <com.google.android.material.textfield.TextInputEditText
+                            android:id="@+id/etExpenseTitle"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:fontFamily="sans-serif"
+                            android:imeOptions="actionNext"
+                            android:inputType="textCapSentences"
+                            android:maxLines="1"
+                            android:paddingTop="16dp"
+                            android:paddingBottom="16dp"
+                            android:textSize="@dimen/text_size_body"
+                            android:textColor="@color/finance_text_primary"
+                            android:textColorHint="@color/finance_hint_text"
+                            tools:text="Lunch" />
+
+                    </com.google.android.material.textfield.TextInputLayout>
+
+                    <!-- Title Error Placeholder -->
+                    <TextView
+                        android:id="@+id/tvTitleError"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="@dimen/spacing_extra_small"
+                        android:text="@string/error_title_required"
+                        android:textColor="?attr/colorError"
+                        android:textSize="@dimen/text_size_error"
+                        android:visibility="gone"
+                        app:layout_constraintEnd_toEndOf="@id/tilExpenseTitle"
+                        app:layout_constraintStart_toStartOf="@id/tilExpenseTitle"
+                        app:layout_constraintTop_toBottomOf="@id/tilExpenseTitle" />
+
+                    <!-- ===== 2b. AMOUNT ===== -->
+                    <com.google.android.material.textfield.TextInputLayout
+                        android:id="@+id/tilAmount"
+                        style="@style/Widget.Material3.TextInputLayout.OutlinedBox"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/spacing_large"
+                        android:hint="@string/amount_hint"
+                        app:boxCornerRadiusBottomEnd="16dp"
+                        app:boxCornerRadiusBottomStart="16dp"
+                        app:boxCornerRadiusTopEnd="16dp"
+                        app:boxCornerRadiusTopStart="16dp"
+                        app:boxStrokeColor="@color/text_field_stroke_color"
+                        app:boxStrokeWidth="1.5dp"
+                        app:boxStrokeWidthFocused="2dp"
+                        app:hintTextColor="@color/text_field_hint_color"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@id/tvTitleError"
+                        app:prefixText="@string/amount_prefix"
+                        app:prefixTextColor="@color/finance_text_primary"
+                        app:prefixTextAppearance="@style/TextAppearance.Material3.BodyLarge">
+
+                        <com.google.android.material.textfield.TextInputEditText
+                            android:id="@+id/etAmount"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:fontFamily="sans-serif"
+                            android:imeOptions="actionNext"
+                            android:inputType="numberDecimal"
+                            android:maxLines="1"
+                            android:paddingTop="16dp"
+                            android:paddingBottom="16dp"
+                            android:textSize="@dimen/text_size_body"
+                            android:textStyle="bold"
+                            android:textColor="@color/finance_text_primary"
+                            android:textColorHint="@color/finance_hint_text"
+                            tools:text="1250.00" />
+
+                    </com.google.android.material.textfield.TextInputLayout>
+
+                    <!-- Amount Error Placeholder -->
+                    <TextView
+                        android:id="@+id/tvAmountError"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="@dimen/spacing_extra_small"
+                        android:text="@string/error_amount_required"
+                        android:textColor="?attr/colorError"
+                        android:textSize="@dimen/text_size_error"
+                        android:visibility="gone"
+                        app:layout_constraintEnd_toEndOf="@id/tilAmount"
+                        app:layout_constraintStart_toStartOf="@id/tilAmount"
+                        app:layout_constraintTop_toBottomOf="@id/tilAmount" />
+
+                    <!-- ===== 2c. CATEGORY DROPDOWN ===== -->
+                    <com.google.android.material.textfield.TextInputLayout
+                        android:id="@+id/tilCategory"
+                        style="@style/Widget.Material3.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/spacing_large"
+                        android:hint="@string/category_hint"
+                        app:boxCornerRadiusBottomEnd="16dp"
+                        app:boxCornerRadiusBottomStart="16dp"
+                        app:boxCornerRadiusTopEnd="16dp"
+                        app:boxCornerRadiusTopStart="16dp"
+                        app:boxStrokeColor="@color/text_field_stroke_color"
+                        app:boxStrokeWidth="1.5dp"
+                        app:boxStrokeWidthFocused="2dp"
+                        app:endIconMode="dropdown_menu"
+                        app:hintTextColor="@color/text_field_hint_color"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@id/tvAmountError">
+
+                        <androidx.appcompat.widget.AppCompatAutoCompleteTextView
+                            android:id="@+id/actvCategory"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:completionThreshold="1"
+                            android:fontFamily="sans-serif"
+                            android:imeOptions="actionNext"
+                            android:inputType="none"
+                            android:paddingTop="16dp"
+                            android:paddingBottom="16dp"
+                            android:textSize="@dimen/text_size_body"
+                            android:textColor="@color/finance_text_primary"
+                            android:textColorHint="@color/finance_hint_text"
+                            tools:text="Food"
+                            tools:listitem="@android:layout/simple_dropdown_item_1line" />
+
+                    </com.google.android.material.textfield.TextInputLayout>
+
+                    <!-- Category Error Placeholder -->
+                    <TextView
+                        android:id="@+id/tvCategoryError"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="@dimen/spacing_extra_small"
+                        android:text="@string/error_category_required"
+                        android:textColor="?attr/colorError"
+                        android:textSize="@dimen/text_size_error"
+                        android:visibility="gone"
+                        app:layout_constraintEnd_toEndOf="@id/tilCategory"
+                        app:layout_constraintStart_toStartOf="@id/tilCategory"
+                        app:layout_constraintTop_toBottomOf="@id/tilCategory" />
+
+                    <!-- ===== 2d. DATE PICKER FIELD ===== -->
+                    <com.google.android.material.textfield.TextInputLayout
+                        android:id="@+id/tilDate"
+                        style="@style/Widget.Material3.TextInputLayout.OutlinedBox"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/spacing_large"
+                        android:hint="@string/date_hint"
+                        app:boxCornerRadiusBottomEnd="16dp"
+                        app:boxCornerRadiusBottomStart="16dp"
+                        app:boxCornerRadiusTopEnd="16dp"
+                        app:boxCornerRadiusTopStart="16dp"
+                        app:boxStrokeColor="@color/text_field_stroke_color"
+                        app:boxStrokeWidth="1.5dp"
+                        app:boxStrokeWidthFocused="2dp"
+                        app:endIconContentDescription="@string/cd_calendar_icon"
+                        app:endIconDrawable="@drawable/ic_calendar"
+                        app:endIconMode="custom"
+                        app:endIconTint="@color/finance_primary"
+                        app:hintTextColor="@color/text_field_hint_color"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@id/tvCategoryError">
+
+                        <com.google.android.material.textfield.TextInputEditText
+                            android:id="@+id/etDate"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:clickable="true"
+                            android:focusable="false"
+                            android:fontFamily="sans-serif"
+                            android:imeOptions="actionNext"
+                            android:inputType="none"
+                            android:paddingTop="16dp"
+                            android:paddingBottom="16dp"
+                            android:textSize="@dimen/text_size_body"
+                            android:textColor="@color/finance_text_primary"
+                            android:textColorHint="@color/finance_hint_text"
+                            tools:text="Today, 14 Jul 2026" />
+
+                    </com.google.android.material.textfield.TextInputLayout>
+
+                    <!-- ===== 2e. PAYMENT METHOD DROPDOWN ===== -->
+                    <com.google.android.material.textfield.TextInputLayout
+                        android:id="@+id/tilPaymentMethod"
+                        style="@style/Widget.Material3.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/spacing_large"
+                        android:hint="@string/payment_method_hint"
+                        app:boxCornerRadiusBottomEnd="16dp"
+                        app:boxCornerRadiusBottomStart="16dp"
+                        app:boxCornerRadiusTopEnd="16dp"
+                        app:boxCornerRadiusTopStart="16dp"
+                        app:boxStrokeColor="@color/text_field_stroke_color"
+                        app:boxStrokeWidth="1.5dp"
+                        app:boxStrokeWidthFocused="2dp"
+                        app:endIconMode="dropdown_menu"
+                        app:hintTextColor="@color/text_field_hint_color"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@id/tilDate">
+
+                        <androidx.appcompat.widget.AppCompatAutoCompleteTextView
+                            android:id="@+id/actvPaymentMethod"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:completionThreshold="1"
+                            android:fontFamily="sans-serif"
+                            android:imeOptions="actionNext"
+                            android:inputType="none"
+                            android:paddingTop="16dp"
+                            android:paddingBottom="16dp"
+                            android:textSize="@dimen/text_size_body"
+                            android:textColor="@color/finance_text_primary"
+                            android:textColorHint="@color/finance_hint_text"
+                            tools:text="Cash"
+                            tools:listitem="@android:layout/simple_dropdown_item_1line" />
+
+                    </com.google.android.material.textfield.TextInputLayout>
+
+                    <!-- ===== 2f. NOTES (MULTI-LINE) ===== -->
+                    <com.google.android.material.textfield.TextInputLayout
+                        android:id="@+id/tilNotes"
+                        style="@style/Widget.Material3.TextInputLayout.OutlinedBox"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/spacing_large"
+                        android:hint="@string/notes_hint"
+                        app:boxCornerRadiusBottomEnd="16dp"
+                        app:boxCornerRadiusBottomStart="16dp"
+                        app:boxCornerRadiusTopEnd="16dp"
+                        app:boxCornerRadiusTopStart="16dp"
+                        app:boxStrokeColor="@color/text_field_stroke_color"
+                        app:boxStrokeWidth="1.5dp"
+                        app:boxStrokeWidthFocused="2dp"
+                        app:hintTextColor="@color/text_field_hint_color"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@id/tilPaymentMethod">
+
+                        <com.google.android.material.textfield.TextInputEditText
+                            android:id="@+id/etNotes"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:fontFamily="sans-serif"
+                            android:gravity="top"
+                            android:imeOptions="actionDone"
+                            android:inputType="textMultiLine"
+                            android:maxLines="5"
+                            android:minLines="3"
+                            android:paddingTop="16dp"
+                            android:paddingBottom="16dp"
+                            android:textSize="@dimen/text_size_body"
+                            android:textColor="@color/finance_text_primary"
+                            android:textColorHint="@color/finance_hint_text"
+                            tools:text="Optional note about the expense..." />
+
+                    </com.google.android.material.textfield.TextInputLayout>
+
+                    <!-- ===== 2g. ACTION BUTTONS ===== -->
+
+                    <!-- Save Expense - Filled Button -->
+
+                    <!-- Cancel - Outlined Button -->
+                    <com.google.android.material.button.MaterialButton
+                        android:id="@+id/btnSaveExpense"
+                        android:layout_width="0dp"
+                        android:layout_height="56dp"
+                        android:layout_marginTop="@dimen/spacing_extra_large"
+                        android:backgroundTint="@color/finance_primary"
+                        android:contentDescription="@string/cd_save_expense"
+                        android:fontFamily="sans-serif-medium"
+                        android:insetTop="0dp"
+                        android:insetBottom="0dp"
+                        android:letterSpacing="0.01"
+                        android:text="@string/save_expense"
+                        android:textAllCaps="false"
+                        android:textColor="@color/white"
+                        android:textSize="16sp"
+                        app:cornerRadius="@dimen/button_corner_radius"
+                        app:elevation="2dp"
+                        app:icon="@drawable/ic_save"
+                        app:iconGravity="textStart"
+                        app:iconSize="20dp"
+                        app:iconTint="@color/white"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintHorizontal_bias="0.0"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@id/tilNotes" />
+
+                    <com.google.android.material.button.MaterialButton
+                        android:id="@+id/btnCancel"
+                        style="@style/Widget.Material3.Button.OutlinedButton"
+                        android:layout_width="0dp"
+                        android:layout_height="56dp"
+                        android:layout_marginTop="@dimen/spacing_medium"
+                        android:backgroundTint="@color/white"
+                        android:fontFamily="sans-serif-medium"
+                        android:insetTop="0dp"
+                        android:insetBottom="0dp"
+                        android:text="@string/cancel"
+                        android:textAllCaps="false"
+                        android:textColor="@color/finance_primary"
+                        android:textSize="16sp"
+                        android:letterSpacing="0.01"
+                        app:cornerRadius="@dimen/button_corner_radius"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@id/btnSaveExpense"
+                        app:strokeColor="@color/finance_primary"
+                        app:strokeWidth="1.5dp" />
+
+                </androidx.constraintlayout.widget.ConstraintLayout>
+
+            </com.google.android.material.card.MaterialCardView>
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+    </androidx.core.widget.NestedScrollView>
+
+</androidx.coordinatorlayout.widget.CoordinatorLayout>

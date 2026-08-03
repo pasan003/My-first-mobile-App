@@ -1,0 +1,436 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.coordinatorlayout.widget.CoordinatorLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/finance_background"
+    tools:context=".ExpenseHistoryActivity">
+
+    <!-- ========== 1. TOP APP BAR ========== -->
+    <com.google.android.material.appbar.MaterialToolbar
+        android:id="@+id/toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="?attr/actionBarSize"
+        android:background="@color/finance_card"
+        android:contentInsetStart="4dp"
+        android:contentInsetEnd="8dp"
+        android:elevation="2dp"
+        app:menu="@menu/menu_expense_history"
+        app:navigationContentDescription="@string/cd_back_button"
+        app:navigationIcon="@drawable/ic_arrow_back"
+        app:title="@string/expense_history"
+        app:titleTextAppearance="@style/TextAppearance.Material3.TitleLarge"
+        app:titleTextColor="@color/finance_text_primary" />
+
+    <!-- ========== 2. SCROLLABLE CONTENT AREA ========== -->
+    <androidx.core.widget.NestedScrollView
+        android:id="@+id/nestedScrollView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginTop="?attr/actionBarSize"
+        android:clipToPadding="false"
+        android:fillViewport="true">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <!-- ========== 3. SUMMARY CARD ========== -->
+            <com.google.android.material.card.MaterialCardView
+                android:id="@+id/cardSummary"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="@dimen/spacing_medium"
+                android:layout_marginTop="@dimen/spacing_medium"
+                app:cardBackgroundColor="@color/finance_card"
+                app:cardCornerRadius="16dp"
+                app:cardElevation="2dp"
+                app:contentPadding="16dp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent">
+
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+
+                    <!-- Total Expenses Label -->
+                    <TextView
+                        android:id="@+id/tvSummaryLabel"
+                        style="@style/TextAppearance.Material3.BodySmall"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/summary_total_expenses"
+                        android:textColor="@color/finance_text_secondary"
+                        android:textSize="13sp"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent" />
+
+                    <!-- Transaction Count -->
+                    <TextView
+                        android:id="@+id/tvSummaryCount"
+                        style="@style/TextAppearance.Material3.LabelSmall"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text=""
+                        android:textColor="@color/finance_hint_text"
+                        android:textSize="12sp"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintTop_toTopOf="parent" />
+
+                    <!-- This Month Label -->
+                    <TextView
+                        android:id="@+id/tvSummaryMonth"
+                        style="@style/TextAppearance.Material3.LabelSmall"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="2dp"
+                        android:text="@string/summary_this_month"
+                        android:textColor="@color/finance_text_secondary"
+                        android:textSize="12sp"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@id/tvSummaryLabel" />
+
+                    <!-- Total Amount -->
+                    <TextView
+                        android:id="@+id/tvSummaryAmount"
+                        style="@style/TextAppearance.Material3.TitleLarge"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="4dp"
+                        android:text=""
+                        android:textColor="@color/finance_text_primary"
+                        android:textSize="24sp"
+                        android:textStyle="bold"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@id/tvSummaryMonth" />
+
+                </androidx.constraintlayout.widget.ConstraintLayout>
+
+            </com.google.android.material.card.MaterialCardView>
+
+            <!-- ========== 4. SEARCH BAR (UI Only) ========== -->
+            <com.google.android.material.card.MaterialCardView
+                android:id="@+id/cardSearch"
+                android:layout_width="0dp"
+                android:layout_height="56dp"
+                android:layout_marginHorizontal="@dimen/spacing_medium"
+                android:layout_marginTop="@dimen/spacing_medium"
+                app:cardBackgroundColor="@color/finance_card"
+                app:cardCornerRadius="16dp"
+                app:cardElevation="1dp"
+                app:contentPadding="4dp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/cardSummary"
+                app:strokeColor="@color/outline_variant"
+                app:strokeWidth="0.5dp">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal"
+                    android:paddingHorizontal="12dp">
+
+                    <ImageView
+                        android:id="@+id/ivSearchIcon"
+                        android:layout_width="20dp"
+                        android:layout_height="20dp"
+                        android:importantForAccessibility="no"
+                        android:src="@drawable/ic_search" />
+
+                    <EditText
+                        android:id="@+id/etSearch"
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_marginStart="12dp"
+                        android:layout_weight="1"
+                        android:background="@null"
+                        android:clickable="false"
+                        android:focusable="false"
+                        android:fontFamily="sans-serif"
+                        android:hint="@string/search_expenses_hint"
+                        android:inputType="none"
+                        android:maxLines="1"
+                        android:textColor="@color/finance_text_primary"
+                        android:textColorHint="@color/finance_hint_text"
+                        android:textSize="@dimen/text_size_body" />
+
+                </LinearLayout>
+
+            </com.google.android.material.card.MaterialCardView>
+
+            <!-- ========== 5. FILTER CHIPS (UI Only) ========== -->
+            <HorizontalScrollView
+                android:id="@+id/hsvFilterChips"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="12dp"
+                android:scrollbars="none"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/cardSearch">
+
+                <com.google.android.material.chip.ChipGroup
+                    android:id="@+id/chipGroupFilters"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/spacing_medium"
+                    android:layout_marginEnd="@dimen/spacing_medium"
+                    app:chipSpacing="8dp"
+                    app:singleSelection="true">
+
+                    <com.google.android.material.chip.Chip
+                        android:id="@+id/chipAll"
+                        style="@style/Widget.Material3.Chip.Filter"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:checked="true"
+                        android:text="@string/chip_all"
+                        android:textColor="@color/finance_text_primary"
+                        android:textSize="13sp"
+                        app:chipBackgroundColor="@color/primary_container"
+                        app:chipCornerRadius="20dp"
+                        app:chipEndPadding="12dp"
+                        app:chipStartPadding="12dp"
+                        app:chipStrokeColor="@color/outline_variant"
+                        app:chipStrokeWidth="0dp"
+                        app:chipSurfaceColor="@color/white" />
+
+                    <com.google.android.material.chip.Chip
+                        android:id="@+id/chipFood"
+                        style="@style/Widget.Material3.Chip.Filter"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/cat_food"
+                        android:textColor="@color/finance_text_secondary"
+                        android:textSize="13sp"
+                        app:chipCornerRadius="20dp"
+                        app:chipEndPadding="12dp"
+                        app:chipStartPadding="12dp"
+                        app:chipStrokeColor="@color/outline_variant"
+                        app:chipStrokeWidth="1dp"
+                        app:chipSurfaceColor="@color/white" />
+
+                    <com.google.android.material.chip.Chip
+                        android:id="@+id/chipTransport"
+                        style="@style/Widget.Material3.Chip.Filter"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/cat_transport"
+                        android:textColor="@color/finance_text_secondary"
+                        android:textSize="13sp"
+                        app:chipCornerRadius="20dp"
+                        app:chipEndPadding="12dp"
+                        app:chipStartPadding="12dp"
+                        app:chipStrokeColor="@color/outline_variant"
+                        app:chipStrokeWidth="1dp"
+                        app:chipSurfaceColor="@color/white" />
+
+                    <com.google.android.material.chip.Chip
+                        android:id="@+id/chipShopping"
+                        style="@style/Widget.Material3.Chip.Filter"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/cat_shopping"
+                        android:textColor="@color/finance_text_secondary"
+                        android:textSize="13sp"
+                        app:chipCornerRadius="20dp"
+                        app:chipEndPadding="12dp"
+                        app:chipStartPadding="12dp"
+                        app:chipStrokeColor="@color/outline_variant"
+                        app:chipStrokeWidth="1dp"
+                        app:chipSurfaceColor="@color/white" />
+
+                    <com.google.android.material.chip.Chip
+                        android:id="@+id/chipBills"
+                        style="@style/Widget.Material3.Chip.Filter"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/cat_bills"
+                        android:textColor="@color/finance_text_secondary"
+                        android:textSize="13sp"
+                        app:chipCornerRadius="20dp"
+                        app:chipEndPadding="12dp"
+                        app:chipStartPadding="12dp"
+                        app:chipStrokeColor="@color/outline_variant"
+                        app:chipStrokeWidth="1dp"
+                        app:chipSurfaceColor="@color/white" />
+
+                    <com.google.android.material.chip.Chip
+                        android:id="@+id/chipEntertainment"
+                        style="@style/Widget.Material3.Chip.Filter"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/cat_entertainment"
+                        android:textColor="@color/finance_text_secondary"
+                        android:textSize="13sp"
+                        app:chipCornerRadius="20dp"
+                        app:chipEndPadding="12dp"
+                        app:chipStartPadding="12dp"
+                        app:chipStrokeColor="@color/outline_variant"
+                        app:chipStrokeWidth="1dp"
+                        app:chipSurfaceColor="@color/white" />
+
+                    <com.google.android.material.chip.Chip
+                        android:id="@+id/chipHealth"
+                        style="@style/Widget.Material3.Chip.Filter"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/cat_health"
+                        android:textColor="@color/finance_text_secondary"
+                        android:textSize="13sp"
+                        app:chipCornerRadius="20dp"
+                        app:chipEndPadding="12dp"
+                        app:chipStartPadding="12dp"
+                        app:chipStrokeColor="@color/outline_variant"
+                        app:chipStrokeWidth="1dp"
+                        app:chipSurfaceColor="@color/white" />
+
+                    <com.google.android.material.chip.Chip
+                        android:id="@+id/chipEducation"
+                        style="@style/Widget.Material3.Chip.Filter"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/cat_education"
+                        android:textColor="@color/finance_text_secondary"
+                        android:textSize="13sp"
+                        app:chipCornerRadius="20dp"
+                        app:chipEndPadding="12dp"
+                        app:chipStartPadding="12dp"
+                        app:chipStrokeColor="@color/outline_variant"
+                        app:chipStrokeWidth="1dp"
+                        app:chipSurfaceColor="@color/white" />
+
+                </com.google.android.material.chip.ChipGroup>
+
+            </HorizontalScrollView>
+
+            <!-- ========== 6. EXPENSE LIST RECYCLERVIEW ========== -->
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/rvExpenseHistory"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/spacing_medium"
+                android:nestedScrollingEnabled="false"
+                app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/hsvFilterChips"
+                tools:itemCount="5"
+                tools:listitem="@layout/item_expense_history" />
+
+            <!-- ========== 7. EMPTY STATE (Hidden by default) ========== -->
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/layoutEmptyState"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="@dimen/spacing_large"
+                android:layout_marginTop="60dp"
+                android:visibility="gone"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/hsvFilterChips">
+
+                <!-- Empty Illustration Placeholder -->
+                <com.google.android.material.card.MaterialCardView
+                    android:id="@+id/cardEmptyIcon"
+                    android:layout_width="80dp"
+                    android:layout_height="80dp"
+                    app:cardBackgroundColor="@color/primary_container"
+                    app:cardCornerRadius="40dp"
+                    app:cardElevation="0dp"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent">
+
+                    <ImageView
+                        android:layout_width="40dp"
+                        android:layout_height="40dp"
+                        android:layout_gravity="center"
+                        android:contentDescription="@string/cd_empty_illustration"
+                        android:importantForAccessibility="no"
+                        android:src="@drawable/ic_category_outline"
+                        app:tint="@color/primary" />
+
+                </com.google.android.material.card.MaterialCardView>
+
+                <!-- Empty Title -->
+                <TextView
+                    android:id="@+id/tvEmptyTitle"
+                    style="@style/TextAppearance.Material3.TitleMedium"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="24dp"
+                    android:gravity="center"
+                    android:text="@string/empty_title"
+                    android:textColor="@color/finance_text_primary"
+                    android:textSize="18sp"
+                    android:textStyle="bold"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/cardEmptyIcon" />
+
+                <!-- Empty Description -->
+                <TextView
+                    android:id="@+id/tvEmptyDescription"
+                    style="@style/TextAppearance.Material3.BodyMedium"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="8dp"
+                    android:gravity="center"
+                    android:lineSpacingExtra="4dp"
+                    android:text="@string/empty_description"
+                    android:textColor="@color/finance_text_secondary"
+                    android:textSize="14sp"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/tvEmptyTitle" />
+
+                <!-- Add Expense Button (UI only) -->
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/btnEmptyAddExpense"
+                    android:layout_width="wrap_content"
+                    android:layout_height="48dp"
+                    android:layout_marginTop="@dimen/spacing_large"
+                    android:backgroundTint="@color/finance_primary"
+                    android:fontFamily="sans-serif-medium"
+                    android:insetTop="0dp"
+                    android:insetBottom="0dp"
+                    android:text="@string/empty_add_expense"
+                    android:textAllCaps="false"
+                    android:textColor="@color/white"
+                    android:textSize="15sp"
+                    app:cornerRadius="24dp"
+                    app:elevation="2dp"
+                    app:icon="@drawable/ic_add"
+                    app:iconGravity="textStart"
+                    app:iconSize="18dp"
+                    app:iconTint="@color/white"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/tvEmptyDescription" />
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+    </androidx.core.widget.NestedScrollView>
+
+    <!-- ========== 8. FLOATING ACTION BUTTON ========== -->
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/fabAddExpense"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="@dimen/spacing_medium"
+        android:contentDescription="@string/cd_add_expense_fab"
+        app:backgroundTint="@color/primary"
+        app:fabSize="auto"
+        android:layout_gravity="bottom|end"
+        app:srcCompat="@drawable/ic_add"
+        app:tint="@color/white" />
+
+</androidx.coordinatorlayout.widget.CoordinatorLayout>

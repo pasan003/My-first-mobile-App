@@ -6,12 +6,16 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.firstapp.myapplication.databinding.ItemTransactionBinding
-import java.text.NumberFormat
+import com.firstapp.myapplication.utils.CurrencyUtils
 
 /**
  * RecyclerView Adapter for displaying a list of [Transaction] items.
+ *
+ * @param onItemClick Callback invoked when a transaction item is tapped.
  */
-class TransactionAdapter :
+class TransactionAdapter(
+    private val onItemClick: ((Transaction) -> Unit)? = null
+) :
     ListAdapter<Transaction, TransactionAdapter.ViewHolder>(DiffCallback()) {
 
     /**
@@ -20,7 +24,7 @@ class TransactionAdapter :
     class ViewHolder(private val binding: ItemTransactionBinding) :
         RecyclerView.ViewHolder(binding.root) {
 
-        fun bind(transaction: Transaction) {
+        fun bind(transaction: Transaction, onItemClick: ((Transaction) -> Unit)?) {
             val context = binding.root.context
 
             // Set category icon
@@ -32,8 +36,7 @@ class TransactionAdapter :
             binding.tvDate.text = transaction.date
 
             // Format and set the amount
-            val currencyFormat = NumberFormat.getCurrencyInstance()
-            val formattedAmount = currencyFormat.format(transaction.amount)
+            val formattedAmount = CurrencyUtils.format(transaction.amount)
 
             binding.tvAmount.text = if (transaction.isExpense) {
                 "-$formattedAmount"
@@ -49,6 +52,11 @@ class TransactionAdapter :
                     context.getColor(R.color.text_income)
                 }
             )
+
+            // Set item click listener
+            binding.root.setOnClickListener {
+                onItemClick?.invoke(transaction)
+            }
         }
     }
 
@@ -60,15 +68,16 @@ class TransactionAdapter :
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        holder.bind(getItem(position))
+        holder.bind(getItem(position), onItemClick)
     }
 
     /**
      * DiffUtil callback for efficient list updates.
+     * Matches on the database [Transaction.id] for stable item identity.
      */
     class DiffCallback : DiffUtil.ItemCallback<Transaction>() {
         override fun areItemsTheSame(oldItem: Transaction, newItem: Transaction): Boolean {
-            return oldItem.title == newItem.title && oldItem.date == newItem.date
+            return oldItem.id == newItem.id
         }
 
         override fun areContentsTheSame(oldItem: Transaction, newItem: Transaction): Boolean {
