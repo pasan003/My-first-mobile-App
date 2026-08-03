@@ -29,8 +29,16 @@ class ExpenseRepository(private val expenseDao: ExpenseDao) {
     fun getMonthlyExpenses(startDate: Long, endDate: Long): Flow<Double> =
         expenseDao.getMonthlyExpenses(startDate, endDate)
 
-    fun getExpensesByCategory(categoryId: Long): Flow<List<ExpenseWithCategory>> =
-        expenseDao.getExpensesByCategory(categoryId)
+    /**
+     * Expenses matching [query] in title, notes or category name
+     * (case-insensitive), optionally restricted to [categoryId] (`null` = all).
+     *
+     * [query] must have SQL LIKE wildcards (`\`, `%`, `_`) pre-escaped — the
+     * only caller (ExpenseViewModel.filteredExpenses) escapes them via its
+     * private `escapeLike` helper, paired with the DAO's `ESCAPE '\'` clause.
+     */
+    fun searchExpenses(query: String, categoryId: Long?): Flow<List<ExpenseWithCategory>> =
+        expenseDao.searchExpenses(query, categoryId)
 
     fun getExpenseCount(): Flow<Int> = expenseDao.getExpenseCount()
 

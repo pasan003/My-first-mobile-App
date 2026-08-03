@@ -111,7 +111,7 @@
 
             </com.google.android.material.card.MaterialCardView>
 
-            <!-- ========== 4. SEARCH BAR (UI Only) ========== -->
+            <!-- ========== 4. SEARCH BAR ========== -->
             <com.google.android.material.card.MaterialCardView
                 android:id="@+id/cardSearch"
                 android:layout_width="0dp"
@@ -149,11 +149,10 @@
                         android:layout_marginStart="12dp"
                         android:layout_weight="1"
                         android:background="@null"
-                        android:clickable="false"
-                        android:focusable="false"
                         android:fontFamily="sans-serif"
                         android:hint="@string/search_expenses_hint"
-                        android:inputType="none"
+                        android:imeOptions="actionSearch"
+                        android:inputType="text"
                         android:maxLines="1"
                         android:textColor="@color/finance_text_primary"
                         android:textColorHint="@color/finance_hint_text"
