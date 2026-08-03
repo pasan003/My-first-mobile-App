@@ -7,12 +7,12 @@ import android.view.MenuItem
 import android.view.View
 import android.widget.Toast
 import androidx.activity.viewModels
-import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.DividerItemDecoration
 import com.firstapp.myapplication.databinding.ActivityExpenseHistoryBinding
 import com.firstapp.myapplication.utils.AnalyticsPeriod
 import com.firstapp.myapplication.utils.CurrencyUtils
 import com.firstapp.myapplication.utils.DateUtils
+import com.firstapp.myapplication.utils.UiAnimations
 import com.firstapp.myapplication.viewmodel.ExpenseViewModel
 
 /**
@@ -23,7 +23,7 @@ import com.firstapp.myapplication.viewmodel.ExpenseViewModel
  * - Empty state shown when there are no expenses
  * - FAB navigates to the Add Expense screen
  */
-class ExpenseHistoryActivity : AppCompatActivity() {
+class ExpenseHistoryActivity : BaseActivity() {
 
     private lateinit var binding: ActivityExpenseHistoryBinding
     private val viewModel: ExpenseViewModel by viewModels()
@@ -38,6 +38,7 @@ class ExpenseHistoryActivity : AppCompatActivity() {
         setupRecyclerView()
         setupFab()
         observeData()
+        UiAnimations.pressFeedback(binding.fabAddExpense)
     }
 
     /**

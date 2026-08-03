@@ -1,41 +1,54 @@
 package com.firstapp.myapplication
 
 import android.os.Bundle
-import android.view.Menu
 import android.view.MenuItem
 import android.view.View
 import android.widget.ArrayAdapter
-import android.widget.Toast
 import androidx.activity.viewModels
-import androidx.appcompat.app.AppCompatActivity
-import androidx.core.content.ContextCompat
 import com.firstapp.myapplication.databinding.ActivityProfileSettingsBinding
 import com.firstapp.myapplication.databinding.DialogEditProfileBinding
 import com.firstapp.myapplication.database.entity.UserProfile
 import com.firstapp.myapplication.utils.CurrencyUtils
 import com.firstapp.myapplication.utils.DateUtils
+import com.firstapp.myapplication.utils.UiAnimations
+import com.firstapp.myapplication.viewmodel.CategoryViewModel
+import com.firstapp.myapplication.viewmodel.ExpenseViewModel
 import com.firstapp.myapplication.viewmodel.UserProfileViewModel
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
+import com.google.android.material.snackbar.Snackbar
 
 /**
  * Profile & Settings screen backed by the Room-stored user profile.
  *
- * - Displays the real profile (avatar, full name, monthly income, currency,
- *   member-since date) loaded from the database.
- * - "Edit Profile" opens a dialog to update name, monthly income and currency.
- * - Includes About App, Privacy Policy and Help & Support sections.
- * - Logout is disabled because this is an offline application.
- *
- * Any change made here is reflected automatically on the Dashboard and
- * Analytics because those screens observe the same Room profile.
+ * - **Profile header**: default avatar, full name, monthly income and the
+ *   member-since date (the profile creation date stored in Room).
+ * - **Financial summary**: monthly income, total expenses, remaining balance
+ *   and total transactions — all observed from Room, so every card updates
+ *   automatically when expenses or the profile change.
+ * - **Edit Profile**: a dialog lets the user update full name, monthly income
+ *   and currency, saving straight into the Room database.
+ * - **Application settings**: Currency, About SpendWise, Help & Support,
+ *   Privacy Policy and App Version. Logout is intentionally not present
+ *   because the app works completely offline.
+ * - **Storage information**: total categories, total expenses and the local
+ *   database status, all read from Room.
  */
-class ProfileSettingsActivity : AppCompatActivity() {
+class ProfileSettingsActivity : BaseActivity() {
 
     private lateinit var binding: ActivityProfileSettingsBinding
-    private val viewModel: UserProfileViewModel by viewModels()
+
+    private val profileViewModel: UserProfileViewModel by viewModels()
+    private val expenseViewModel: ExpenseViewModel by viewModels()
+    private val categoryViewModel: CategoryViewModel by viewModels()
 
     /** The profile currently displayed; used as the base for edits. */
     private var currentProfile: UserProfile? = null
+
+    /** Latest total expenses, used to compute the remaining balance. */
+    private var totalExpenses = 0.0
+
+    /** Currency symbol from the profile, used for all formatted amounts. */
+    private var currencySymbol = CurrencyUtils.DEFAULT_SYMBOL
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -45,7 +58,8 @@ class ProfileSettingsActivity : AppCompatActivity() {
         setupToolbar()
         setupSettingRows()
         setupClickListeners()
-        observeProfile()
+        observeData()
+        UiAnimations.pressFeedback(binding.btnEditProfile)
     }
 
     /**
@@ -57,19 +71,10 @@ class ProfileSettingsActivity : AppCompatActivity() {
         supportActionBar?.setDisplayShowTitleEnabled(false)
     }
 
-    override fun onCreateOptionsMenu(menu: Menu): Boolean {
-        menuInflater.inflate(R.menu.menu_profile_settings, menu)
-        return true
-    }
-
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         return when (item.itemId) {
             android.R.id.home -> {
                 finish()
-                true
-            }
-            R.id.action_more_options -> {
-                showPlaceholderToast(getString(R.string.cd_more_options))
                 true
             }
             else -> super.onOptionsItemSelected(item)
@@ -77,139 +82,135 @@ class ProfileSettingsActivity : AppCompatActivity() {
     }
 
     /**
-     * Shows a short toast as a placeholder for future functionality.
-     */
-    private fun showPlaceholderToast(action: String) {
-        Toast.makeText(
-            this,
-            getString(R.string.sample_toast_placeholder, action),
-            Toast.LENGTH_SHORT
-        ).show()
-    }
-
-    /**
-     * Configures the Application Settings rows with icons, titles, and descriptions.
+     * Configures the Application Settings rows with icons, titles and values.
      */
     private fun setupSettingRows() {
-        // Notifications
-        binding.rowNotifications.ivRowIcon.setImageResource(R.drawable.ic_notifications)
-        binding.rowNotifications.tvRowTitle.setText(R.string.profile_notifications)
-        binding.rowNotifications.tvRowDescription.setText(R.string.profile_notifications_desc)
-        binding.rowNotifications.tvRowDescription.visibility = View.VISIBLE
+        // Currency — the stored value is shown and edited from the profile dialog
+        binding.rowCurrency.ivRowIcon.setImageResource(R.drawable.ic_payment)
+        binding.rowCurrency.tvRowTitle.setText(R.string.profile_currency)
 
-        // Language
-        binding.rowLanguage.ivRowIcon.setImageResource(R.drawable.ic_language)
-        binding.rowLanguage.tvRowTitle.setText(R.string.profile_language)
-        binding.rowLanguage.tvRowDescription.setText(R.string.profile_language_desc)
-        binding.rowLanguage.tvRowDescription.visibility = View.VISIBLE
+        // About SpendWise
+        binding.rowAbout.ivRowIcon.setImageResource(R.drawable.ic_info)
+        binding.rowAbout.tvRowTitle.setText(R.string.profile_about_spendwise)
 
-        // Date Format
-        binding.rowDateFormat.ivRowIcon.setImageResource(R.drawable.ic_calendar)
-        binding.rowDateFormat.tvRowTitle.setText(R.string.profile_date_format)
-        binding.rowDateFormat.tvRowDescription.setText(R.string.profile_date_format_desc)
-        binding.rowDateFormat.tvRowDescription.visibility = View.VISIBLE
-
-        // Currency Format
-        binding.rowCurrencyFormat.ivRowIcon.setImageResource(R.drawable.ic_payment)
-        binding.rowCurrencyFormat.tvRowTitle.setText(R.string.profile_currency_format)
-        binding.rowCurrencyFormat.tvRowDescription.setText(R.string.profile_currency_format_desc)
-        binding.rowCurrencyFormat.tvRowDescription.visibility = View.VISIBLE
-
-        // Help Center
-        binding.rowHelpCenter.ivRowIcon.setImageResource(R.drawable.ic_category_outline)
-        binding.rowHelpCenter.tvRowTitle.setText(R.string.profile_help_center)
-
-        // Contact Support
-        binding.rowContactSupport.ivRowIcon.setImageResource(R.drawable.ic_profile)
-        binding.rowContactSupport.ivRowIcon.setColorFilter(
-            ContextCompat.getColor(this, R.color.finance_primary)
-        )
-        binding.rowContactSupport.tvRowTitle.setText(R.string.profile_contact_support)
+        // Help & Support
+        binding.rowHelpSupport.ivRowIcon.setImageResource(R.drawable.ic_help)
+        binding.rowHelpSupport.tvRowTitle.setText(R.string.profile_help_support)
 
         // Privacy Policy
-        binding.rowPrivacyPolicy.ivRowIcon.setImageResource(R.drawable.ic_save)
+        binding.rowPrivacyPolicy.ivRowIcon.setImageResource(R.drawable.ic_shield)
         binding.rowPrivacyPolicy.tvRowTitle.setText(R.string.profile_privacy_policy)
 
-        // Terms & Conditions
-        binding.rowTermsConditions.ivRowIcon.setImageResource(R.drawable.ic_notes)
-        binding.rowTermsConditions.tvRowTitle.setText(R.string.profile_terms_conditions)
+        // App Version — display-only row with the version as its value
+        binding.rowAppVersion.ivRowIcon.setImageResource(R.drawable.ic_more_vert)
+        binding.rowAppVersion.tvRowTitle.setText(R.string.profile_app_version)
+        binding.rowAppVersion.tvRowDescription.setText(R.string.profile_version_value)
+        binding.rowAppVersion.tvRowDescription.visibility = View.VISIBLE
+        binding.rowAppVersion.root.apply {
+            // Informational row — remove the clickable ripple affordance
+            isClickable = false
+            isFocusable = false
+            background = null
+        }
     }
 
     /**
-     * Observes the profile from Room and updates the screen whenever it changes.
+     * Observes the profile, expenses and categories from Room and updates the
+     * whole screen automatically whenever any of them changes.
      */
-    private fun observeProfile() {
-        viewModel.profile.observe(this) { profile ->
+    private fun observeData() {
+        profileViewModel.profile.observe(this) { profile ->
             if (profile == null) return@observe
 
             currentProfile = profile
-            val symbol = CurrencyUtils.symbolFor(profile.currency)
+            currencySymbol = CurrencyUtils.symbolFor(profile.currency)
 
             binding.tvUserName.text = profile.fullName
             binding.tvIncomeValue.text = getString(
                 R.string.profile_income_value,
-                CurrencyUtils.format(profile.monthlyIncome, symbol)
+                CurrencyUtils.format(profile.monthlyIncome, currencySymbol)
             )
             binding.tvMemberSince.text = getString(
                 R.string.profile_member_since_format,
                 DateUtils.formatDate(profile.createdAt)
             )
-            binding.tvCurrencyValue.text = CurrencyUtils.currencyDisplay(profile.currency)
-            binding.tvBudgetValue.text = CurrencyUtils.format(profile.monthlyIncome, symbol)
+
+            // Currency row shows the friendly display name of the stored code
+            binding.rowCurrency.tvRowDescription.text =
+                CurrencyUtils.currencyDisplay(profile.currency)
+            binding.rowCurrency.tvRowDescription.visibility = View.VISIBLE
+
+            updateSummary()
+        }
+
+        // Total expenses drive the summary card and refresh automatically
+        expenseViewModel.totalExpenses.observe(this) { total ->
+            totalExpenses = total
+            updateSummary()
+        }
+
+        // Transaction count (summary card + storage info)
+        expenseViewModel.expenseCount.observe(this) { count ->
+            binding.tvSummaryTransactions.text = count.toString()
+            binding.tvStorageExpenses.text = count.toString()
+        }
+
+        // Category count (storage info)
+        categoryViewModel.categoryCount.observe(this) { count ->
+            binding.tvStorageCategories.text = count.toString()
         }
     }
 
     /**
-     * Sets up click listeners: edit profile, application setting rows and
-     * the About / Privacy / Help & Support rows.
+     * Recomputes the financial summary cards: income, expenses and the
+     * remaining balance (income − expenses).
+     */
+    private fun updateSummary() {
+        val income = currentProfile?.monthlyIncome ?: 0.0
+        binding.tvSummaryIncome.text = CurrencyUtils.format(income, currencySymbol)
+        binding.tvSummaryExpenses.text = CurrencyUtils.format(totalExpenses, currencySymbol)
+        binding.tvSummaryBalance.text =
+            CurrencyUtils.format(income - totalExpenses, currencySymbol)
+    }
+
+    /**
+     * Sets up click listeners: edit profile (button, pencil icon and the
+     * Currency row) plus the About / Help / Privacy rows.
      */
     private fun setupClickListeners() {
-        // Edit Profile — via the button or the pencil icon in the header
+        // Edit Profile — via the button, the pencil icon or the Currency row
         binding.btnEditProfile.setOnClickListener {
             currentProfile?.let { showEditProfileDialog(it) }
         }
         binding.ivEditProfile.setOnClickListener {
             currentProfile?.let { showEditProfileDialog(it) }
         }
-
-        // Application settings — UI placeholders (rows are <include> layouts,
-        // so the click listener goes on the included root view)
-        binding.rowNotifications.root.setOnClickListener {
-            showPlaceholderToast(getString(R.string.profile_notifications))
-        }
-        binding.rowLanguage.root.setOnClickListener {
-            showPlaceholderToast(getString(R.string.profile_language))
-        }
-        binding.rowDateFormat.root.setOnClickListener {
-            showPlaceholderToast(getString(R.string.profile_date_format))
-        }
-        binding.rowCurrencyFormat.root.setOnClickListener {
-            showPlaceholderToast(getString(R.string.profile_currency_format))
+        binding.rowCurrency.root.setOnClickListener {
+            currentProfile?.let { showEditProfileDialog(it) }
         }
 
-        // Help & Support
-        binding.rowHelpCenter.root.setOnClickListener {
-            showPlaceholderToast(getString(R.string.profile_help_center))
-        }
-        binding.rowContactSupport.root.setOnClickListener {
-            showPlaceholderToast(getString(R.string.profile_contact_support))
-        }
-        binding.rowPrivacyPolicy.root.setOnClickListener {
-            showPrivacyDialog()
-        }
-        binding.rowTermsConditions.root.setOnClickListener {
+        // About SpendWise
+        binding.rowAbout.root.setOnClickListener {
             showAboutDialog()
         }
 
-        // Logout — disabled in this offline app
-        binding.btnLogout.setOnClickListener {
-            Toast.makeText(this, R.string.feature_coming_soon, Toast.LENGTH_SHORT).show()
+        // Help & Support
+        binding.rowHelpSupport.root.setOnClickListener {
+            showHelpDialog()
         }
+
+        // Privacy Policy
+        binding.rowPrivacyPolicy.root.setOnClickListener {
+            showPrivacyDialog()
+        }
+
+        // App Version row is informational — no action needed
     }
 
     /**
      * Opens the Edit Profile dialog pre-filled with the current profile.
-     * Saves changes back into the Room database on "Save".
+     * Saves changes back into the Room database on "Save"; every other screen
+     * that observes the profile (Dashboard, Analytics) updates automatically.
      */
     private fun showEditProfileDialog(profile: UserProfile) {
         val dialogBinding = DialogEditProfileBinding.inflate(layoutInflater)
@@ -263,7 +264,7 @@ class ProfileSettingsActivity : AppCompatActivity() {
 
             if (!valid) return@setOnClickListener
 
-            viewModel.updateProfile(
+            profileViewModel.updateProfile(
                 profile.copy(
                     fullName = name,
                     monthlyIncome = income!!,
@@ -271,13 +272,24 @@ class ProfileSettingsActivity : AppCompatActivity() {
                 )
             ) {
                 runOnUiThread {
-                    Toast.makeText(this, R.string.profile_updated, Toast.LENGTH_SHORT).show()
+                    Snackbar.make(binding.root, R.string.profile_updated, Snackbar.LENGTH_SHORT).show()
                 }
             }
             dialog.dismiss()
         }
 
         dialog.show()
+    }
+
+    /**
+     * Shows the Help & Support dialog (offline app — no external links).
+     */
+    private fun showHelpDialog() {
+        MaterialAlertDialogBuilder(this)
+            .setTitle(R.string.profile_help_support)
+            .setMessage(R.string.profile_help_support_message)
+            .setPositiveButton(R.string.action_ok, null)
+            .show()
     }
 
     /**

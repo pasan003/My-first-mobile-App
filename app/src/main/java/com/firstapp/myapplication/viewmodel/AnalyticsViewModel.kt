@@ -30,14 +30,12 @@ data class CategorySpending(
 data class AnalyticsData(
     val totalExpenses: Double,
     val transactionCount: Int,
-    val averageExpense: Double,
     val monthlyIncome: Double,
     val remainingBalance: Double,
     val categorySpending: List<CategorySpending>,
     val monthlyTotals: List<Pair<String, Double>>,
     val topCategory: String,
     val averageDaily: Double,
-    val highestDay: String,
     val largestExpense: Double
 )
 
@@ -99,7 +97,6 @@ class AnalyticsViewModel(application: Application) : AndroidViewModel(applicatio
             return AnalyticsData(
                 totalExpenses = 0.0,
                 transactionCount = 0,
-                averageExpense = 0.0,
                 monthlyIncome = monthlyIncome,
                 remainingBalance = monthlyIncome,
                 categorySpending = emptyList(),
@@ -108,7 +105,6 @@ class AnalyticsViewModel(application: Application) : AndroidViewModel(applicatio
                 },
                 topCategory = "—",
                 averageDaily = 0.0,
-                highestDay = "—",
                 largestExpense = 0.0
             )
         }
@@ -145,24 +141,17 @@ class AnalyticsViewModel(application: Application) : AndroidViewModel(applicatio
         val daysInPeriod = DateUtils.daysInRange(rangeStart, rangeEnd).coerceAtLeast(1)
         val averageDaily = total / daysInPeriod
 
-        val highestDay = expenses
-            .groupBy { DateUtils.formatDayName(it.expense.transactionDate) }
-            .maxByOrNull { it.value.sumOf { e -> e.expense.amount } }
-            ?.key ?: "—"
-
         val largestExpense = expenses.maxOfOrNull { it.expense.amount } ?: 0.0
 
         return AnalyticsData(
             totalExpenses = total,
             transactionCount = count,
-            averageExpense = if (count == 0) 0.0 else total / count,
             monthlyIncome = monthlyIncome,
             remainingBalance = monthlyIncome - total,
             categorySpending = categorySpending,
             monthlyTotals = monthlyTotals,
             topCategory = topCategory,
             averageDaily = averageDaily,
-            highestDay = highestDay,
             largestExpense = largestExpense
         )
     }

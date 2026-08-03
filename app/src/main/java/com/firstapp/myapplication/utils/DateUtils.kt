@@ -16,7 +16,6 @@ object DateUtils {
     private val displayDateFormatter = SimpleDateFormat("dd MMM yyyy", Locale.getDefault())
     private val shortDateFormatter = SimpleDateFormat("EEE, dd MMM yyyy", Locale.getDefault())
     private val timeFormatter = SimpleDateFormat("hh:mm a", Locale.getDefault())
-    private val dayNameFormatter = SimpleDateFormat("EEEE", Locale.getDefault())
     private val monthYearLabelFormatter = SimpleDateFormat("MMM yyyy", Locale.getDefault())
 
     /** Formats an epoch-millis timestamp as "15 Jul 2026". */
@@ -27,9 +26,6 @@ object DateUtils {
 
     /** Formats an epoch-millis timestamp as "01:30 PM". */
     fun formatTime(millis: Long): String = timeFormatter.format(Date(millis))
-
-    /** Returns the weekday name (e.g. "Friday") for a timestamp. */
-    fun formatDayName(millis: Long): String = dayNameFormatter.format(Date(millis))
 
     /** Returns the month + year (e.g. "Jan 2026") for a timestamp. */
     fun formatMonthYearLabel(millis: Long): String = monthYearLabelFormatter.format(Date(millis))

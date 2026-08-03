@@ -7,6 +7,7 @@ import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.firstapp.myapplication.databinding.ItemTransactionBinding
 import com.firstapp.myapplication.utils.CurrencyUtils
+import com.firstapp.myapplication.utils.UiAnimations
 
 /**
  * RecyclerView Adapter for displaying a list of [Transaction] items.
@@ -17,6 +18,9 @@ class TransactionAdapter(
     private val onItemClick: ((Transaction) -> Unit)? = null
 ) :
     ListAdapter<Transaction, TransactionAdapter.ViewHolder>(DiffCallback()) {
+
+    /** Item ids that have already played their entrance animation. */
+    private val animatedIds = mutableSetOf<Long>()
 
     /**
      * Holds references to the views in a single transaction item.
@@ -68,7 +72,9 @@ class TransactionAdapter(
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        holder.bind(getItem(position), onItemClick)
+        val transaction = getItem(position)
+        holder.bind(transaction, onItemClick)
+        UiAnimations.animateItemIn(holder.itemView, animatedIds, transaction.id)
     }
 
     /**

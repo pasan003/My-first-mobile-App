@@ -7,6 +7,7 @@ import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.firstapp.myapplication.databinding.ItemCategoryBinding
 import com.firstapp.myapplication.utils.CurrencyUtils
+import com.firstapp.myapplication.utils.UiAnimations
 
 /**
  * RecyclerView Adapter for displaying a list of [CategoryItem] objects
@@ -22,6 +23,9 @@ class CategoryAdapter(
     private val onEditClick: ((CategoryItem) -> Unit)? = null,
     private val onItemLongClick: ((CategoryItem) -> Unit)? = null
 ) : ListAdapter<CategoryItem, CategoryAdapter.ViewHolder>(DiffCallback()) {
+
+    /** Item ids that have already played their entrance animation. */
+    private val animatedIds = mutableSetOf<Long>()
 
     /**
      * Currency symbol used to format the total amount. Set by the screen
@@ -86,7 +90,9 @@ class CategoryAdapter(
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        holder.bind(getItem(position), currencySymbol, onEditClick, onItemLongClick)
+        val category = getItem(position)
+        holder.bind(category, currencySymbol, onEditClick, onItemLongClick)
+        UiAnimations.animateItemIn(holder.itemView, animatedIds, category.id.toLong())
     }
 
     /**
