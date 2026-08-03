@@ -127,13 +127,16 @@ class MainActivity : BaseActivity() {
     }
 
     /**
-     * Sets up the RecyclerView and observes the Room database for changes.
+     * Sets up the RecyclerView once. List updates go through [ListAdapter.submitList]
+     * so the adapter always reflects the current Room snapshot — never appends.
      */
     private fun setupRecyclerView() {
         adapter = TransactionAdapter { transaction ->
             startActivity(getExpenseDetailIntent(transaction))
         }
         binding.rvRecentTransactions.adapter = adapter
+        // Avoid stacking DiffUtil insert animations on top of item entrance fades.
+        binding.rvRecentTransactions.itemAnimator = null
 
         // Add subtle divider between items
         binding.rvRecentTransactions.addItemDecoration(
@@ -145,11 +148,13 @@ class MainActivity : BaseActivity() {
 
     /**
      * Observes the ViewModels and updates the dashboard with real database data.
+     * Observers are registered once in [onCreate]; Room Flows push every change
+     * so totals and recent transactions stay in sync after add / edit / delete.
      */
     private fun observeData() {
-        // Recent transactions (top 5) from Room
+        // Recent transactions (top 5) from Room — replace the list, never append.
         viewModel.getRecentExpenses(5).observe(this) { transactions ->
-            adapter.submitList(transactions)
+            adapter.submitList(transactions.toList())
         }
 
         // Profile drives the first-launch gate, greeting, name and income.

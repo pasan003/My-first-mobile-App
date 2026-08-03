@@ -10,8 +10,8 @@ import android.view.animation.DecelerateInterpolator
  * - [pressFeedback] scales a button / FAB down slightly while it is pressed
  *   and back to normal on release. The Material ripple already provides the
  *   ink effect; this adds a subtle physical "push" on top of it.
- * - [animateItemIn] fades and slides a RecyclerView item up the first time it
- *   appears, so lists animate in instead of popping abruptly.
+ * - [animateItemIn] fades a RecyclerView item in the first time it appears,
+ *   so lists animate gently without overlapping neighbours.
  */
 object UiAnimations {
 
@@ -49,26 +49,27 @@ object UiAnimations {
     }
 
     /**
-     * Plays a subtle fade + slide-up entrance for a RecyclerView item, but only
-     * the first time that item id is displayed (tracked in [animatedIds]).
-     * Re-binds of already-animated items are left untouched, so scrolling and
-     * DiffUtil updates never re-trigger the animation.
+     * Plays a subtle fade-in entrance for a RecyclerView item, but only the
+     * first time that item id is displayed (tracked in [animatedIds]).
+     *
+     * Uses alpha only — never [View.setTranslationY] — because a translated
+     * item still occupies its layout slot, so neighbours appear to overlap
+     * while the animation runs. Re-binds of already-animated items are reset
+     * to a settled state so recycled views are never left invisible.
      */
     fun animateItemIn(itemView: View, animatedIds: MutableSet<Long>, itemId: Long) {
+        itemView.animate().cancel()
+        itemView.translationY = 0f
+
         if (!animatedIds.add(itemId)) {
-            // A recycled view may still carry partial state from a cancelled
-            // entrance animation; reset it so the item is never stuck invisible.
             itemView.alpha = 1f
-            itemView.translationY = 0f
             return
         }
 
         itemView.alpha = 0f
-        itemView.translationY = itemView.resources.displayMetrics.density * 24f
         itemView.animate()
             .alpha(1f)
-            .translationY(0f)
-            .setDuration(320L)
+            .setDuration(250L)
             .setInterpolator(interpolator)
             .start()
     }

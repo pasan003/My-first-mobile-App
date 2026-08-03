@@ -163,7 +163,7 @@
 
             </com.google.android.material.card.MaterialCardView>
 
-            <!-- ========== 5. FILTER CHIPS (UI Only) ========== -->
+            <!-- ========== 5. FILTER CHIPS (built dynamically from Room categories) ========== -->
             <HorizontalScrollView
                 android:id="@+id/hsvFilterChips"
                 android:layout_width="0dp"
@@ -181,131 +181,8 @@
                     android:layout_marginStart="@dimen/spacing_medium"
                     android:layout_marginEnd="@dimen/spacing_medium"
                     app:chipSpacing="8dp"
-                    app:singleSelection="true">
-
-                    <com.google.android.material.chip.Chip
-                        android:id="@+id/chipAll"
-                        style="@style/Widget.Material3.Chip.Filter"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:checked="true"
-                        android:text="@string/chip_all"
-                        android:textColor="@color/finance_text_primary"
-                        android:textSize="13sp"
-                        app:chipBackgroundColor="@color/primary_container"
-                        app:chipCornerRadius="20dp"
-                        app:chipEndPadding="12dp"
-                        app:chipStartPadding="12dp"
-                        app:chipStrokeColor="@color/outline_variant"
-                        app:chipStrokeWidth="0dp"
-                        app:chipSurfaceColor="@color/white" />
-
-                    <com.google.android.material.chip.Chip
-                        android:id="@+id/chipFood"
-                        style="@style/Widget.Material3.Chip.Filter"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="@string/cat_food"
-                        android:textColor="@color/finance_text_secondary"
-                        android:textSize="13sp"
-                        app:chipCornerRadius="20dp"
-                        app:chipEndPadding="12dp"
-                        app:chipStartPadding="12dp"
-                        app:chipStrokeColor="@color/outline_variant"
-                        app:chipStrokeWidth="1dp"
-                        app:chipSurfaceColor="@color/white" />
-
-                    <com.google.android.material.chip.Chip
-                        android:id="@+id/chipTransport"
-                        style="@style/Widget.Material3.Chip.Filter"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="@string/cat_transport"
-                        android:textColor="@color/finance_text_secondary"
-                        android:textSize="13sp"
-                        app:chipCornerRadius="20dp"
-                        app:chipEndPadding="12dp"
-                        app:chipStartPadding="12dp"
-                        app:chipStrokeColor="@color/outline_variant"
-                        app:chipStrokeWidth="1dp"
-                        app:chipSurfaceColor="@color/white" />
-
-                    <com.google.android.material.chip.Chip
-                        android:id="@+id/chipShopping"
-                        style="@style/Widget.Material3.Chip.Filter"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="@string/cat_shopping"
-                        android:textColor="@color/finance_text_secondary"
-                        android:textSize="13sp"
-                        app:chipCornerRadius="20dp"
-                        app:chipEndPadding="12dp"
-                        app:chipStartPadding="12dp"
-                        app:chipStrokeColor="@color/outline_variant"
-                        app:chipStrokeWidth="1dp"
-                        app:chipSurfaceColor="@color/white" />
-
-                    <com.google.android.material.chip.Chip
-                        android:id="@+id/chipBills"
-                        style="@style/Widget.Material3.Chip.Filter"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="@string/cat_bills"
-                        android:textColor="@color/finance_text_secondary"
-                        android:textSize="13sp"
-                        app:chipCornerRadius="20dp"
-                        app:chipEndPadding="12dp"
-                        app:chipStartPadding="12dp"
-                        app:chipStrokeColor="@color/outline_variant"
-                        app:chipStrokeWidth="1dp"
-                        app:chipSurfaceColor="@color/white" />
-
-                    <com.google.android.material.chip.Chip
-                        android:id="@+id/chipEntertainment"
-                        style="@style/Widget.Material3.Chip.Filter"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="@string/cat_entertainment"
-                        android:textColor="@color/finance_text_secondary"
-                        android:textSize="13sp"
-                        app:chipCornerRadius="20dp"
-                        app:chipEndPadding="12dp"
-                        app:chipStartPadding="12dp"
-                        app:chipStrokeColor="@color/outline_variant"
-                        app:chipStrokeWidth="1dp"
-                        app:chipSurfaceColor="@color/white" />
-
-                    <com.google.android.material.chip.Chip
-                        android:id="@+id/chipHealth"
-                        style="@style/Widget.Material3.Chip.Filter"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="@string/cat_health"
-                        android:textColor="@color/finance_text_secondary"
-                        android:textSize="13sp"
-                        app:chipCornerRadius="20dp"
-                        app:chipEndPadding="12dp"
-                        app:chipStartPadding="12dp"
-                        app:chipStrokeColor="@color/outline_variant"
-                        app:chipStrokeWidth="1dp"
-                        app:chipSurfaceColor="@color/white" />
-
-                    <com.google.android.material.chip.Chip
-                        android:id="@+id/chipEducation"
-                        style="@style/Widget.Material3.Chip.Filter"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="@string/cat_education"
-                        android:textColor="@color/finance_text_secondary"
-                        android:textSize="13sp"
-                        app:chipCornerRadius="20dp"
-                        app:chipEndPadding="12dp"
-                        app:chipStartPadding="12dp"
-                        app:chipStrokeColor="@color/outline_variant"
-                        app:chipStrokeWidth="1dp"
-                        app:chipSurfaceColor="@color/white" />
-
-                </com.google.android.material.chip.ChipGroup>
+                    app:selectionRequired="true"
+                    app:singleSelection="true" />
 
             </HorizontalScrollView>
 
