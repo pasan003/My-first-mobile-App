@@ -1,94 +1,128 @@
-# SpendWise – Personal Finance Tracker
+# SpendWise – Personal Expense Tracker
 
-SpendWise is a personal finance tracker designed to help you manage your money effectively. Built with **Kotlin**, **Material Design 3** and **Room Database**, SpendWise provides a clean and intuitive interface for tracking daily expenses.
+**SpendWise** is an offline, Android-only personal expense tracker built with **Kotlin**, **Material Design 3** and **Room Database**. It helps you take control of your spending by recording every expense, organising it into categories, and turning that data into clear, actionable insights — all without an internet connection.
 
-> **Note:** The app now uses a **Room Database** for persistent local storage (MVVM architecture). All screens load real data — no more sample/hardcoded data.
+> **Version 1.0.0** — Apache License 2.0
 
 ---
 
-## Current Features
+## Table of Contents
 
-### ✅ First-Time Setup
-- Shown automatically on the very first launch when no user profile exists
-- Collects the user's **Full Name** and **Monthly Income** with validation
-- Saves the profile into Room and navigates to the Dashboard
-- Never shown again unless the app data is cleared
+- [Project Overview](#project-overview)
+- [Features](#features)
+- [Project Structure](#project-structure)
+- [Technologies Used](#technologies-used)
+- [Database Design](#database-design)
+- [Screens](#screens)
+- [Installation](#installation)
+- [Future Improvements](#future-improvements)
+- [License](#license)
 
-### ✅ User Profile (Room)
-- `UserProfile` entity with full name, monthly income, currency and creation date
-- Only one profile is ever stored; created on first launch, editable afterwards
-- Every screen observes the same profile, so changes propagate instantly
+---
 
-### ✅ Home Dashboard
-- Time-aware greeting (**Good Morning / Afternoon / Evening**) with the user's real name
-- Balance card calculated from Room: **Monthly Income − Total Expenses = Remaining Balance**
-- Recent Transactions list rendered via `RecyclerView`
-- Bottom Navigation bar with four tabs (Home, Categories, Analytics, Profile)
-- Floating Action Button to navigate to the Add Expense screen
+## Project Overview
 
-### ✅ Add Expense
-- Full-screen form with the following fields:
-  - Expense Title (text input with clear button)
-  - Amount (numeric input with Rs. prefix)
-  - Category (dropdown loaded from the Room database)
-  - Date (Material DatePicker dialog, triggered on tap or calendar icon)
-  - Payment Method (dropdown with 5 options)
-  - Notes (multi-line text area, optional)
-- **Saves expenses to the Room database** with real validation
-- **Edit mode** — the same screen pre-fills and updates an existing expense
-- Snackbar feedback after saving, returns to the previous screen
-- Toolbar with back navigation and save action
+Tracking expenses is easy; understanding them is hard. Most people never get a clear picture of where their money goes because they rely on memory or scattered notes.
 
-### ✅ Expense History
-- Full list of all expenses loaded from Room via `RecyclerView`
-- Summary card (transaction count + total expenses) computed from real data
-- Empty state shown when the database has no expenses
-- Tap an item to open its Expense Detail screen
+SpendWise solves this by putting a **complete, private money diary in your pocket**:
 
-### ✅ Expense Details
-- Loads the expense from Room by id
-- Displays title, amount, category, date, time, payment method and notes
-- **Edit** opens the Add Expense screen in edit mode
-- **Delete** with a confirmation dialog removes the expense from Room
+- **Track daily expenses** — record any purchase in seconds with title, amount, category, date, payment method and optional notes.
+- **Organise expenses using categories** — use the nine built-in categories (Food, Transport, Shopping, Bills, Entertainment, Health, Education, Salary, Other) or create your own with custom icons and colors.
+- **View spending analytics** — see where your money goes with period-based summaries, spending-by-category breakdowns, monthly trends and smart insights.
+- **Manage a personal profile** — set your name, monthly income and preferred currency, all editable at any time.
+- **Store everything locally** — all data lives in a Room (SQLite) database on the device. Nothing is uploaded anywhere.
+- **Work completely offline** — SpendWise runs 100% on-device, so your financial data never leaves your phone.
 
-### ✅ Category Manager
-- Categories + live expense counts loaded from Room
-- **Add** category via FAB / empty-state button
-- **Edit** category via the pencil icon on each row
-- **Delete** category via long-press, with a friendly warning when the category still has expenses
-- Custom color picker (8 colors) and icon dropdown for each category
-- Empty state shown when there are no categories
+The app follows the **MVVM** architecture (Repository + ViewModel + LiveData/Flow) with a **Material Design 3** interface built from XML layouts and **ViewBinding**.
 
-### ✅ Analytics
-- All numbers calculated from the Room database
-- Period selector (This Week / This Month / This Year) that recomputes the aggregates
-- Four summary cards: **Total Expenses, Monthly Income, Remaining Balance, Total Transactions**
-- Spending by Category — dynamic list grouped by category with colored indicators
-- Monthly Spending — per-month totals with progress bars for the whole year
-- Top Categories ranking and Insights card (most spent on, remaining balance, avg daily, largest expense)
-- Friendly empty state: *"No expense data available yet. Start by adding your first expense."*
+---
 
-### ✅ Material Design 3 Interface
-- Deep teal / emerald color palette
-- Material 3 theming with proper color roles (Primary, Secondary, Tertiary, Surface, Error)
-- Rounded card components (`MaterialCardView`)
-- Outlined text fields with custom corner radius
-- Splash screen integration
+## Features
 
-### ✅ Room Database (persistence)
-- `Expense` entity with auto-generated primary key, category foreign key (RESTRICT), and index on `categoryId`
-- `Category` entity with name, icon and color stored as resource names
-- One-to-many relation modeled with Room's `@Relation` (`ExpenseWithCategory`)
-- Reactive `Flow` queries so the UI updates automatically when data changes
-- **Nine default categories are seeded only on the first launch** (Food, Transport, Shopping, Bills, Entertainment, Health, Education, Salary, Other) — no duplicates on later launches
-- `UserProfile` entity for persistent profile management (name, monthly income, currency)
-- Database version 2 with a data-preserving migration (adds `user_profiles` + new default categories)
-- Schema exported to `app/schemas/`
+### 🏠 Dashboard
 
-### ✅ MVVM Architecture
-- **Data layer:** `database/` (entities, DAOs, `AppDatabase` singleton), `repository/`
-- **UI layer:** Activities observe `LiveData` exposed by ViewModels
-- **Utils layer:** currency formatting, date helpers, category visuals mapping
+- **Personalized greeting** — time-aware greeting (Good Morning / Afternoon / Evening) with the user's name
+- **Monthly balance summary** — a balance card computed from real data: `Monthly Income − Total Expenses = Remaining Balance`
+- **Monthly income** and **total expenses** shown on the balance card
+- **Recent Transactions** — the five most recent expenses loaded from Room, rendered in a `RecyclerView`
+- **View All** — opens Expense History, where search and category filters live
+- **Floating Action Button (FAB)** — quick access to the Add Expense screen
+- **Bottom Navigation** — four tabs (Home, Categories, Analytics, Profile)
+
+### 💸 Expense Management
+
+- **Add Expense** — full-screen form with title, amount, category dropdown, date picker, payment method and notes
+- **Edit Expense** — the same form pre-fills and updates an existing expense
+- **Delete Expense** — with a confirmation dialog
+- **Expense Details** — a dedicated screen showing every field of a single transaction
+- **Expense History** — the complete, searchable list of expenses
+- **Date Picker** — Material `DatePickerDialog` (tap the field or the calendar icon)
+- **Payment Method** — five options: Cash, Credit Card, Debit Card, Bank Transfer, Digital Wallet
+- **Notes** — optional multi-line note attached to each expense
+- **Validation** — inline error messages for required title, a positive amount and a valid category, plus a double-tap guard so Save cannot create duplicate rows
+
+### 🗂️ Categories
+
+- **Default categories** — nine seeded automatically on first launch (Food, Transport, Shopping, Bills, Entertainment, Health, Education, Salary, Other)
+- **Create custom categories** — via the FAB or the empty-state button
+- **Edit categories** — rename or change the icon and color
+- **Delete categories** — long-press a row; categories still in use are moved to "Other" inside one atomic Room transaction before deletion
+- **Category search** — a real-time search box filters categories by name as you type
+- **Category statistics** — live transaction count and total amount spent per category, aggregated by SQL
+- **Icon selection** — choose from a curated set of category icons
+- **Color selection** — pick from eight Material 3 color accents
+- **Dynamic category filters** — category filter chips on Expense History are generated from the database, so custom categories appear automatically
+- **Sorting** — sort by name (A–Z), most/least used, or highest/lowest spending
+
+### 📊 Analytics
+
+- **Monthly Income, Total Expenses, Remaining Balance, Total Transactions** — four summary cards computed from Room
+- **Spending by Category** — dynamic list grouped by category with colored indicators
+- **Highest Spending Category** — a Top 5 ranking of categories by amount
+- **Monthly Spending Summary** — per-month totals with progress bars across the current year
+- **Smart spending insights** — most spent on, remaining balance, average daily spending and largest single expense
+- **Period selector** — This Week / This Month / This Year, recomputing every section instantly
+- **Empty state** — a friendly screen with an "Add Expense" action when no data exists
+
+### 👤 Profile
+
+- **First-time user setup** — a guided screen collects full name and monthly income before the dashboard is shown
+- **Store user name, monthly income and currency** — kept in Room and observed by every screen
+- **Edit Profile** — a dialog updates name, income and currency (8 currencies: LKR, USD, EUR, GBP, INR, JPY, AUD, CAD)
+- **Member Since** — the profile creation date
+- **Financial summary** — income, expenses and remaining balance, updating live
+- **Storage information** — total categories and expenses with the local database status
+- **About App, Privacy Policy, Help & Support** — informational dialogs
+- **Application version** — displayed in the settings list (no logout, because the app is a single-user, fully offline application)
+
+### 🗄️ Database
+
+- Built on **Room Database** (SQLite)
+- Three entities: **User Profile**, **Expenses**, **Categories**
+- Full **CRUD** (Create, Read, Update, Delete) for expenses and categories, plus update for the single user profile
+- Reactive `Flow` queries so every screen refreshes automatically when data changes
+- Schema version **2** with a data-preserving migration, exported to `app/schemas/`
+
+### 🔍 Search & Filtering
+
+- **Search transactions in real time** — every keystroke on the Expense History search bar re-queries the database instantly; no Search button required
+- **Case-insensitive matching** across **expense title**, **category name** and **notes** (implemented with SQL `LIKE` so filtering happens in the database, not in memory)
+- **Filter by category** — Material filter chips (All + every custom category) narrow the list
+- **Combine search and filters** — search and category selection work together, e.g. *Filter = Food* + *search = "Rice"* shows only Food transactions containing "Rice"
+- **Automatically refresh results** — clearing the search restores the current category results; selecting "All" restores every transaction
+- **Empty search state** — "No matching transactions found. Try a different keyword." when nothing matches
+
+### 🎨 UI & UX
+
+- **Material Design 3** theming with proper color roles and a deep teal/emerald palette
+- **Smooth screen transitions** — slide animations between every screen (shared `BaseActivity`)
+- **RecyclerView animations** — subtle fade-in entrance animations for list items
+- **Snackbar feedback** — for saved/updated/deleted expenses, profile updates and category actions
+- **Responsive layouts** — scrollable, constraint-based layouts that adapt to screen sizes
+- **Empty state screens** — friendly placeholders on History, Categories, Analytics and search
+- **Confirmation dialogs** — before deleting expenses or categories
+- **Splash screen** — branded launch experience via the AndroidX SplashScreen API
+- **Press feedback** — gentle scale-down on buttons and FABs
 
 ---
 
@@ -99,64 +133,112 @@ app/
 ├── src/
 │   ├── main/
 │   │   ├── java/com/firstapp/myapplication/
-│   │   │   ├── SetupActivity.kt             # First-time setup (name + income)
-│   │   │   ├── MainActivity.kt              # Home Dashboard
-│   │   │   ├── AddExpenseActivity.kt        # Add / Edit Expense form
-│   │   │   ├── ExpenseHistoryActivity.kt    # Full expense list
-│   │   │   ├── ExpenseDetailActivity.kt     # Single expense detail
-│   │   │   ├── CategoryManagerActivity.kt   # Category CRUD
-│   │   │   ├── AnalyticsActivity.kt         # Spending insights
-│   │   │   ├── ProfileSettingsActivity.kt   # Profile & settings
-│   │   │   ├── Transaction.kt               # UI data model
-│   │   │   ├── CategoryItem.kt              # UI data model
-│   │   │   ├── TransactionAdapter.kt        # Dashboard list adapter
-│   │   │   ├── ExpenseHistoryAdapter.kt     # History list adapter
-│   │   │   ├── CategoryAdapter.kt           # Category list adapter
-│   │   │   ├── database/                    # Room: entities, DAOs, AppDatabase
-│   │   │   │   ├── AppDatabase.kt
-│   │   │   │   ├── dao/ExpenseDao.kt
-│   │   │   │   ├── dao/CategoryDao.kt
-│   │   │   │   ├── dao/UserProfileDao.kt
-│   │   │   │   ├── entity/Expense.kt
-│   │   │   │   ├── entity/Category.kt
-│   │   │   │   ├── entity/UserProfile.kt
-│   │   │   │   └── relation/ExpenseWithCategory.kt
-│   │   │   ├── repository/                  # Expense, Category, UserProfile repositories
-│   │   │   ├── viewmodel/                   # Expense, Category, Analytics, UserProfile ViewModels
-│   │   │   └── utils/                       # CurrencyUtils, DateUtils, CategoryVisuals, Mapper
+│   │   │   ├── BaseActivity.kt                 # Shared slide-transition base activity
+│   │   │   ├── SetupActivity.kt                # First-time setup (name + income)
+│   │   │   ├── MainActivity.kt                 # Home Dashboard
+│   │   │   ├── AddExpenseActivity.kt           # Add / Edit expense form
+│   │   │   ├── ExpenseHistoryActivity.kt       # History + search + filter chips
+│   │   │   ├── ExpenseDetailActivity.kt        # Single expense details
+│   │   │   ├── CategoryManagerActivity.kt      # Category CRUD + search + sort
+│   │   │   ├── AnalyticsActivity.kt            # Spending analytics
+│   │   │   ├── ProfileSettingsActivity.kt      # Profile & settings
+│   │   │   ├── Transaction.kt / CategoryItem.kt    # UI data models
+│   │   │   ├── TransactionAdapter.kt           # Dashboard list adapter
+│   │   │   ├── ExpenseHistoryAdapter.kt        # History list adapter
+│   │   │   ├── CategoryAdapter.kt              # Category list adapter
+│   │   │   ├── database/                       # Room layer
+│   │   │   │   ├── AppDatabase.kt              # Singleton + migration + seeding
+│   │   │   │   ├── dao/                        # ExpenseDao, CategoryDao, UserProfileDao
+│   │   │   │   ├── entity/                     # Expense, Category, UserProfile
+│   │   │   │   └── relation/                   # ExpenseWithCategory, CategoryStats
+│   │   │   ├── repository/                     # Expense, Category, UserProfile repositories
+│   │   │   ├── viewmodel/                      # Expense, Category, Analytics, UserProfile ViewModels
+│   │   │   └── utils/                          # CurrencyUtils, DateUtils, CategoryVisuals, Mapper, UiAnimations
 │   │   ├── res/
-│   │   │   ├── layout/                      # XML layout files
-│   │   │   ├── drawable/                    # Icons and drawable resources
-│   │   │   ├── values/                      # Colors, themes, strings, dimens
-│   │   │   ├── menu/                        # Bottom nav & toolbar menus
-│   │   │   ├── color/                       # Color state lists
-│   │   │   └── mipmap/                      # App launcher icons
+│   │   │   ├── layout/                         # XML screen & item layouts
+│   │   │   ├── drawable/                       # Icons and drawable resources
+│   │   │   ├── values/                         # Colors, themes, strings, dimens
+│   │   │   ├── color/                          # Color state lists
+│   │   │   ├── menu/                           # Bottom nav & toolbar menus
+│   │   │   ├── anim/                           # Screen transition animations
+│   │   │   └── mipmap/                         # App launcher icons
 │   │   └── AndroidManifest.xml
-│   └── test/                                # Unit tests
-│   └── androidTest/                         # Instrumented tests
-├── schemas/                                 # Room schema exports
-├── build.gradle.kts                         # App-level build config
-├── gradle/                                  # Gradle wrapper & configuration
-└── build.gradle.kts                         # Root-level build config
+│   ├── test/                                   # Unit tests
+│   └── androidTest/                            # Instrumented tests
+├── schemas/                                    # Room schema exports
+├── gradle/                                     # Gradle wrapper & configuration
+├── build.gradle.kts                            # App-level build config
+└── settings.gradle.kts                         # Project-level build config
 ```
 
 ---
 
-## Technologies
+## Technologies Used
 
-| Technology | Status |
+| Technology | Usage |
 |---|---|
-| **Kotlin** | ✅ In Use |
-| **Android Studio** | ✅ Development Environment |
-| **XML Layouts** | ✅ In Use |
-| **Material Design 3** | ✅ In Use |
-| **RecyclerView** | ✅ In Use |
-| **SplashScreen API** | ✅ In Use |
-| **Room Database** | ✅ In Use |
-| **SQLite** (via Room) | ✅ In Use |
-| **LiveData / ViewModel** | ✅ In Use |
-| **Kotlin Coroutines** | ✅ In Use |
-| **KSP** (Room annotation processing) | ✅ In Use |
+| **Kotlin** | Primary language |
+| **Android Studio** | Development environment |
+| **XML Layouts + ViewBinding** | UI definition and type-safe view access |
+| **Material Design 3** | Theming, components and design system |
+| **Room Database / SQLite** | Local persistent storage |
+| **MVVM** | Repository + ViewModel + LiveData architecture |
+| **LiveData / ViewModel** | Reactive UI state |
+| **Kotlin Coroutines & Flow** | Asynchronous data layer |
+| **RecyclerView + DiffUtil** | Efficient, animated lists |
+| **SplashScreen API** | Branded launch screen |
+| **KSP** | Room annotation processing |
+
+---
+
+## Database Design
+
+The database (`spendwise_database`, version 2) contains three entities:
+
+### Expense
+Stores a single transaction:
+
+| Column | Type | Notes |
+|---|---|---|
+| `id` | Long (PK, auto) | Primary key |
+| `title` | String | Short description, e.g. "Lunch" |
+| `amount` | Double | Monetary value |
+| `categoryId` | Long (FK) | References `Category.id` (`RESTRICT` — a category with expenses cannot be deleted) |
+| `notes` | String | Optional user note |
+| `paymentMethod` | String | e.g. "Cash" |
+| `transactionDate` | Long | Epoch millis of the expense date |
+| `createdAt` | Long | Epoch millis when the record was added |
+
+Indexed on `categoryId` for fast lookups.
+
+### Category
+Represents a spending category:
+
+| Column | Type | Notes |
+|---|---|---|
+| `id` | Long (PK, auto) | Primary key |
+| `name` | String | e.g. "Food" |
+| `icon` | String | Drawable *resource name* (e.g. `ic_food`) |
+| `color` | String | Color *resource name* for the indicator |
+| `createdAt` | Long | Creation timestamp |
+
+Icons and colors are stored as stable resource names rather than resource IDs.
+
+### UserProfile
+A single, app-wide profile:
+
+| Column | Type | Notes |
+|---|---|---|
+| `id` | Long (PK, auto) | Primary key |
+| `fullName` | String | Display name |
+| `monthlyIncome` | Double | Used by Dashboard balance and Analytics |
+| `currency` | String | ISO-style code, e.g. "LKR" |
+| `createdAt` | Long | Profile creation date ("Member since") |
+
+### Relationships
+- **Category 1 → N Expense** — one category can have many expenses. Modeled with Room's `@Relation` (`ExpenseWithCategory`), so an expense always loads together with its category in a single reactive query.
+- **CategoryStats** — an SQL aggregation (`COUNT`, `SUM`) grouped by category, powering the Category Manager statistics and Analytics without loading raw rows.
+- The nine default categories are **seeded only on first launch**; the v1 → v2 migration adds the `user_profiles` table and any missing default categories without touching existing user data.
 
 ---
 
@@ -164,73 +246,73 @@ app/
 
 | Screen | Description |
 |---|---|
-| **First-Time Setup** | Collects full name and monthly income on the very first launch |
-| **Home Dashboard** | Balance overview, recent transactions, bottom navigation, and FAB |
-| **Add Expense** | Full expense entry form with dropdowns, date picker, and validation (also used for editing) |
-| **Expense History** | Full list of expenses with summary and empty state |
-| **Expense Details** | View/edit/delete an individual transaction |
-| **Category Manager** | Add, edit, and delete custom spending categories |
-| **Analytics** | Real spending insights computed from the database |
-| **Profile / Settings** | Real profile data, edit profile, About / Privacy / Help, disabled logout |
+| **First-Time Setup** | Collects full name and monthly income on the very first launch, then creates the profile and opens the Dashboard |
+| **Dashboard** | Greeting, balance card (income − expenses), recent transactions, bottom navigation and the Add Expense FAB |
+| **Add Expense** | Full expense entry form with dropdowns, date picker, notes and validation — also used for editing |
+| **Expense Details** | View every field of a transaction; edit or delete it |
+| **Expense History** | Complete, searchable expense list with category filter chips, summary card and empty state |
+| **Category Manager** | Create, edit, search, sort and delete categories with live statistics |
+| **Analytics** | Period-based spending insights: summaries, category breakdowns, monthly trends and top categories |
+| **Profile & Settings** | Profile header, financial summary, edit profile (name/income/currency) and app information dialogs |
 
 ---
 
-## Development Status
+## Installation
 
-- ✅ Home Dashboard (real data)
-- ✅ Add / Edit Expense (saves to Room)
-- ✅ Expense History (real data)
-- ✅ Expense Details (load, update, delete)
-- ✅ Category Manager (full CRUD)
-- ✅ Analytics (real calculations)
-- ✅ First-time setup (persistent profile)
-- ✅ Profile & Settings (edit name, income, currency)
-- ✅ Room Database + seeding (9 default categories)
-- ✅ MVVM (Repository + ViewModel + LiveData)
-- ✅ Material Design 3 Theming
-- ⏳ Search / Filter logic
-- ⏳ Real charts (pie/bar) — currently summarized in lists
-- ⏳ Data export, budget tracking, dark mode
+### Requirements
 
----
+- **Android Studio** (latest stable release recommended)
+- **JDK 11+** (AGP 9.2.1 with built-in Kotlin support)
+- **Android SDK 37** (the project compiles against API 37 and supports devices from API 26)
 
-## How to Run
+### Steps
 
-1. **Open in Android Studio:**
+1. **Clone the project:**
+
+   ```bash
+   git clone <repository-url>
+   cd My-first-mobile-App
+   ```
+
+2. **Open in Android Studio:**
    - Launch Android Studio
-   - Select **File → Open** and navigate to the project directory
-   - Wait for Gradle sync to complete (this may download dependencies on first run)
+   - Select **File → Open** and choose the cloned project folder
+   - Wait for the Gradle sync to finish (the first sync downloads dependencies)
 
-2. **Build the project:**
+3. **Build the project:**
    - Click **Build → Make Project** (or press `Ctrl+F9`)
+   - Optionally run `./gradlew assembleDebug` from the terminal
 
-3. **Run the app:**
-   - Select a device/emulator from the toolbar
+4. **Run the app:**
+   - Select a physical device or emulator from the toolbar
    - Click **Run → Run 'app'** (or press `Shift+F10`)
-   - The app will launch with the SpendWise splash screen followed by the Home Dashboard
+   - The app launches with the SpendWise splash screen
 
-4. **Explore the app:**
-   - On first launch, the **Get Started** screen asks for your name and monthly income
-   - Tap the **+** (FAB) button to add your first expense
-   - Edit your profile in **Profile**, view insights in **Analytics**
-   - All data is stored on-device and persists across app restarts
-
-> **Requirements:** Android Studio, Android SDK 37, JDK 11+ (AGP 9.2.1 with built-in Kotlin support).
+5. **Explore:**
+   - On first launch, enter your name and monthly income on the **Get Started** screen
+   - Tap the **+** FAB to add your first expense
+   - Use the search bar and category chips in **Expense History**, view insights in **Analytics**, and manage categories in **Categories**
+   - All data is stored on-device and persists across restarts — no account or internet connection needed
 
 ---
 
 ## Future Improvements
 
-- **Search & Filter** — filter expenses by title or category
-- **Real Charts** — replace summarized lists with pie/bar chart visuals
-- **Dark Mode** — implement dark theme support using Material 3
-- **Budget Tracking** — set monthly budgets per category and track progress
-- **Monthly Reports** — generate detailed monthly financial summaries
-- **Data Export** — export transactions to CSV or PDF
-- **Notifications** — remind users about due bills and spending limits
-- **Cloud Backup** — sync data across devices via cloud storage
-- **Multi-Currency Support** — handle different currencies with live exchange rates
+- **Cloud backup** — sync data across devices via cloud storage
+- **User authentication** — optional account-based sign-in
+- **Export to PDF/CSV** — generate shareable financial reports
+- **Budget planning** — monthly budgets per category with progress tracking
+- **Recurring expenses** — automate repeated bills and subscriptions
+- **Notifications** — reminders for due bills and spending limits
+- **Dark mode** — full dark theme support using Material 3 dynamic colors
+- **Multi-language support** — localize the app beyond English
 
 ---
 
-<p align="center">Built with ❤️ using Kotlin & Android</p>
+## License
+
+This project is licensed under the **Apache License 2.0**. See the [LICENSE](LICENSE) file for the full license text.
+
+---
+
+<p align="center">Built with ❤️ using Kotlin &amp; Android</p>
