@@ -1,11 +1,15 @@
 package com.firstapp.myapplication
 
+import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
+import android.view.inputmethod.EditorInfo
+import android.view.inputmethod.InputMethodManager
 import androidx.activity.viewModels
+import androidx.core.widget.addTextChangedListener
 import androidx.recyclerview.widget.DividerItemDecoration
 import com.firstapp.myapplication.databinding.ActivityExpenseHistoryBinding
 import com.firstapp.myapplication.utils.AnalyticsPeriod
@@ -44,6 +48,7 @@ class ExpenseHistoryActivity : BaseActivity() {
         setupRecyclerView()
         setupFab()
         setupFilterChips()
+        setupSearch()
         observeData()
         UiAnimations.pressFeedback(binding.fabAddExpense)
     }
@@ -115,6 +120,32 @@ class ExpenseHistoryActivity : BaseActivity() {
         }
         binding.btnEmptyAddExpense.setOnClickListener {
             startActivity(Intent(this, AddExpenseActivity::class.java))
+        }
+    }
+
+    /**
+     * Wires the search bar so every keystroke re-queries Room in real time.
+     * The typed text is pushed to the ViewModel, which combines it with the
+     * active category filter; [ExpenseViewModel.filteredExpenses] then emits
+     * the matching transactions and the RecyclerView refreshes via DiffUtil.
+     * No search button is needed.
+     */
+    private fun setupSearch() {
+        binding.etSearch.addTextChangedListener { editable ->
+            viewModel.setSearchQuery(editable?.toString().orEmpty())
+        }
+
+        // Results already update live, so the keyboard's search action only
+        // needs to dismiss the keyboard.
+        binding.etSearch.setOnEditorActionListener { _, actionId, _ ->
+            if (actionId == EditorInfo.IME_ACTION_SEARCH) {
+                binding.etSearch.clearFocus()
+                (getSystemService(Context.INPUT_METHOD_SERVICE) as? InputMethodManager)
+                    ?.hideSoftInputFromWindow(binding.etSearch.windowToken, 0)
+                true
+            } else {
+                false
+            }
         }
     }
 
@@ -213,9 +244,27 @@ class ExpenseHistoryActivity : BaseActivity() {
 
     /**
      * Shows or hides the empty state based on the list contents.
+     *
+     * When a search is active and yields no matches, a dedicated
+     * "No matching transactions found." message is shown (without the Add
+     * Expense button); otherwise the regular empty state is displayed.
      */
     private fun updateEmptyState(isEmpty: Boolean) {
         binding.layoutEmptyState.visibility = if (isEmpty) View.VISIBLE else View.GONE
         binding.rvExpenseHistory.visibility = if (isEmpty) View.GONE else View.VISIBLE
+
+        if (isEmpty) {
+            val isSearchActive = viewModel.searchQuery.value.isNotBlank()
+            binding.tvEmptyTitle.setText(
+                if (isSearchActive) R.string.search_no_results_title
+                else R.string.empty_title
+            )
+            binding.tvEmptyDescription.setText(
+                if (isSearchActive) R.string.search_no_results_description
+                else R.string.empty_description
+            )
+            binding.btnEmptyAddExpense.visibility =
+                if (isSearchActive) View.GONE else View.VISIBLE
+        }
     }
 }

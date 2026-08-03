@@ -103,6 +103,8 @@
     <string name="summary_total_expenses">Total Expenses</string>
     <string name="summary_this_month">This Month</string>
     <string name="search_expenses_hint">Search expenses&#8230;</string>
+    <string name="search_no_results_title">No matching transactions found.</string>
+    <string name="search_no_results_description">Try a different keyword.</string>
     <string name="chip_all">All</string>
     <string name="empty_title">No Expenses Yet</string>
     <string name="empty_description">Start tracking your spending by adding your first expense.</string>

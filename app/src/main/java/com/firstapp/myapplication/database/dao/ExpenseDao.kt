@@ -62,9 +62,29 @@ interface ExpenseDao {
     )
     fun getMonthlyExpenses(startDate: Long, endDate: Long): Flow<Double>
 
+    /**
+     * Expenses whose title, notes or category name contains [query]
+     * (case-insensitive, matched by SQLite itself so the whole table is
+     * never loaded into memory), optionally narrowed to a single category
+     * via [categoryId] (`null` = all categories).
+     *
+     * An empty [query] matches every row, so clearing the search text
+     * naturally restores the plain category-filtered list.
+     *
+     * The caller is expected to pre-escape SQL LIKE wildcards (`\`, `%` and
+     * `_`) in [query] so that typed wildcard characters match literally.
+     */
     @Transaction
-    @Query("SELECT * FROM expenses WHERE categoryId = :categoryId ORDER BY transactionDate DESC, id DESC")
-    fun getExpensesByCategory(categoryId: Long): Flow<List<ExpenseWithCategory>>
+    @Query(
+        "SELECT expenses.* FROM expenses " +
+            "INNER JOIN categories ON categories.id = expenses.categoryId " +
+            "WHERE (:categoryId IS NULL OR expenses.categoryId = :categoryId) " +
+            "AND (LOWER(expenses.title) LIKE '%' || LOWER(:query) || '%' ESCAPE '\\' " +
+            "OR LOWER(COALESCE(expenses.notes, '')) LIKE '%' || LOWER(:query) || '%' ESCAPE '\\' " +
+            "OR LOWER(categories.name) LIKE '%' || LOWER(:query) || '%' ESCAPE '\\') " +
+            "ORDER BY expenses.transactionDate DESC, expenses.id DESC"
+    )
+    fun searchExpenses(query: String, categoryId: Long?): Flow<List<ExpenseWithCategory>>
 
     @Query("SELECT COUNT(*) FROM expenses")
     fun getExpenseCount(): Flow<Int>
